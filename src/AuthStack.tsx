@@ -1,11 +1,12 @@
 import React, { useContext } from "react";
 import { createStackNavigator } from "@react-navigation/stack";
+import { AuthProps } from "./Types";
 import { AuthContext } from "./AuthProvider";
 import { Button, Text, TextInput, StyleSheet, TouchableOpacity } from "react-native";
 import Login from "./Login";
 import Register from "./Register";
 
-const Stack = createStackNavigator();
+const Stack = createStackNavigator < AuthProps > ();
 
 export const AuthStack: React.FC < {} > = ({}) => {
     return (

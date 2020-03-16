@@ -1,10 +1,11 @@
 import React, { useContext } from "react";
+import { AuthNavProps } from "./Types";
 import { AuthContext } from "./AuthProvider";
 import { Center } from "./Center";
 import { Button, Text, TextInput, StyleSheet, TouchableOpacity } from "react-native";
 import AuthStyles from "./Styles/AuthStyles";
 
-const Login = ({ navigation }) => {
+const Login = ({ navigation }: AuthNavProps < "Login" > ) => {
     const { login } = useContext(AuthContext);
     return (
         <Center>

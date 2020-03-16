@@ -1,10 +1,11 @@
 import React, { useContext } from "react";
+import { AuthNavProps } from "./Types";
 import { AuthContext } from "./AuthProvider";
 import { Center } from "./Center";
 import { Button, Text, TextInput, StyleSheet, TouchableOpacity } from "react-native";
 import AuthStyles from "./Styles/AuthStyles";
 
-const Register = ({ navigation, route }) => {
+const Register = ({ navigation, route }: AuthNavProps < "Register" > ) => {
   const { signup } = useContext(AuthContext);
     return (
         <Center>
