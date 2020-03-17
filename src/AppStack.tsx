@@ -3,6 +3,7 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { AppProps } from "./Types";
 import { AntDesign, Ionicons, EvilIcons } from "@expo/vector-icons";
 import { Home } from "./Home";
+import { Maps } from "./Maps";
 import { Routen } from "./Routen";
 import { Settings } from "./Settings";
 
@@ -13,15 +14,15 @@ export const AppStack: React.FC<{}> = ({}) => {
     <Tabs.Navigator
     screenOptions={({ route }) => ({
       tabBarIcon: ({ focused, color, size }) => {
-        let iconName;
 
         if (route.name === "Home") {
-          iconName = "home";
           return <AntDesign name={"home"} size={size} color={color} />;
         } else if (route.name === "Routen") {
-          return <EvilIcons name={"search"} size={size} color={color} />;
+            return <EvilIcons name={"search"} size={size} color={color} />;
+        } else if (route.name === "Maps") {
+            return <Ionicons name={"md-map"} size={size} color={color} />;
         } else if (route.name === "Settings") {
-          return <EvilIcons name={"gear"} size={size} color={color} />;
+            return <EvilIcons name={"gear"} size={size} color={color} />;
         }
         // default fallback
         return <AntDesign name={"home"} size={size} color={color} />;
@@ -34,6 +35,7 @@ export const AppStack: React.FC<{}> = ({}) => {
     >
     <Tabs.Screen name="Home" component={Home} />
     <Tabs.Screen name="Routen" component={Routen} />
+    <Tabs.Screen options={{title: "Karte"}}  name="Maps" component={Maps} />
     <Tabs.Screen options={{title: "Einstellungen"}} name="Settings" component={Settings} />
     </Tabs.Navigator>
     );

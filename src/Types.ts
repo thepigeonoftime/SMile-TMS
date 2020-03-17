@@ -13,12 +13,17 @@ export type AuthNavProps<T extends keyof AuthProps> = {
 
 export type AppProps = {
   Home: undefined;
+  Maps: undefined;
   Routen: undefined;
   Settings: undefined;
 };
 
 export type HomeProps = {
   Home: undefined;
+};
+
+export type MapsProps = {
+  Maps: undefined;
 };
 
 export type RoutenProps = {
