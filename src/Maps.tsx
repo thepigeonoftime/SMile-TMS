@@ -9,9 +9,24 @@ import MapView, { UrlTile } from "react-native-maps";
 const Stack = createStackNavigator < MapsProps > ();
 
 const MapsView = ({ navigation }) => {
-return (
-  <MapView> </MapView>
-  );
+    let region = {
+        latitude: 52.5200,
+        longitude: 13.4050,
+        latitudeDelta: 0.1,
+        longitudeDelta: 0.05,
+    };
+
+    const HERE_APPID = "pbHofeJ8BquSqxLG3K26";
+    const HERE_APIKEY = "x-6Yvgvamvf-dT0n4YSJetgNX7BxHKSCgdjN-jDS76M";
+    const tileUrl = "https://1.base.maps.ls.hereapi.com/maptile/2.1/maptile/newest/normal.day13/4400/2686/256/png8" +
+    "?app_id=" + HERE_APPID + "&app_code=" + HERE_APIKEY;
+
+    return (
+      <MapView style={{ flex: 1 }} initialRegion={region} provider={null}
+      mapType={Platform.OS === "android" ? "none" : "standard"}>
+        <UrlTile urlTemplate={tileUrl} maximumZ={19} />
+      </MapView>
+     );
 };
 
 export const Maps: React.FC < {} > = ({}) => {
