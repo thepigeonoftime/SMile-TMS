@@ -17,6 +17,10 @@ export type AppProps = {
   Settings: undefined;
 };
 
+export type HomeProps = {
+  Home: undefined;
+};
+
 export type RoutenProps = {
   Routen: undefined;
 };
