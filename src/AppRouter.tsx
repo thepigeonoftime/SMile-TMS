@@ -6,6 +6,8 @@ import {
 import { NavigationContainer, RouteProp } from "@react-navigation/native";
 import { ActivityIndicator, AsyncStorage, View } from "react-native";
 import { AuthContext } from "./AuthProvider";
+import { AppStack } from "./AppStack";
+import { AuthStack } from "./AuthStack";
 
 interface RoutesProps {}
 
@@ -36,7 +38,7 @@ export const AppRouter: React.FC<RoutesProps> = ({}) => {
 
   return (
     <NavigationContainer>
-      {/*  {user ? <AppStack /> : <AuthStack />} */ }
+      {user ? <AppStack /> : <AuthStack />}
     </NavigationContainer>
   );
 };
