@@ -9,9 +9,7 @@ import { AuthContext } from "./AuthProvider";
 import { AppStack } from "./AppStack";
 import { AuthStack } from "./AuthStack";
 
-interface RoutesProps {}
-
-export const AppRouter: React.FC<RoutesProps> = ({}) => {
+export const AppRouter: React.FC<{}> = ({}) => {
   const { user, login } = useContext(AuthContext);
   const [loading, setLoading] = useState(true);
 
