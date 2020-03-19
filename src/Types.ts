@@ -15,6 +15,7 @@ export type AppProps = {
   Home: undefined;
   Maps: undefined;
   Routen: undefined;
+  CodeScanner: undefined;
   Settings: undefined;
 };
 
@@ -28,6 +29,10 @@ export type MapsProps = {
 
 export type RoutenProps = {
   Routen: undefined;
+};
+
+export type ScannerProps = {
+  CodeScanner: undefined;
 };
 
 export type SettingsProps = {

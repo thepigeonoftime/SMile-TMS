@@ -6,6 +6,8 @@ import { Home } from "./Home";
 import { Maps } from "./Maps";
 import { Routen } from "./Routen";
 import { Settings } from "./Settings";
+import { CodeScanner } from "./CodeScanner";
+
 
 const Tabs = createBottomTabNavigator<AppProps>();
 
@@ -23,6 +25,8 @@ export const AppStack: React.FC<{}> = ({}) => {
             return <Ionicons name={"md-map"} size={size} color={color} />;
         } else if (route.name === "Settings") {
             return <EvilIcons name={"gear"} size={size} color={color} />;
+        } else if (route.name === "CodeScanner") {
+          return <AntDesign name={"scan1"} size={size} color={color} />;
         }
         // default fallback
         return <AntDesign name={"home"} size={size} color={color} />;
@@ -36,6 +40,7 @@ export const AppStack: React.FC<{}> = ({}) => {
     <Tabs.Screen name="Home" component={Home} />
     <Tabs.Screen name="Routen" component={Routen} />
     <Tabs.Screen options={{title: "Karte"}}  name="Maps" component={Maps} />
+    <Tabs.Screen options={{title: "QR Scan"}}  name="CodeScanner" component={CodeScanner} />
     <Tabs.Screen options={{title: "Einstellungen"}} name="Settings" component={Settings} />
     </Tabs.Navigator>
     );
