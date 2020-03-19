@@ -3,6 +3,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 import { ScannerProps } from "./Types";
 import { Text, View, StyleSheet, Button } from "react-native";
 import { BarCodeScanner } from "expo-barcode-scanner";
+import BarcodeMask from "react-native-barcode-mask";
 
 const Stack = createStackNavigator < ScannerProps > ();
 
@@ -39,13 +40,7 @@ const ScannerView = ({ navigation }) => {
         onBarCodeScanned={(scan) => alert(scan.data)}
         style={[StyleSheet.absoluteFill, styles.container]}
       >
-        <View style={styles.layerTop} />
-        <View style={styles.layerCenter}>
-          <View style={styles.layerLeft} />
-          <View style={styles.focused} />
-          <View style={styles.layerRight} />
-        </View>
-        <View style={styles.layerBottom} />
+        <BarcodeMask edgeColor={"#62B1F6"} showAnimatedLine={true} />
       </BarCodeScanner>
 
       {scanned && <Button title={"Tap to Scan Again"} onPress={() => setScanned(false)} />}
@@ -61,29 +56,6 @@ const styles = StyleSheet.create({
     width: "100%",
     padding: 0,
     margin: 0,
-  },
-  layerTop: {
-    flex: 2,
-    backgroundColor: opacity
-  },
-  layerCenter: {
-    flex: 5,
-    flexDirection: "row"
-  },
-  layerLeft: {
-    flex: 1,
-    backgroundColor: opacity
-  },
-  focused: {
-    flex: 22,
-  },
-  layerRight: {
-    flex: 1,
-    backgroundColor: opacity
-  },
-  layerBottom: {
-    flex: 2,
-    backgroundColor: opacity
   },
 });
 
