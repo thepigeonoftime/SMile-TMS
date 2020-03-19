@@ -33,8 +33,7 @@ const ScannerView = ({ navigation }) => {
         <View
       style={{
         flex: 1,
-        flexDirection: "column",
-        justifyContent: "flex-end",
+        backgroundColor: "#000",
       }}>
       <BarCodeScanner
         onBarCodeScanned={(scan) => alert(scan.data)}
@@ -58,7 +57,10 @@ const opacity = "rgba(0, 0, 0, .6)";
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    flexDirection: "column"
+    flexDirection: "column",
+    width: "100%",
+    padding: 0,
+    margin: 0,
   },
   layerTop: {
     flex: 2,
@@ -69,14 +71,14 @@ const styles = StyleSheet.create({
     flexDirection: "row"
   },
   layerLeft: {
-    flex: 2,
+    flex: 1,
     backgroundColor: opacity
   },
   focused: {
-    flex: 15
+    flex: 22,
   },
   layerRight: {
-    flex: 2,
+    flex: 1,
     backgroundColor: opacity
   },
   layerBottom: {
@@ -87,9 +89,13 @@ const styles = StyleSheet.create({
 
 
 export const CodeScanner: React.FC < {} > = ({}) => {
-    return (
-        <Stack.Navigator initialRouteName="CodeScanner">
-      <Stack.Screen options={{title: "Bar Code Scanner"}} name="CodeScanner" component={ScannerView} />
+  return (
+    <Stack.Navigator initialRouteName="CodeScanner"
+    screenOptions={{
+      header: () => null
+    }}
+    >
+    <Stack.Screen options={{title: "Bar Code Scanner"}} name="CodeScanner" component={ScannerView} />
     </Stack.Navigator>
     );
 };
