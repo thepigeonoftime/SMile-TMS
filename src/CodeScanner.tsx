@@ -1,9 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 import { ScannerProps } from "./Types";
-import { Text, View, StyleSheet, Button } from 'react-native';
-import { BarCodeScanner } from 'expo-barcode-scanner';
-import { Center } from "./Center";
+import { Text, View, StyleSheet, Button } from "react-native";
+import { BarCodeScanner } from "expo-barcode-scanner";
 
 const Stack = createStackNavigator < ScannerProps > ();
 
@@ -14,7 +13,7 @@ const ScannerView = ({ navigation }) => {
     useEffect(() => {
         (async () => {
             const { status } = await BarCodeScanner.requestPermissionsAsync();
-            setHasPermission(status === 'granted');
+            setHasPermission(status === "granted");
         })();
     }, []);
 
@@ -34,18 +33,57 @@ const ScannerView = ({ navigation }) => {
         <View
       style={{
         flex: 1,
-        flexDirection: 'column',
-        justifyContent: 'flex-end',
+        flexDirection: "column",
+        justifyContent: "flex-end",
       }}>
       <BarCodeScanner
-        onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
-        style={StyleSheet.absoluteFillObject}
-      />
+        onBarCodeScanned={(scan) => alert(scan.data)}
+        style={[StyleSheet.absoluteFill, styles.container]}
+      >
+        <View style={styles.layerTop} />
+        <View style={styles.layerCenter}>
+          <View style={styles.layerLeft} />
+          <View style={styles.focused} />
+          <View style={styles.layerRight} />
+        </View>
+        <View style={styles.layerBottom} />
+      </BarCodeScanner>
 
-      {scanned && <Button title={'Tap to Scan Again'} onPress={() => setScanned(false)} />}
+      {scanned && <Button title={"Tap to Scan Again"} onPress={() => setScanned(false)} />}
     </View>
     );
 };
+
+const opacity = "rgba(0, 0, 0, .6)";
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    flexDirection: "column"
+  },
+  layerTop: {
+    flex: 2,
+    backgroundColor: opacity
+  },
+  layerCenter: {
+    flex: 5,
+    flexDirection: "row"
+  },
+  layerLeft: {
+    flex: 2,
+    backgroundColor: opacity
+  },
+  focused: {
+    flex: 15
+  },
+  layerRight: {
+    flex: 2,
+    backgroundColor: opacity
+  },
+  layerBottom: {
+    flex: 2,
+    backgroundColor: opacity
+  },
+});
 
 
 export const CodeScanner: React.FC < {} > = ({}) => {
