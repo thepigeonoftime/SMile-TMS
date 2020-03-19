@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { Button, FlatList, Text, Platform } from "react-native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { MapsProps } from "./Types";
-import { Center } from "./Center";
 import MapView, { UrlTile } from "react-native-maps";
 
 
@@ -30,9 +29,12 @@ const MapsView = ({ navigation }) => {
 };
 
 export const Maps: React.FC < {} > = ({}) => {
-  return (
-    <Stack.Navigator initialRouteName="Maps">
+    return (
+      <Stack.Navigator initialRouteName="Maps"
+      screenOptions={{
+        header: () => null
+      }}>
       <Stack.Screen options={{title: "Karte"}} name="Maps" component={MapsView} />
-    </Stack.Navigator>
-    );
+      </Stack.Navigator>
+      );
 };
