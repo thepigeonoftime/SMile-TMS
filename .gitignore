@@ -31,6 +31,9 @@ __generated__
 *.sublime-project
 *.sublime-workspace
 
+# Visual Studio Code
+.vscode
+
 # Xcode
 *.pbxuser
 !default.pbxuser
