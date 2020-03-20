@@ -18,6 +18,7 @@ export type AppProps = {
   CodeScanner: undefined;
   Settings: undefined;
   Signature: undefined;
+  CodeGenerator: undefined;
 };
 
 export type HomeProps = {
@@ -34,6 +35,10 @@ export type RoutenProps = {
 
 export type ScannerProps = {
   CodeScanner: undefined;
+};
+
+export type GeneratorProps = {
+  CodeGenerator: undefined;
 };
 
 export type SignatureProps = {

@@ -8,6 +8,7 @@ import { Routen } from "./Routen";
 import { Settings } from "./Settings";
 import { Signature } from "./Signature";
 import { CodeScanner } from "./CodeScanner";
+import { CodeGenerator } from "./CodeGenerator";
 
 
 const Tabs = createBottomTabNavigator<AppProps>();
@@ -44,6 +45,7 @@ export const AppStack: React.FC<{}> = ({}) => {
     <Tabs.Screen name="Routen" component={Routen} />
     <Tabs.Screen options={{title: "Karte"}}  name="Maps" component={Maps} />
     <Tabs.Screen options={{title: "QR Scan"}}  name="CodeScanner" component={CodeScanner} />
+    <Tabs.Screen name="CodeGenerator" component={CodeGenerator} />
     <Tabs.Screen name="Signature" component={Signature} />
     <Tabs.Screen options={{title: "Einstellungen"}} name="Settings" component={Settings} />
     </Tabs.Navigator>
