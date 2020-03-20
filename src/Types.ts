@@ -17,6 +17,7 @@ export type AppProps = {
   Routen: undefined;
   CodeScanner: undefined;
   Settings: undefined;
+  Signature: undefined;
 };
 
 export type HomeProps = {
@@ -33,6 +34,10 @@ export type RoutenProps = {
 
 export type ScannerProps = {
   CodeScanner: undefined;
+};
+
+export type SignatureProps = {
+  Signature: undefined;
 };
 
 export type SettingsProps = {

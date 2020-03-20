@@ -6,6 +6,7 @@ import { Home } from "./Home";
 import { Maps } from "./Maps";
 import { Routen } from "./Routen";
 import { Settings } from "./Settings";
+import { Signature } from "./Signature";
 import { CodeScanner } from "./CodeScanner";
 
 
@@ -27,6 +28,8 @@ export const AppStack: React.FC<{}> = ({}) => {
             return <EvilIcons name={"gear"} size={size} color={color} />;
         } else if (route.name === "CodeScanner") {
           return <AntDesign name={"scan1"} size={size} color={color} />;
+        } else if (route.name === "Signature") {
+          return <AntDesign name={"edit"} size={size} color={color} />;
         }
         // default fallback
         return <AntDesign name={"home"} size={size} color={color} />;
@@ -41,6 +44,7 @@ export const AppStack: React.FC<{}> = ({}) => {
     <Tabs.Screen name="Routen" component={Routen} />
     <Tabs.Screen options={{title: "Karte"}}  name="Maps" component={Maps} />
     <Tabs.Screen options={{title: "QR Scan"}}  name="CodeScanner" component={CodeScanner} />
+    <Tabs.Screen name="Signature" component={Signature} />
     <Tabs.Screen options={{title: "Einstellungen"}} name="Settings" component={Settings} />
     </Tabs.Navigator>
     );
