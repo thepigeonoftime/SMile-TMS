@@ -1,28 +1,20 @@
 import { createStackNavigator } from "@react-navigation/stack";
 import React from "react";
-import { StyleSheet, View } from "react-native";
-import { GeneratorProps } from "./Types";
-import { Center } from "./Center";
 import { QRCode } from "react-native-custom-qr-codes-expo";
+import { Center } from "./Center";
+import { GeneratorProps } from "./Types";
 
 
 const Stack = createStackNavigator<GeneratorProps>();
 
 const GeneratorView = ({ navigation }) => {
+  let content = "smile QR Code test";
   return (
     <Center>
-      <QRCode codeStyle="square" content="smile test" size="300"/>
+      <QRCode codeStyle="square" content={content} size={300} />
     </Center>
   );
 };
-
-const styles = StyleSheet.create({
-
-  container: {
-    flex: 1,
-    alignItems: "center",
-  }
-});
 
 export const CodeGenerator: React.FC<{}> = ({}) => {
   return (
