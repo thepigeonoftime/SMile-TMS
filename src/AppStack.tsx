@@ -37,7 +37,19 @@ export const AppStack: React.FC<{}> = ({}) => {
     })}
     tabBarOptions={{
       activeTintColor: "tomato",
-      inactiveTintColor: "gray"
+      inactiveTintColor: "gray",
+      style: {
+        position: "absolute",
+        bottom: "5%",
+        left: "2,5%",
+        width: "95%",
+        height: 70,
+        borderRadius: 30,
+        paddingTop: 10,
+        paddingBottom: 15,
+        borderTopColor: "transparent",
+        backgroundColor: "#FFF",
+      },
     }}
     >
     <Tabs.Screen name="Home" component={Home} />
