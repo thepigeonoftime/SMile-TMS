@@ -18,7 +18,11 @@ const GeneratorView = ({ navigation }) => {
 
 export const CodeGenerator: React.FC<{}> = ({}) => {
   return (
-    <Stack.Navigator initialRouteName="CodeGenerator">
+    <Stack.Navigator initialRouteName="CodeGenerator"
+    screenOptions={{
+      header: () => null
+      }}
+    >
       <Stack.Screen options={{title: "QR Generator"}} name="CodeGenerator" component={GeneratorView} />
     </Stack.Navigator>
   );
