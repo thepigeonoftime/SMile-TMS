@@ -19,6 +19,7 @@ export type AppProps = {
   Settings: undefined;
   Signature: undefined;
   CodeGenerator: undefined;
+  QRTest: undefined;
 };
 
 export type HomeProps = {
@@ -39,6 +40,12 @@ export type ScannerProps = {
 
 export type GeneratorProps = {
   CodeGenerator: undefined;
+};
+
+export type QRTestProps = {
+  QRTest: undefined;
+  QRScan: undefined;
+  QRGenerator: undefined;
 };
 
 export type SignatureProps = {
