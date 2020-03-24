@@ -4,12 +4,10 @@ import { AppProps } from "./Types";
 import { AntDesign, Ionicons, EvilIcons } from "@expo/vector-icons";
 import { Home } from "./Home";
 import { Maps } from "./Maps";
-import { Routen } from "./Routen";
+import { Route } from "./Route";
 import { Settings } from "./Settings";
 import { Signature } from "./Signature";
 import { QRTest } from "./QRTest";
-// import { CodeScanner } from "./CodeScanner";
-// import { CodeGenerator } from "./CodeGenerator";
 
 
 const Tabs = createBottomTabNavigator<AppProps>();
@@ -22,7 +20,7 @@ export const AppStack: React.FC<{}> = ({}) => {
 
         if (route.name === "Home") {
           return <AntDesign name={"home"} size={size} color={color} />;
-        } else if (route.name === "Routen") {
+        } else if (route.name === "Route") {
             return <EvilIcons name={"search"} size={size} color={color} />;
         } else if (route.name === "Maps") {
             return <Ionicons name={"md-map"} size={size} color={color} />;
@@ -43,11 +41,9 @@ export const AppStack: React.FC<{}> = ({}) => {
     }}
     >
     <Tabs.Screen name="Home" component={Home} />
-    <Tabs.Screen name="Routen" component={Routen} />
+    <Tabs.Screen name="Route" component={Route} />
     <Tabs.Screen options={{ title: "Karte" }} name="Maps" component={Maps} />
     <Tabs.Screen options={{ title: "QR Codes" }} name="QRTest" component={QRTest} />
-    {/* <Tabs.Screen options={{title: "QR Scan"}}  name="CodeScanner" component={CodeScanner} />
-    <Tabs.Screen name="CodeGenerator" component={CodeGenerator} /> */}
     <Tabs.Screen name="Signature" component={Signature} />
     <Tabs.Screen options={{title: "Einstellungen"}} name="Settings" component={Settings} />
     </Tabs.Navigator>
