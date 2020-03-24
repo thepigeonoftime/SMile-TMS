@@ -8,12 +8,21 @@ import { Route } from "./Route";
 import { Settings } from "./Settings";
 import { Signature } from "./Signature";
 import { QRTest } from "./QRTest";
+import { Text } from "react-native";
+import { RegisterContext } from "./RegisterProvider";
+import { TouchableOpacity } from "react-native-gesture-handler";
+import { Center } from "./Center";
 
 
 const Tabs = createBottomTabNavigator<AppProps>();
 
-export const AppStack: React.FC<{}> = ({}) => {
+export const AppStack: React.FC<{}> = ({ }) => {
+  const { registered, unregister } = useContext(RegisterContext);
   return (
+    // <Center>
+    //   <Text>registered: { registered }</Text>
+    //   <TouchableOpacity onPress={() => { unregister();   }}><Text>Unregister</Text></TouchableOpacity>
+    // </Center>
     <Tabs.Navigator
     screenOptions={({ route }) => ({
       tabBarIcon: ({ focused, color, size }) => {
@@ -47,5 +56,5 @@ export const AppStack: React.FC<{}> = ({}) => {
     <Tabs.Screen name="Signature" component={Signature} />
     <Tabs.Screen options={{title: "Einstellungen"}} name="Settings" component={Settings} />
     </Tabs.Navigator>
-    );
+  );
 };

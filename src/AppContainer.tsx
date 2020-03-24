@@ -1,11 +1,11 @@
 import React from "react";
 import { AuthProvider } from "./AuthProvider";
-import { AppRouter } from "./AppRouter";
+import { AuthRouter } from "./AuthRouter";
 
 export const AppContainer: React.FC<{}> = ({}) => {
   return (
     <AuthProvider>
-      <AppRouter />
+      <AuthRouter />
     </AuthProvider>
   );
 };
