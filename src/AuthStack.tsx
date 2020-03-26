@@ -1,35 +1,32 @@
-import React, { useContext } from "react";
-import { createStackNavigator } from "@react-navigation/stack";
-import { AuthProps } from "./Types";
-import { AuthContext } from "./AuthProvider";
-import { Button, Text, TextInput, StyleSheet, TouchableOpacity } from "react-native";
-import Login from "./Login";
-import Register from "./Register";
+import {createStackNavigator} from "@react-navigation/stack";
+import React from "react";
+import {Login} from "./Login";
+import {Signup} from "./Signup";
+import {AuthProps} from "./Types";
 
-const Stack = createStackNavigator < AuthProps > ();
+const Stack = createStackNavigator<AuthProps>();
 
-export const AuthStack: React.FC < {} > = ({}) => {
+export const AuthStack: React.FC<{}> = ({}) => {
     return (
         <Stack.Navigator
-      // screenOptions={{
-      //   header: () => null
-      // }}
-      initialRouteName="Login"
-    >
-      <Stack.Screen
-        options={{
-          headerTitle: "Login"
-        }}
-        name="Login"
-        component={Login}
-      />
-      <Stack.Screen
-        options={{
-          headerTitle: "Registrieren"
-        }}
-        name="Register"
-        component={Register}
-      />
-    </Stack.Navigator>
+            // screenOptions={{
+            //   header: () => null
+            // }}
+            initialRouteName="Login">
+            <Stack.Screen
+                options={{
+                    headerTitle: "Login"
+                }}
+                name="Login"
+                component={Login}
+            />
+            <Stack.Screen
+                options={{
+                    headerTitle: "Registrieren"
+                }}
+                name="Register"
+                component={Signup}
+            />
+        </Stack.Navigator>
     );
 };
