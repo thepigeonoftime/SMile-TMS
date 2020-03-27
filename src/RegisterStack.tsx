@@ -1,17 +1,55 @@
-import React, { useContext } from "react"
-import { Text, View } from "react-native"
-import { RegisterContext } from "./RegisterProvider";
-import { TouchableOpacity } from "react-native-gesture-handler";
-import { Center } from "./Center";
+import {createStackNavigator} from "@react-navigation/stack";
+import * as React from "react";
+import {Text, View} from "react-native";
+import {Button} from "react-native-elements";
+import {Register} from "./Register";
+
+function RegisterPerson({navigation}) {
+    return (
+        <View style={{flex: 1, alignItems: "center", justifyContent: "center"}}>
+            <Text style={{fontSize: 30}}>Persönliche Informationen</Text>
+            <Button onPress={() => navigation.goBack()} title="Zurück" />
+        </View>
+    );
+}
+
+function RegisterFahrzeug({navigation}) {
+    return (
+        <View style={{flex: 1, alignItems: "center", justifyContent: "center"}}>
+            <Text style={{fontSize: 30}}>Fahrzeuginformationen</Text>
+            <Button onPress={() => navigation.goBack()} title="Zurück" />
+        </View>
+    );
+}
+
+function RegisterGebietPreis({navigation}) {
+    return (
+        <View style={{flex: 1, alignItems: "center", justifyContent: "center"}}>
+            <Text style={{fontSize: 30}}>Gebiet & Preis</Text>
+            <Button onPress={() => navigation.goBack()} title="Zurück" />
+        </View>
+    );
+}
+
+function RegisterArbeitszeiten({navigation}) {
+    return (
+        <View style={{flex: 1, alignItems: "center", justifyContent: "center"}}>
+            <Text style={{fontSize: 30}}>Arbeitszeiten</Text>
+            <Button onPress={() => navigation.goBack()} title="Zurück" />
+        </View>
+    );
+}
+
+const Stack = createStackNavigator();
 
 export const RegisterStack = () => {
-    const { registered, register } = useContext(RegisterContext);
     return (
-            <Center>
-            <Text>Please Register</Text>
-            <TouchableOpacity onPress={() => { register(); }}>
-                    <Text style={{fontWeight: "bold", marginTop: 20}}>Register</Text>
-                </TouchableOpacity>
-            </Center>
-    )
-}
+        <Stack.Navigator mode="modal" headerMode="none">
+            <Stack.Screen name="Register" component={Register} options={{}} />
+            <Stack.Screen name="infoPerson" component={RegisterPerson} />
+            <Stack.Screen name="infoFahrzeug" component={RegisterFahrzeug} />
+            <Stack.Screen name="infoGebietPreis" component={RegisterGebietPreis} />
+            <Stack.Screen name="infoArbeitszeiten" component={RegisterArbeitszeiten} />
+        </Stack.Navigator>
+    );
+};

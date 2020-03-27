@@ -1,33 +1,55 @@
-import React, { useContext } from "react";
-import { AuthNavProps } from "./Types";
-import { AuthContext } from "./AuthProvider";
-import { Center } from "./Center";
-import { Button, Text, TextInput, StyleSheet, TouchableOpacity } from "react-native";
-import AuthStyles from "./Styles/AuthStyles";
+import React, {useContext} from "react";
+import {StyleSheet, Text, TouchableOpacity, View} from "react-native";
+import {Button} from "react-native-elements";
+import {AuthContext} from "./AuthProvider";
+import {RegisterContext} from "./RegisterProvider";
 
-const Register = ({ navigation, route }: AuthNavProps < "Register" > ) => {
-  const { signup } = useContext(AuthContext);
+export const Register = ({navigation}) => {
+    const {logout} = useContext(AuthContext);
+    const {registered, register} = useContext(RegisterContext);
     return (
-        <Center>
-      <TextInput style={AuthStyles.authInput} placeholder="E-Mail Adresse" />
-      <TextInput style={AuthStyles.authInput} placeholder="Passwort" />
-      <TouchableOpacity
-        style={AuthStyles.authButton}
-        onPress={() => {
-          signup();
-        }}
-      >
-      <Text>Registrieren</Text>
-      </TouchableOpacity>
-      <Button
-        title="Ich habe bereits einen Login"
-        onPress={() => {
-          navigation.navigate("Login");
-          // navigation.goBack()
-        }}
-      />
-    </Center>
+        <View>
+            <View style={{paddingTop: "30%", justifyContent: "center", alignContent: "center"}}>
+                <TouchableOpacity onPress={() => navigation.navigate("infoPerson")}>
+                    <Text style={[styles.navLink, {marginTop: 20}]}>Persönliche Informationen</Text>
+                </TouchableOpacity>
+                <Text style={styles.statusText}>Unvollständig</Text>
+                <TouchableOpacity onPress={() => navigation.navigate("infoFahrzeug")}>
+                    <Text style={[styles.navLink]}>Fahrzeuginformationen</Text>
+                </TouchableOpacity>
+                <Text style={styles.statusText}>Unvollständig</Text>
+                <TouchableOpacity onPress={() => navigation.navigate("infoGebietPreis")}>
+                    <Text style={[styles.navLink]}>Gebiet & Preis</Text>
+                </TouchableOpacity>
+                <Text style={styles.statusText}>Unvollständig</Text>
+                <TouchableOpacity onPress={() => navigation.navigate("infoArbeitszeiten")}>
+                    <Text style={[styles.navLink]}>Arbeitszeiten</Text>
+                </TouchableOpacity>
+                <Text style={styles.statusText}>Unvollständig</Text>
+            </View>
+            <View>
+                <Button
+                    title="Abschließen"
+                    onPress={() => {
+                        register();
+                    }}
+                    buttonStyle={{borderRadius: 20, height: 45, width: 200}}></Button>
+            </View>
+        </View>
     );
 };
 
-export default Register;
+export const styles = StyleSheet.create({
+    container: {},
+    navLink: {
+        color: "#65697A",
+        fontSize: 23,
+        fontWeight: "bold",
+        padding: 10
+    },
+    statusText: {
+        color: "#D4CCC3",
+        marginLeft: 10,
+        fontSize: 16
+    }
+});
