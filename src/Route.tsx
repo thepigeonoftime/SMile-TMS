@@ -1,6 +1,5 @@
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-import { AntDesign, EvilIcons, Ionicons } from "@expo/vector-icons";
+
+import { AntDesign, EvilIcons } from "@expo/vector-icons";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import React, { useEffect, useState } from "react";
 import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
@@ -14,36 +13,13 @@ const getRoute = (url: string) => {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-=======
-=======
->>>>>>> Stashed changes
-import { createStackNavigator } from "@react-navigation/stack";
-import React, { useState, useEffect } from "react";
-import { Text } from "react-native";
-import { Center } from "./Center";
-import { RouteProps } from "./Types";
-
-const getRoute = (url: string) => {
-  const [data, setData] = useState(null);
-  const [error, setError] = useState(null);
-  const [loading, setLoading] = useState("loading");
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
 
   const fetchRoute = async (url: string) => {
     const response = await fetch(url);
     response
       .json()
       .then(res => setData(res))
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
       .then(() => setLoading(false))
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
       .catch(err => setError(err));
   };
 
@@ -53,8 +29,6 @@ const getRoute = (url: string) => {
   return { data, loading };
 };
 
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
 interface IRoute {
   data: JSON;
   loading: boolean;
@@ -104,6 +78,7 @@ const RouteView: React.FC<IRoute> = (props) => {
       }
     </View>
   );
+
 };
 
 type BottomTabProps = {
@@ -112,6 +87,12 @@ type BottomTabProps = {
   Settings: undefined;
 };
 
+export const Route: React.FC<{}> = ({}) => {
+    return (
+        <Stack.Navigator initialRouteName="Route">
+            <Stack.Screen options={{title: "Route"}} name="Route" component={RouteView} />
+        </Stack.Navigator>
+    );
 const routeLogic = ({ }) => {
   const { data, loading } = getRoute("https://bpt-lab.org/smile/sphinx/getTours");
   if (!loading) {
@@ -125,6 +106,7 @@ const routeLogic = ({ }) => {
       <ActivityIndicator />
     );
   }
+
 };
 
 const Tabs = createBottomTabNavigator<BottomTabProps>();
@@ -208,29 +190,3 @@ const styles = StyleSheet.create({
     paddingTop: 50
   },
 });
-=======
-=======
->>>>>>> Stashed changes
-const RouteView = ({ navigation }) => {
-  const { data, loading } = getRoute("https://bpt-lab.org/smile/sphinx/getTours");
-  return (
-    <Center>
-      <Text>{loading}</Text>
-      <Text> {JSON.stringify(data, null, 2)} </Text>
-    </Center>
-  );
-};
-
-const Stack = createStackNavigator<RouteProps>();
-
-export const Route: React.FC<{}> = ({ }) => {
-  return (
-    <Stack.Navigator initialRouteName="Route">
-      <Stack.Screen options={{ title: "Route" }} name="Route" component={RouteView} />
-    </Stack.Navigator>
-  );
-};
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
