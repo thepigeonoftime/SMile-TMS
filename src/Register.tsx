@@ -3,6 +3,7 @@ import {createBottomTabNavigator} from "@react-navigation/bottom-tabs";
 import React, {useContext} from "react";
 import {StyleSheet, Text, TouchableOpacity, View} from "react-native";
 import {Button} from "react-native-elements";
+import {SafeAreaView} from "react-native-safe-area-context";
 import {AuthContext} from "./AuthProvider";
 import {RegisterContext} from "./RegisterProvider";
 import {Settings} from "./Settings";
@@ -11,7 +12,7 @@ export const RegisterView = ({navigation}) => {
     const {logout} = useContext(AuthContext);
     const {registered, register} = useContext(RegisterContext);
     return (
-        <View style={styles.container}>
+        <SafeAreaView style={styles.container}>
             <View style={styles.logout}>
                 <TouchableOpacity
                     onPress={() => {
@@ -28,19 +29,19 @@ export const RegisterView = ({navigation}) => {
             </View>
             <View style={styles.contentWrap}>
                 <View style={styles.contentInner}>
-                    <TouchableOpacity onPress={() => navigation.navigate("infoPerson")}>
+                    <TouchableOpacity onPress={() => navigation.navigate("RegisterPerson")}>
                         <Text style={[styles.navLink, {marginTop: 20}]}>Persönliche Informationen</Text>
                     </TouchableOpacity>
                     <Text style={styles.statusText}>Unvollständig</Text>
-                    <TouchableOpacity onPress={() => navigation.navigate("infoFahrzeug")}>
+                    <TouchableOpacity onPress={() => navigation.navigate("RegisterFahrzeug")}>
                         <Text style={[styles.navLink]}>Fahrzeuginformationen</Text>
                     </TouchableOpacity>
                     <Text style={styles.statusText}>Unvollständig</Text>
-                    <TouchableOpacity onPress={() => navigation.navigate("infoGebietPreis")}>
+                    <TouchableOpacity onPress={() => navigation.navigate("RegisterGebietPreis")}>
                         <Text style={[styles.navLink]}>Gebiet & Preis</Text>
                     </TouchableOpacity>
                     <Text style={styles.statusText}>Unvollständig</Text>
-                    <TouchableOpacity onPress={() => navigation.navigate("infoArbeitszeiten")}>
+                    <TouchableOpacity onPress={() => navigation.navigate("RegisterArbeitszeiten")}>
                         <Text style={[styles.navLink]}>Arbeitszeiten</Text>
                     </TouchableOpacity>
                     <Text style={styles.statusText}>Unvollständig</Text>
@@ -53,10 +54,11 @@ export const RegisterView = ({navigation}) => {
                         }}
                         buttonStyle={styles.button}
                         titleStyle={styles.buttonTitle}
-                        containerStyle={styles.buttonContainer}></Button>
+                        containerStyle={styles.buttonContainer}
+                    />
                 </View>
             </View>
-        </View>
+        </SafeAreaView>
     );
 };
 
@@ -112,7 +114,7 @@ export const styles = StyleSheet.create({
         width: "100%",
         alignItems: "center",
         justifyContent: "center",
-        top: "12%"
+        top: "8%"
     },
     header: {
         fontSize: 40,
@@ -124,7 +126,7 @@ export const styles = StyleSheet.create({
         color: "#729628"
     },
     contentWrap: {
-        top: "17%",
+        top: "13%",
         backgroundColor: "#FFF",
         flex: 1,
         alignItems: "center",
@@ -143,7 +145,8 @@ export const styles = StyleSheet.create({
     },
     contentInner: {
         backgroundColor: "#FFF",
-        borderRadius: 20
+        borderRadius: 20,
+        paddingTop: "1%"
     },
     navLink: {
         color: "#65697A",
@@ -173,8 +176,7 @@ export const styles = StyleSheet.create({
         backgroundColor: "#FFF"
     },
     tabBar: {
-        position: "relative",
-        bottom: "12%",
+        bottom: "3%",
         left: "5%",
         width: "90%",
         height: 70,
