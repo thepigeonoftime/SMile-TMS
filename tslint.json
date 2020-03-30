@@ -1,15 +1,17 @@
 {
     "extends": ["tslint-config-prettier", "tslint-react", "tslint-react-native"],
     "rules": {
-        "no-unused-styles": true,
         "class-name": false,
         "comment-format": [true, "check-space"],
         "indent": [true, "spaces"],
+        "jsx-no-lambda": false,
+        "jsx-no-multiline-js": false,
         "no-duplicate-variable": true,
         "no-eval": true,
         "no-internal-module": true,
         "no-trailing-whitespace": true,
         "no-unsafe-finally": true,
+        "no-unused-styles": true,
         "no-var-keyword": true,
         "one-line": [true, "check-open-brace", "check-whitespace"],
         "quotemark": [true, "double"],
