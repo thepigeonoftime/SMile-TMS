@@ -1,3 +1,3 @@
-import { AppContainer } from "./src/AppContainer";
+import { AppRoot } from "./src/AppRoot";
 
-export default AppContainer;
+export default AppRoot;

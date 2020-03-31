@@ -2,7 +2,7 @@ import React from "react";
 import { AuthProvider } from "./AuthProvider";
 import { AuthRouter } from "./AuthRouter";
 
-export const AppContainer: React.FC<{}> = ({}) => {
+export const AppRoot: React.FC<{}> = ({ }) => {
   return (
     <AuthProvider>
       <AuthRouter />
