@@ -33,6 +33,7 @@ __generated__
 
 # Visual Studio Code
 .vscode
+*.code-workspace
 
 # Xcode
 *.pbxuser
