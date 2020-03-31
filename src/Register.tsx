@@ -1,6 +1,6 @@
 
 import React, { useContext } from "react";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { StyleSheet, Text, TouchableOpacity, View, ScrollView } from "react-native";
 import { Button } from "react-native-elements";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { AuthContext } from "./AuthProvider";
@@ -8,68 +8,64 @@ import { RegisterContext } from "./RegisterProvider";
 
 export const Register = ({ navigation }) => {
     const { logout } = useContext(AuthContext);
-    const { registered, register } = useContext(RegisterContext);
+    const { register } = useContext(RegisterContext);
+
     return (
-        <SafeAreaView style={styles.container}>
-            <View style={styles.logout}>
-                <TouchableOpacity
-                    onPress={() => {
-                        logout();
-                    }}>
-                    <Text>LOGOUT</Text>
-                </TouchableOpacity>
-            </View>
+        <ScrollView style={styles.container}>
             <View style={styles.headerContainer}>
-                <View>
+                <View style={styles.logout}>
+                    <TouchableOpacity
+                        onPress={() => {
+                            logout();
+                        }}>
+                        <Text>LOGOUT</Text>
+                    </TouchableOpacity>
+                </View>
+                <View style={styles.headerWrap}>
                     <Text style={styles.header}>Profil</Text>
                     <Text style={styles.subheader}>anlegen und individuelle{"\n"}Touren erhalten</Text>
                 </View>
             </View>
-            <View style={styles.contentWrap}>
-                <View style={styles.contentInner}>
-                    <TouchableOpacity onPress={() => navigation.navigate("RegisterPerson")}>
-                        <Text style={[styles.navLink, { marginTop: 20 }]}>Persönliche Informationen</Text>
-                    </TouchableOpacity>
-                    <Text style={styles.statusText}>Unvollständig</Text>
-                    <TouchableOpacity onPress={() => navigation.navigate("RegisterFahrzeug")}>
-                        <Text style={[styles.navLink]}>Fahrzeuginformationen</Text>
-                    </TouchableOpacity>
-                    <Text style={styles.statusText}>Unvollständig</Text>
-                    <TouchableOpacity onPress={() => navigation.navigate("RegisterGebietPreis")}>
-                        <Text style={[styles.navLink]}>Gebiet & Preis</Text>
-                    </TouchableOpacity>
-                    <Text style={styles.statusText}>Unvollständig</Text>
-                    <TouchableOpacity onPress={() => navigation.navigate("RegisterArbeitszeiten")}>
-                        <Text style={[styles.navLink]}>Arbeitszeiten</Text>
-                    </TouchableOpacity>
-                    <Text style={styles.statusText}>Unvollständig</Text>
-                </View>
-                <View>
-                    <Button
-                        title="Account erstellen"
-                        onPress={() => {
-                            register();
-                        }}
-                        buttonStyle={styles.button}
-                        titleStyle={styles.buttonTitle}
-                        containerStyle={styles.buttonContainer}
-                    />
+            <View>
+                <View style={styles.contentWrap}>
+                    <View style={styles.contentInner}>
+                        <TouchableOpacity onPress={() => navigation.navigate("RegisterPerson")}>
+                            <Text style={[styles.navLink, { marginTop: 20 }]}>Persönliche Informationen</Text>
+                        </TouchableOpacity>
+                        <Text style={styles.statusText}>Unvollständig</Text>
+                        <TouchableOpacity onPress={() => navigation.navigate("RegisterFahrzeug")}>
+                            <Text style={[styles.navLink]}>Fahrzeuginformationen</Text>
+                        </TouchableOpacity>
+                        <Text style={styles.statusText}>Unvollständig</Text>
+                        <TouchableOpacity onPress={() => navigation.navigate("RegisterGebietPreis")}>
+                            <Text style={[styles.navLink]}>Gebiet & Preis</Text>
+                        </TouchableOpacity>
+                        <Text style={styles.statusText}>Unvollständig</Text>
+                        <TouchableOpacity onPress={() => navigation.navigate("RegisterArbeitszeiten")}>
+                            <Text style={[styles.navLink]}>Arbeitszeiten</Text>
+                        </TouchableOpacity>
+                        <Text style={styles.statusText}>Unvollständig</Text>
+                    </View>
+                    <View>
+                        <Button
+                            title="Account erstellen"
+                            onPress={() => {
+                                register();
+                            }}
+                            buttonStyle={styles.button}
+                            titleStyle={styles.buttonTitle}
+                            containerStyle={styles.buttonContainer}
+                        />
+                    </View>
                 </View>
             </View>
-        </SafeAreaView>
+        </ScrollView >
     );
 };
 
-
-
 export const styles = StyleSheet.create({
     container: {
-        flex: 1,
-        alignItems: "center",
-        justifyContent: "flex-start",
-        padding: 0,
-        backgroundColor: "#F2F2F2",
-        height: "100%"
+        backgroundColor: "#FFF"
     },
     logout: {
         position: "absolute",
@@ -79,10 +75,11 @@ export const styles = StyleSheet.create({
     },
     headerContainer: {
         backgroundColor: "#F2F2F2",
-        width: "100%",
         alignItems: "center",
         justifyContent: "center",
-        top: "8%"
+        height: "35%"
+    },
+    headerWrap: {
     },
     header: {
         fontSize: 40,
@@ -94,27 +91,26 @@ export const styles = StyleSheet.create({
         color: "#729628"
     },
     contentWrap: {
-        top: "13%",
+        top: "-7%",
         backgroundColor: "#FFF",
         flex: 1,
         alignItems: "center",
         justifyContent: "flex-start",
         width: "100%",
-        borderRadius: 40,
+        paddingBottom: "50%",
+        borderTopLeftRadius: 40,
+        borderTopRightRadius: 40,
         shadowColor: "#000",
-        shadowOffset: {
-            width: 0,
-            height: 1
-        },
+        shadowOffset: { width: 0, height: -1 },
         shadowOpacity: 0.1,
         shadowRadius: 2.84,
-
         elevation: 5
     },
     contentInner: {
         backgroundColor: "#FFF",
         borderRadius: 20,
-        paddingTop: "1%"
+        paddingTop: "1%",
+        marginBottom: "20%"
     },
     navLink: {
         color: "#65697A",
@@ -137,35 +133,6 @@ export const styles = StyleSheet.create({
         fontSize: 26
     },
     buttonContainer: {
-        top: 50
+        marginTop: "-10%"
     },
-    tabContainer: {
-        height: "100%",
-        backgroundColor: "#FFF"
-    },
-    tabBar: {
-        bottom: "3%",
-        left: "5%",
-        width: "90%",
-        height: 70,
-        padding: 0,
-        margin: 0,
-        fontSize: 30,
-        borderRadius: 30,
-        borderTopColor: "transparent",
-        backgroundColor: "#FFF",
-        paddingTop: 15,
-        paddingBottom: 15,
-        shadowColor: "#000",
-        shadowOpacity: 0.2,
-        shadowRadius: 4.65,
-        elevation: 5,
-        shadowOffset: {
-            width: 0,
-            height: 2
-        }
-    },
-    tabLabel: {
-        fontSize: 13
-    }
 });
