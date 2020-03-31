@@ -8,17 +8,25 @@ export function RegisterPerson({navigation}) {
     return (
         <ScrollView>
             <View>
-                <View style={{paddingLeft: 60, paddingTop: "20%", alignItems: "flex-start", paddingBottom: 40, backgroundColor: "#F2F2F2"}}>
+                <View style={styles.headerContainer}>
                     <Text style={styles.header}>Persönliche{"\n"}Daten</Text>
                     <Text style={styles.subheader}>eingeben und verändern</Text>
                 </View>
             </View>
-            <View style={{paddingTop: "4%", padding: 20, borderRadius: 25, backgroundColor: "#FFF", height: "100%"}}>
+            <View style={styles.formContainer}>
                 <TouchableOpacity style={styles.closeButton} onPress={() => navigation.goBack()}>
                     <AntDesign name={"close"} size={20} color="#f89e3b" />
                 </TouchableOpacity>
                 <Formik
-                    initialValues={{firstName: "", lastName: "", streetName: "", postCode: "", province: ""}}
+                    initialValues={{
+                        firstName: "",
+                        lastName: "",
+                        company: "",
+                        streetName: "",
+                        postCode: "",
+                        province: "",
+                        phone: ""
+                    }}
                     onSubmit={values => {
                         Alert.alert(JSON.stringify(values, null, 2));
                         Keyboard.dismiss();
@@ -51,8 +59,8 @@ export function RegisterPerson({navigation}) {
                                     <Input
                                         containerStyle={styles.input}
                                         style={styles.input}
-                                        onChangeText={handleChange("streetName")}
-                                        value={values.streetName}
+                                        onChangeText={handleChange("company")}
+                                        value={values.company}
                                         label="Firma"
                                         placeholder="Firma"
                                     />
@@ -68,7 +76,7 @@ export function RegisterPerson({navigation}) {
                                         placeholder="Straße"
                                     />
                                 </View>
-                                <View style={[styles.inputWrap, {padding: 0, alignItems: "flex-start", justifyContent: "space-around"}]}>
+                                <View style={[styles.inputWrap, styles.halfInputContainer]}>
                                     <SimpleLineIcons name="user" size={25} color="#fff" />
                                     <Input
                                         containerStyle={styles.halfInput}
@@ -92,17 +100,17 @@ export function RegisterPerson({navigation}) {
                                     <Input
                                         containerStyle={styles.input}
                                         style={styles.input}
-                                        onChangeText={handleChange("streetName")}
-                                        value={values.streetName}
+                                        onChangeText={handleChange("phone")}
+                                        value={values.phone}
                                         label="Mobiltelefon"
                                         placeholder="Mobiltelefon"
                                     />
                                 </View>
                             </View>
-                            <View style={{alignItems: "center", marginTop: 50}}>
+                            <View style={styles.saveButtonContainer}>
                                 <Button
-                                    buttonStyle={styles.button}
-                                    titleStyle={styles.buttonTitle}
+                                    buttonStyle={styles.saveButton}
+                                    titleStyle={styles.saveButtonTitle}
                                     disabled={false}
                                     title="Speichern"
                                     onPress={() => {
@@ -120,6 +128,13 @@ export function RegisterPerson({navigation}) {
 }
 
 export const styles = StyleSheet.create({
+    headerContainer: {
+        paddingLeft: 60,
+        paddingTop: "20%",
+        alignItems: "flex-start",
+        paddingBottom: 40,
+        backgroundColor: "#F2F2F2"
+    },
     header: {
         fontSize: 40,
         color: "#729628",
@@ -129,10 +144,20 @@ export const styles = StyleSheet.create({
         fontSize: 20,
         color: "#729628"
     },
+    formContainer: {
+        paddingTop: "4%",
+        padding: 20,
+        borderRadius: 25,
+        backgroundColor: "#FFF",
+        height: "100%"
+    },
     input: {
         backgroundColor: "#FFF",
         width: "90%",
         paddingRight: "5%"
+    },
+    halfInputContainer: {
+        paddingLeft: "0.7%"
     },
     halfInput: {
         backgroundColor: "#FFF",
@@ -144,18 +169,6 @@ export const styles = StyleSheet.create({
         justifyContent: "space-around",
         alignItems: "flex-end",
         paddingVertical: 10
-    },
-    button: {
-        backgroundColor: "#3FA9F5",
-        height: 50,
-        width: 200,
-        borderRadius: 30,
-        alignItems: "center",
-        justifyContent: "center"
-    },
-    buttonTitle: {
-        fontSize: 22,
-        fontWeight: "800"
     },
     closeButton: {
         borderWidth: 0,
@@ -177,5 +190,21 @@ export const styles = StyleSheet.create({
         shadowOpacity: 0.25,
         shadowRadius: 3.84,
         elevation: 5
+    },
+    saveButtonContainer: {
+        alignItems: "center",
+        marginTop: 50
+    },
+    saveButton: {
+        backgroundColor: "#3FA9F5",
+        height: 50,
+        width: 200,
+        borderRadius: 30,
+        alignItems: "center",
+        justifyContent: "center"
+    },
+    saveButtonTitle: {
+        fontSize: 22,
+        fontWeight: "800"
     }
 });
