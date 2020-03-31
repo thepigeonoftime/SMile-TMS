@@ -5,9 +5,9 @@ import { AppStack } from "./AppStack";
 import { RegisterContext, RegisterProvider } from "./RegisterProvider";
 import { RegisterStack } from "./RegisterStack";
 
-export const RegisterRouter: React.FC<{}> = ({ }) => {
+
+const RegisterLogic: React.FC<{}> = ({ }) => {
     let { registered, register, unregister } = useContext(RegisterContext);
-    const [loading, setLoading] = useState(true);
     const Stack = createStackNavigator<{}>();
 
     useEffect(() => {
@@ -22,24 +22,31 @@ export const RegisterRouter: React.FC<{}> = ({ }) => {
                     unregister();
                 }
                 console.log("registered: " + registered);
-                setLoading(false);
             })
             .catch(err => {
                 console.log(err);
             });
     }, []);
 
-    if (loading) {
-        return (
-            <View>
-                { /* Splash Screen */}
-            </View>
-        );
-    }
+    const RegisterContainer = ({ children }) => {
+        return (children);
+    };
 
     return (
+        <RegisterContainer>
+            {
+                registered ? <AppStack /> : <RegisterStack />
+            }
+        </RegisterContainer>
+    )
+};
+
+export const RegisterRouter: React.FC<{}> = ({ }) => {
+    return (
         <RegisterProvider>
-            {registered ? <AppStack /> : <RegisterStack />}
+            <RegisterLogic />
         </RegisterProvider>
     );
-};
+}
+
+
