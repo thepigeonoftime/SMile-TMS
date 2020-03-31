@@ -1,16 +1,14 @@
-import {AntDesign, EvilIcons} from "@expo/vector-icons";
-import {createBottomTabNavigator} from "@react-navigation/bottom-tabs";
-import React, {useContext} from "react";
-import {StyleSheet, Text, TouchableOpacity, View} from "react-native";
-import {Button} from "react-native-elements";
-import {SafeAreaView} from "react-native-safe-area-context";
-import {AuthContext} from "./AuthProvider";
-import {RegisterContext} from "./RegisterProvider";
-import {Settings} from "./Settings";
 
-export const RegisterView = ({navigation}) => {
-    const {logout} = useContext(AuthContext);
-    const {registered, register} = useContext(RegisterContext);
+import React, { useContext } from "react";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Button } from "react-native-elements";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { AuthContext } from "./AuthProvider";
+import { RegisterContext } from "./RegisterProvider";
+
+export const Register = ({ navigation }) => {
+    const { logout } = useContext(AuthContext);
+    const { registered, register } = useContext(RegisterContext);
     return (
         <SafeAreaView style={styles.container}>
             <View style={styles.logout}>
@@ -30,7 +28,7 @@ export const RegisterView = ({navigation}) => {
             <View style={styles.contentWrap}>
                 <View style={styles.contentInner}>
                     <TouchableOpacity onPress={() => navigation.navigate("RegisterPerson")}>
-                        <Text style={[styles.navLink, {marginTop: 20}]}>Persönliche Informationen</Text>
+                        <Text style={[styles.navLink, { marginTop: 20 }]}>Persönliche Informationen</Text>
                     </TouchableOpacity>
                     <Text style={styles.statusText}>Unvollständig</Text>
                     <TouchableOpacity onPress={() => navigation.navigate("RegisterFahrzeug")}>
@@ -62,37 +60,7 @@ export const RegisterView = ({navigation}) => {
     );
 };
 
-const Tabs = createBottomTabNavigator<{}>();
 
-export const Register = () => {
-    return (
-        <View style={styles.tabContainer}>
-            <Tabs.Navigator
-                screenOptions={({route}) => ({
-                    tabBarIcon: ({focused, color, size}) => {
-                        if (route.name === "TourStarten") {
-                            return <EvilIcons name={"location"} size={size} color={color} />;
-                        } else if (route.name === "TourView") {
-                            return <AntDesign name={"calendar"} size={size} color={color} />;
-                        } else if (route.name === "Settings") {
-                            return <EvilIcons name={"gear"} size={size} color={color} />;
-                        }
-                        return <AntDesign name={"home"} size={size} color={color} />;
-                    }
-                })}
-                tabBarOptions={{
-                    activeTintColor: "#41A9F5",
-                    inactiveTintColor: "gray",
-                    style: styles.tabBar,
-                    labelStyle: styles.tabLabel
-                }}>
-                <Tabs.Screen options={{title: "Tour Starten"}} name="TourStarten" component={RegisterView} />
-                <Tabs.Screen options={{title: "Tourenlogbuch"}} name="TourView" component={RegisterView} />
-                <Tabs.Screen options={{title: "Einstellungen"}} name="Settings" component={Settings} />
-            </Tabs.Navigator>
-        </View>
-    );
-};
 
 export const styles = StyleSheet.create({
     container: {
