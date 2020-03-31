@@ -2,12 +2,11 @@ import { createStackNavigator } from "@react-navigation/stack";
 import React, { useContext, useEffect, useState } from "react";
 import { AsyncStorage, View } from "react-native";
 import { AppStack } from "./AppStack";
-import { RegisterContext } from "./RegisterProvider";
+import { RegisterContext, RegisterProvider } from "./RegisterProvider";
 import { RegisterStack } from "./RegisterStack";
-import { NavigationContainer } from "@react-navigation/native";
 
-export const AppRouter: React.FC<{}> = ({ }) => {
-    let {registered, register, unregister} = useContext(RegisterContext);
+export const RegisterRouter: React.FC<{}> = ({ }) => {
+    let { registered, register, unregister } = useContext(RegisterContext);
     const [loading, setLoading] = useState(true);
     const Stack = createStackNavigator<{}>();
 
@@ -39,27 +38,8 @@ export const AppRouter: React.FC<{}> = ({ }) => {
     }
 
     return (
-        // { registered ? <AppStack /> : <RegisterStack /> }
-        <Stack.Navigator initialRouteName={RegisterStack} screenOptions={{header: () => null}} >
-            {registered ?
-                <Stack.Screen name="AppStack" component={AppStack} />
-                :
-                <Stack.Screen name="RegisterStack" component={RegisterStack} />
-            }
-            </Stack.Navigator>
-        //
-        //
-        // <RegisterContext.Consumer>
-        //     {registered =>
-        //     { return registered ? (
-        //         <AppStack />
-        //         )
-
-        //         return (
-        //             <RegisterStack />
-        //             )
-        //     }
-        // }
-        // </RegisterContext.Consumer>
+        <RegisterProvider>
+            {registered ? <AppStack /> : <RegisterStack />}
+        </RegisterProvider>
     );
 };
