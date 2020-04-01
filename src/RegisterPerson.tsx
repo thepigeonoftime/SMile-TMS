@@ -111,7 +111,8 @@ export function RegisterPerson({navigation}) {
                                 <Button
                                     buttonStyle={styles.saveButton}
                                     titleStyle={styles.saveButtonTitle}
-                                    disabled={false}
+                                    disabledStyle={styles.saveButtonDisabled}
+                                    disabled={true}
                                     title="Speichern"
                                     onPress={() => {
                                         handleSubmit;
@@ -206,5 +207,10 @@ export const styles = StyleSheet.create({
     saveButtonTitle: {
         fontSize: 22,
         fontWeight: "800"
+    },
+    saveButtonDisabled: {
+        backgroundColor: "#FFF",
+        borderWidth: 2,
+        borderColor: "#ccc"
     }
 });
