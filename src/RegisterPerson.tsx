@@ -3,15 +3,17 @@ import {Formik} from "formik";
 import React from "react";
 import {Alert, Keyboard, ScrollView, StyleSheet, Text, TouchableOpacity, View} from "react-native";
 import {Button, Input} from "react-native-elements";
+import {Header} from "./Header";
 
 export function RegisterPerson({navigation}) {
     return (
         <ScrollView>
             <View>
-                <View style={styles.headerContainer}>
-                    <Text style={styles.header}>Persönliche{"\n"}Daten</Text>
-                    <Text style={styles.subheader}>eingeben und verändern</Text>
-                </View>
+                <Header
+                    text={"Persönliche\nDaten"}
+                    subText="eingeben und verändern"
+                    color="#729628"
+                />
             </View>
             <View style={styles.formContainer}>
                 <TouchableOpacity style={styles.closeButton} onPress={() => navigation.goBack()}>
@@ -30,7 +32,8 @@ export function RegisterPerson({navigation}) {
                     onSubmit={values => {
                         Alert.alert(JSON.stringify(values, null, 2));
                         Keyboard.dismiss();
-                    }}>
+                    }}
+                >
                     {({handleChange, handleSubmit, values}) => (
                         <View>
                             <View>
@@ -129,22 +132,6 @@ export function RegisterPerson({navigation}) {
 }
 
 export const styles = StyleSheet.create({
-    headerContainer: {
-        paddingLeft: 60,
-        paddingTop: "20%",
-        alignItems: "flex-start",
-        paddingBottom: 40,
-        backgroundColor: "#F2F2F2"
-    },
-    header: {
-        fontSize: 40,
-        color: "#729628",
-        fontWeight: "800"
-    },
-    subheader: {
-        fontSize: 20,
-        color: "#729628"
-    },
     formContainer: {
         paddingTop: "4%",
         padding: 20,

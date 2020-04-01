@@ -13,16 +13,14 @@ import {
 } from "react-native";
 import {Button, Input} from "react-native-elements";
 import RNPickerSelect from "react-native-picker-select";
+import {Header} from "./Header";
 
 export function RegisterFahrzeug({navigation}) {
     const [pickVal, setPickVal] = useState("java");
     return (
         <ScrollView>
             <View>
-                <View style={styles.headerContainer}>
-                    <Text style={styles.header}>Fahrzeugart</Text>
-                    <Text style={styles.subheader}>auswählen</Text>
-                </View>
+                <Header text="Fahrzeugart" subText="auswählen" color="#729628" />
             </View>
             <View style={styles.closeButtonContainer}>
                 <TouchableOpacity style={styles.closeButton} onPress={() => navigation.goBack()}>
@@ -39,7 +37,8 @@ export function RegisterFahrzeug({navigation}) {
                     onSubmit={values => {
                         Alert.alert(JSON.stringify(values, null, 2));
                         Keyboard.dismiss();
-                    }}>
+                    }}
+                >
                     {({handleChange, handleSubmit, values}) => (
                         <View>
                             <View>
@@ -172,22 +171,6 @@ export function RegisterFahrzeug({navigation}) {
 }
 
 export const styles = StyleSheet.create({
-    headerContainer: {
-        paddingLeft: 60,
-        paddingTop: "20%",
-        alignItems: "flex-start",
-        paddingBottom: 40,
-        backgroundColor: "#F2F2F2"
-    },
-    header: {
-        fontSize: 40,
-        color: "#729628",
-        fontWeight: "800"
-    },
-    subheader: {
-        fontSize: 20,
-        color: "#729628"
-    },
     closeButtonContainer: {
         paddingTop: "5%",
         padding: 20,
