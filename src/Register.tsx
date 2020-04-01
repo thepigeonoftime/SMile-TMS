@@ -1,47 +1,61 @@
+import React, {useContext} from "react";
+import {StyleSheet, Text, TouchableOpacity, View, ScrollView} from "react-native";
+import {Button} from "react-native-elements";
+import {SafeAreaView} from "react-native-safe-area-context";
+import {AuthContext} from "./AuthProvider";
+import {RegisterContext} from "./RegisterProvider";
+import {Header} from "./Header";
 
-import React, { useContext } from "react";
-import { StyleSheet, Text, TouchableOpacity, View, ScrollView } from "react-native";
-import { Button } from "react-native-elements";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { AuthContext } from "./AuthProvider";
-import { RegisterContext } from "./RegisterProvider";
-
-export const Register = ({ navigation }) => {
-    const { logout } = useContext(AuthContext);
-    const { register } = useContext(RegisterContext);
+export const Register = ({navigation}) => {
+    const {logout} = useContext(AuthContext);
+    const {register} = useContext(RegisterContext);
 
     return (
         <ScrollView style={styles.container}>
-            <View style={styles.headerContainer}>
+            <View>
                 <View style={styles.logout}>
                     <TouchableOpacity
                         onPress={() => {
                             logout();
-                        }}>
+                        }}
+                    >
                         <Text>LOGOUT</Text>
                     </TouchableOpacity>
                 </View>
-                <View style={styles.headerWrap}>
-                    <Text style={styles.header}>Profil</Text>
-                    <Text style={styles.subheader}>anlegen und individuelle{"\n"}Touren erhalten</Text>
-                </View>
+                <Header
+                    text="Profil"
+                    subText={"anlegen und individuelle\nTouren erhalten"}
+                    containerStyle={{
+                        paddingLeft: 60,
+                        paddingTop: "15%",
+                        alignItems: "flex-start",
+                        paddingBottom: 60,
+                        backgroundColor: "#F2F2F2"
+                    }}
+                />
             </View>
             <View>
                 <View style={styles.contentWrap}>
                     <View style={styles.contentInner}>
                         <TouchableOpacity onPress={() => navigation.navigate("RegisterPerson")}>
-                            <Text style={[styles.navLink, { marginTop: 20 }]}>Persönliche Informationen</Text>
+                            <Text style={[styles.navLink, {marginTop: 20}]}>
+                                Persönliche Informationen
+                            </Text>
                         </TouchableOpacity>
                         <Text style={styles.statusText}>Unvollständig</Text>
                         <TouchableOpacity onPress={() => navigation.navigate("RegisterFahrzeug")}>
                             <Text style={[styles.navLink]}>Fahrzeuginformationen</Text>
                         </TouchableOpacity>
                         <Text style={styles.statusText}>Unvollständig</Text>
-                        <TouchableOpacity onPress={() => navigation.navigate("RegisterGebietPreis")}>
+                        <TouchableOpacity
+                            onPress={() => navigation.navigate("RegisterGebietPreis")}
+                        >
                             <Text style={[styles.navLink]}>Gebiet & Preis</Text>
                         </TouchableOpacity>
                         <Text style={styles.statusText}>Unvollständig</Text>
-                        <TouchableOpacity onPress={() => navigation.navigate("RegisterArbeitszeiten")}>
+                        <TouchableOpacity
+                            onPress={() => navigation.navigate("RegisterArbeitszeiten")}
+                        >
                             <Text style={[styles.navLink]}>Arbeitszeiten</Text>
                         </TouchableOpacity>
                         <Text style={styles.statusText}>Unvollständig</Text>
@@ -59,7 +73,7 @@ export const Register = ({ navigation }) => {
                     </View>
                 </View>
             </View>
-        </ScrollView >
+        </ScrollView>
     );
 };
 
@@ -73,23 +87,6 @@ export const styles = StyleSheet.create({
         right: 30,
         zIndex: 10
     },
-    headerContainer: {
-        backgroundColor: "#F2F2F2",
-        alignItems: "center",
-        justifyContent: "center",
-        height: "35%"
-    },
-    headerWrap: {
-    },
-    header: {
-        fontSize: 40,
-        color: "#729628",
-        fontWeight: "900"
-    },
-    subheader: {
-        fontSize: 24,
-        color: "#729628"
-    },
     contentWrap: {
         top: "-7%",
         backgroundColor: "#FFF",
@@ -101,7 +98,7 @@ export const styles = StyleSheet.create({
         borderTopLeftRadius: 40,
         borderTopRightRadius: 40,
         shadowColor: "#000",
-        shadowOffset: { width: 0, height: -1 },
+        shadowOffset: {width: 0, height: -1},
         shadowOpacity: 0.1,
         shadowRadius: 2.84,
         elevation: 5
@@ -134,5 +131,5 @@ export const styles = StyleSheet.create({
     },
     buttonContainer: {
         marginTop: "-10%"
-    },
+    }
 });
