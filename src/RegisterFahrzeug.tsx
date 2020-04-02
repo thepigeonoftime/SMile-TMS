@@ -1,16 +1,7 @@
 import {AntDesign, Entypo, FontAwesome, MaterialIcons, SimpleLineIcons} from "@expo/vector-icons";
 import {Formik} from "formik";
 import React, {useState} from "react";
-import {
-    Alert,
-    Keyboard,
-    ScrollView,
-    StyleSheet,
-    Text,
-    TouchableOpacity,
-    View,
-    Platform
-} from "react-native";
+import {Alert, Keyboard, ScrollView, StyleSheet, TouchableOpacity, View} from "react-native";
 import {Button, Input} from "react-native-elements";
 import RNPickerSelect from "react-native-picker-select";
 import {Header} from "./Header";
@@ -22,7 +13,7 @@ export function RegisterFahrzeug({navigation}) {
             <View>
                 <Header text="Fahrzeugart" subText="auswählen" color="#729628" />
             </View>
-            <View style={styles.closeButtonContainer}>
+            <View style={styles.formContainer}>
                 <TouchableOpacity style={styles.closeButton} onPress={() => navigation.goBack()}>
                     <AntDesign name={"close"} size={20} color="#f89e3b" />
                 </TouchableOpacity>
@@ -171,7 +162,7 @@ export function RegisterFahrzeug({navigation}) {
 }
 
 export const styles = StyleSheet.create({
-    closeButtonContainer: {
+    formContainer: {
         paddingTop: "5%",
         padding: 20,
         borderRadius: 25,
