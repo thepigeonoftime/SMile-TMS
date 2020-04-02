@@ -5,8 +5,8 @@ import React, {useContext} from "react";
 import {StyleSheet, View} from "react-native";
 import {Home} from "./Home";
 import {RegisterContext} from "./RegisterProvider";
-import {Route} from "./Route";
 import {TestStack} from "./TestStack";
+import {Tour} from "./Tour";
 import {AppProps} from "./Types";
 
 const Tabs = createBottomTabNavigator<AppProps>();
@@ -50,7 +50,7 @@ export const AppTabs: React.FC<{}> = ({}) => {
                 <Tabs.Screen
                     name="TourLogbuch"
                     options={{tabBarVisible: true, title: "Tourenlogbuch"}}
-                    component={Route}
+                    component={Tour}
                 />
                 <Tabs.Screen
                     options={{title: "Einstellungen"}}
