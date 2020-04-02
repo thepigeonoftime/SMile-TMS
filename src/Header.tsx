@@ -1,5 +1,5 @@
 import React from "react";
-import {View, Text, StyleSheet} from "react-native";
+import {StyleSheet, Text, View} from "react-native";
 
 interface HeaderProps {
     text: string;
@@ -52,7 +52,6 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         alignItems: "flex-start",
         paddingTop: "15%",
-        backgroundColor: "#F2F2F2",
         height: 190
     },
     spacer: {
