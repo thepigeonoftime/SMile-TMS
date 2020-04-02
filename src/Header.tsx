@@ -24,36 +24,45 @@ export const Header: React.SFC<HeaderProps> = props => {
     };
     return (
         <View style={[props.containerStyle ? props.containerStyle : styles.containerDefault]}>
-            <Text
-                style={[
-                    color(props.color),
-                    [props.textStyle ? props.textStyle : styles.textDefault]
-                ]}
-            >
-                {props.text}
-            </Text>
-            <Text
-                style={[
-                    color(props.color),
-                    [props.subTextStyle ? props.subTextStyle : styles.subTextDefault]
-                ]}
-            >
-                {props.subText}
-            </Text>
+            <View style={styles.spacer} />
+            <View style={styles.textWrapper}>
+                <Text
+                    style={[
+                        color(props.color),
+                        [props.textStyle ? props.textStyle : styles.textDefault]
+                    ]}
+                >
+                    {props.text}
+                </Text>
+                <Text
+                    style={[
+                        color(props.color),
+                        [props.subTextStyle ? props.subTextStyle : styles.subTextDefault]
+                    ]}
+                >
+                    {props.subText}
+                </Text>
+            </View>
         </View>
     );
 };
 
 const styles = StyleSheet.create({
     containerDefault: {
-        paddingLeft: 60,
-        paddingTop: "20%",
+        flexDirection: "row",
         alignItems: "flex-start",
-        paddingBottom: 40,
-        backgroundColor: "#F2F2F2"
+        paddingTop: "15%",
+        backgroundColor: "#F2F2F2",
+        height: 190
+    },
+    spacer: {
+        flex: 2
+    },
+    textWrapper: {
+        flex: 10
     },
     textDefault: {
-        fontSize: 40,
+        fontSize: 36,
         fontWeight: "800"
     },
     subTextDefault: {
