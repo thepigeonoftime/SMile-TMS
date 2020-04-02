@@ -1,57 +1,52 @@
-import { StackNavigationProp } from "@react-navigation/stack";
-import { RouteProp } from "@react-navigation/native";
+import {RouteProp} from "@react-navigation/native";
+import {StackNavigationProp} from "@react-navigation/stack";
 
 export type AuthProps = {
-  Login: undefined;
-  Register: undefined;
+    Login: undefined;
+    Register: undefined;
 };
 
 export type AuthNavProps<T extends keyof AuthProps> = {
-  navigation: StackNavigationProp<AuthProps, T>;
-  route: RouteProp<AuthProps, T>;
+    navigation: StackNavigationProp<AuthProps, T>;
+    route: RouteProp<AuthProps, T>;
 };
 
 export type AppProps = {
-  Home: undefined;
-  Maps: undefined;
-  Route: undefined;
-  CodeScanner: undefined;
-  Settings: undefined;
-  Signature: undefined;
-  CodeGenerator: undefined;
-  QRTest: undefined;
+    TourStart: undefined;
+    TourLogbuch: undefined;
+    Settings: undefined;
 };
 
 export type HomeProps = {
-  Home: undefined;
+    Home: undefined;
 };
 
 export type MapsProps = {
-  Maps: undefined;
+    Maps: undefined;
 };
 
 export type RouteProps = {
-  Route: undefined;
+    Route: undefined;
 };
 
 export type ScannerProps = {
-  CodeScanner: undefined;
+    CodeScanner: undefined;
 };
 
 export type GeneratorProps = {
-  CodeGenerator: undefined;
+    CodeGenerator: undefined;
 };
 
 export type QRTestProps = {
-  QRTest: undefined;
-  QRScan: undefined;
-  QRGenerator: undefined;
+    QRTest: undefined;
+    QRScan: undefined;
+    QRGenerator: undefined;
 };
 
 export type SignatureProps = {
-  Signature: undefined;
+    Signature: undefined;
 };
 
 export type SettingsProps = {
-  Settings: undefined;
+    Settings: undefined;
 };
