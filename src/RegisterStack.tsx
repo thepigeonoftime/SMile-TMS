@@ -1,28 +1,19 @@
-import { AntDesign, EvilIcons } from "@expo/vector-icons";
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { createStackNavigator } from "@react-navigation/stack";
+import {AntDesign, EvilIcons} from "@expo/vector-icons";
+import {createBottomTabNavigator} from "@react-navigation/bottom-tabs";
+import {createStackNavigator} from "@react-navigation/stack";
 import * as React from "react";
-import { StyleSheet, Text, View } from "react-native";
-import { Button } from "react-native-elements";
-import { Register } from "./Register";
-import { RegisterFahrzeug } from "./RegisterFahrzeug";
-import { RegisterPerson } from "./RegisterPerson";
-import { Settings } from "./Settings";
+import {StyleSheet, Text, View} from "react-native";
+import {Button} from "react-native-elements";
+import {Register} from "./Register";
+import {RegisterFahrzeug} from "./RegisterFahrzeug";
+import {RegisterGebietPreis} from "./RegisterGebietPreis";
+import {RegisterPerson} from "./RegisterPerson";
+import {Settings} from "./Settings";
 
-
-function RegisterGebietPreis({ navigation }) {
+function RegisterArbeitszeiten({navigation}) {
     return (
-        <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-            <Text style={{ fontSize: 30 }}>Gebiet & Preis</Text>
-            <Button onPress={() => navigation.goBack()} title="Zurück" />
-        </View>
-    );
-}
-
-function RegisterArbeitszeiten({ navigation }) {
-    return (
-        <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-            <Text style={{ fontSize: 30 }}>Arbeitszeiten</Text>
+        <View style={{flex: 1, alignItems: "center", justifyContent: "center"}}>
+            <Text style={{fontSize: 30}}>Arbeitszeiten</Text>
             <Button onPress={() => navigation.goBack()} title="Zurück" />
         </View>
     );
@@ -34,8 +25,8 @@ export const RegisterTabs = () => {
     return (
         <View style={styles.tabContainer}>
             <Tabs.Navigator
-                screenOptions={({ route }) => ({
-                    tabBarIcon: ({ focused, color, size }) => {
+                screenOptions={({route}) => ({
+                    tabBarIcon: ({focused, color, size}) => {
                         if (route.name === "TourStarten") {
                             return <EvilIcons name={"location"} size={size} color={color} />;
                         } else if (route.name === "TourView") {
@@ -51,10 +42,23 @@ export const RegisterTabs = () => {
                     inactiveTintColor: "gray",
                     style: styles.tabBar,
                     labelStyle: styles.tabLabel
-                }}>
-                <Tabs.Screen options={{ title: "Tour Starten" }} name="TourStarten" component={Register} />
-                <Tabs.Screen options={{ title: "Tourenlogbuch" }} name="TourView" component={Register} />
-                <Tabs.Screen options={{ title: "Einstellungen" }} name="Settings" component={Settings} />
+                }}
+            >
+                <Tabs.Screen
+                    options={{title: "Tour Starten"}}
+                    name="TourStarten"
+                    component={Register}
+                />
+                <Tabs.Screen
+                    options={{title: "Tourenlogbuch"}}
+                    name="TourView"
+                    component={Register}
+                />
+                <Tabs.Screen
+                    options={{title: "Einstellungen"}}
+                    name="Settings"
+                    component={Settings}
+                />
             </Tabs.Navigator>
         </View>
     );
