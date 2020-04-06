@@ -11,8 +11,8 @@ export type AuthNavProps<T extends keyof AuthProps> = {
     route: RouteProp<AuthProps, T>;
 };
 
-export type AppProps = {
-    TourStart: undefined;
+export type AppTabsProps = {
+    TourStarten: undefined;
     TourLogbuch: undefined;
     Settings: undefined;
 };
