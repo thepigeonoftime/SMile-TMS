@@ -9,26 +9,24 @@ import {HomeProps} from "./Types";
 
 const Stack = createStackNavigator<HomeProps>();
 
-export const Home = () => {
+export const Home = ({navigation}) => {
     const {unregister} = useContext(RegisterContext);
     const {logout} = useContext(AuthContext);
     return (
         <View style={styles.container}>
             <View
                 style={{
-                    // position: "absolute",
                     top: 30,
                     zIndex: 10,
                     flexDirection: "row",
-                    // flex: 1
                     justifyContent: "space-between",
-                    padding: 10
-                    // alignItems: "stretch"
+                    padding: 10,
                 }}
             >
                 <TouchableOpacity
                     onPress={() => {
                         unregister();
+                        navigation.navigate("Settings");
                     }}
                 >
                     <Text>unregister</Text>
@@ -42,7 +40,11 @@ export const Home = () => {
                 </TouchableOpacity>
             </View>
             <View>
-                <Header text="Suche jetzt" color="#FFF" subText="nach einer vefügbaren Route!" />
+                <Header
+                    text="Suche jetzt"
+                    color="#FFF"
+                    subText="nach einer vefügbaren Route!"
+                />
             </View>
             <View style={{justifyContent: "center", alignItems: "center", top: "10%"}}>
                 <Button
@@ -73,7 +75,7 @@ const styles = StyleSheet.create({
         flex: 1,
         flexDirection: "column",
         height: "100%",
-        justifyContent: "flex-start"
+        justifyContent: "flex-start",
     },
     saveButton: {
         backgroundColor: "#3FA9F5",
@@ -82,18 +84,18 @@ const styles = StyleSheet.create({
         borderRadius: 30,
         alignItems: "center",
         justifyContent: "center",
-        marginBottom: 20
+        marginBottom: 20,
     },
     saveButtonTitle: {
         fontSize: 22,
-        fontWeight: "800"
+        fontWeight: "800",
     },
     saveButtonDisabled: {
         backgroundColor: "transparent",
         borderWidth: 2,
-        borderColor: "#ccc"
+        borderColor: "#ccc",
     },
     saveButtonTitleDisabled: {
-        color: "#ccc"
-    }
+        color: "#ccc",
+    },
 });

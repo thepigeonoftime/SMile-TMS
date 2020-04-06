@@ -1,17 +1,21 @@
 import {AntDesign, EvilIcons} from "@expo/vector-icons";
 import {createBottomTabNavigator} from "@react-navigation/bottom-tabs";
-import React from "react";
+import React, {useContext} from "react";
 import {StyleSheet, View} from "react-native";
+import {Home} from "./Home";
+import {RegisterContext} from "./RegisterProvider";
 import {RegisterStack} from "./RegisterStack";
-import {Settings} from "./Settings";
+import {Tour} from "./Tour";
 import {AppTabsProps} from "./Types";
 
 const Tabs = createBottomTabNavigator<AppTabsProps>();
 
 export const AppTabs: React.FC = (AppTabsTypes) => {
+    const {registered} = useContext(RegisterContext);
     return (
         <View style={styles.tabContainer}>
             <Tabs.Navigator
+                initialRouteName="Settings"
                 screenOptions={({route}) => ({
                     tabBarIcon: ({focused, color, size}) => {
                         if (route.name === "TourStarten") {
@@ -38,17 +42,31 @@ export const AppTabs: React.FC = (AppTabsTypes) => {
                 <Tabs.Screen
                     options={{title: "Tour Starten"}}
                     name="TourStarten"
-                    component={RegisterStack}
+                    component={Home}
+                    listeners={{
+                        tabPress: (e) => {
+                            if (!registered) {
+                                e.preventDefault();
+                            }
+                        },
+                    }}
                 />
                 <Tabs.Screen
                     options={{title: "Tourenlogbuch"}}
                     name="TourLogbuch"
-                    component={RegisterStack}
+                    component={Tour}
+                    listeners={{
+                        tabPress: (e) => {
+                            if (!registered) {
+                                e.preventDefault();
+                            }
+                        },
+                    }}
                 />
                 <Tabs.Screen
                     options={{title: "Einstellungen"}}
                     name="Settings"
-                    component={Settings}
+                    component={RegisterStack}
                 />
             </Tabs.Navigator>
         </View>

@@ -1,10 +1,9 @@
 import React, {useContext} from "react";
-import {StyleSheet, Text, TouchableOpacity, View, ScrollView} from "react-native";
+import {ScrollView, StyleSheet, Text, TouchableOpacity, View} from "react-native";
 import {Button} from "react-native-elements";
-import {SafeAreaView} from "react-native-safe-area-context";
 import {AuthContext} from "./AuthProvider";
-import {RegisterContext} from "./RegisterProvider";
 import {Header} from "./Header";
+import {RegisterContext} from "./RegisterProvider";
 
 export const Register = ({navigation}) => {
     const {logout} = useContext(AuthContext);
@@ -30,20 +29,24 @@ export const Register = ({navigation}) => {
                         paddingTop: "15%",
                         alignItems: "flex-start",
                         paddingBottom: 60,
-                        backgroundColor: "#F2F2F2"
+                        backgroundColor: "#F2F2F2",
                     }}
                 />
             </View>
             <View>
                 <View style={styles.contentWrap}>
                     <View style={styles.contentInner}>
-                        <TouchableOpacity onPress={() => navigation.navigate("RegisterPerson")}>
+                        <TouchableOpacity
+                            onPress={() => navigation.navigate("RegisterPerson")}
+                        >
                             <Text style={[styles.navLink, {marginTop: 20}]}>
                                 Persönliche Informationen
                             </Text>
                         </TouchableOpacity>
                         <Text style={styles.statusText}>Unvollständig</Text>
-                        <TouchableOpacity onPress={() => navigation.navigate("RegisterFahrzeug")}>
+                        <TouchableOpacity
+                            onPress={() => navigation.navigate("RegisterFahrzeug")}
+                        >
                             <Text style={[styles.navLink]}>Fahrzeuginformationen</Text>
                         </TouchableOpacity>
                         <Text style={styles.statusText}>Unvollständig</Text>
@@ -65,6 +68,7 @@ export const Register = ({navigation}) => {
                             title="Account erstellen"
                             onPress={() => {
                                 register();
+                                navigation.navigate("TourStarten");
                             }}
                             buttonStyle={styles.button}
                             titleStyle={styles.buttonTitle}
@@ -79,13 +83,13 @@ export const Register = ({navigation}) => {
 
 export const styles = StyleSheet.create({
     container: {
-        backgroundColor: "#FFF"
+        backgroundColor: "#FFF",
     },
     logout: {
         position: "absolute",
         top: 50,
         right: 30,
-        zIndex: 10
+        zIndex: 10,
     },
     contentWrap: {
         top: "-7%",
@@ -101,35 +105,35 @@ export const styles = StyleSheet.create({
         shadowOffset: {width: 0, height: -1},
         shadowOpacity: 0.1,
         shadowRadius: 2.84,
-        elevation: 5
+        elevation: 5,
     },
     contentInner: {
         backgroundColor: "#FFF",
         borderRadius: 20,
         paddingTop: "1%",
-        marginBottom: "20%"
+        marginBottom: "20%",
     },
     navLink: {
         color: "#65697A",
         fontSize: 23,
         fontWeight: "bold",
-        padding: 10
+        padding: 10,
     },
     statusText: {
         color: "#D4CCC3",
         marginLeft: 10,
-        fontSize: 16
+        fontSize: 16,
     },
     button: {
         borderRadius: 40,
         height: 52,
-        width: "102%"
+        width: "102%",
     },
     buttonTitle: {
         fontWeight: "bold",
-        fontSize: 26
+        fontSize: 26,
     },
     buttonContainer: {
-        marginTop: "-10%"
-    }
+        marginTop: "-10%",
+    },
 });
