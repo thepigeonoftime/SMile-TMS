@@ -79,6 +79,7 @@ const styles = StyleSheet.create({
         backgroundColor: "#FFF",
     },
     tabBar: {
+        position: "absolute",
         bottom: "3%",
         left: "5%",
         width: "90%",

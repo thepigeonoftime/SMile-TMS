@@ -6,8 +6,7 @@ import {Button, Input} from "react-native-elements";
 import RNPickerSelect from "react-native-picker-select";
 import {Header} from "./Header";
 
-export function RegisterFahrzeug({navigation}) {
-    const [pickVal, setPickVal] = useState("java");
+export const RegisterFahrzeug = ({navigation}) => {
     return (
         <ScrollView>
             <View>
@@ -23,9 +22,9 @@ export function RegisterFahrzeug({navigation}) {
                         Ladevolumen: "",
                         Laenge: "",
                         Breite: "",
-                        Hoehe: ""
+                        Hoehe: "",
                     }}
-                    onSubmit={values => {
+                    onSubmit={(values) => {
                         Alert.alert(JSON.stringify(values, null, 2));
                         Keyboard.dismiss();
                     }}
@@ -45,22 +44,25 @@ export function RegisterFahrzeug({navigation}) {
                                         </View>
                                         <View style={styles.pickerWrap}>
                                             <RNPickerSelect
-                                                onValueChange={value => console.log(value)}
+                                                onValueChange={(value) => console.log(value)}
                                                 items={[
-                                                    {label: "Sprinter", value: "Sprinter"},
+                                                    {
+                                                        label: "Sprinter",
+                                                        value: "Sprinter",
+                                                    },
                                                     {label: "Golf", value: "Golf"},
-                                                    {label: "Bugatti", value: "Bugatti"}
+                                                    {label: "Bugatti", value: "Bugatti"},
                                                 ]}
                                                 placeholder={{
                                                     label: "Fahrzeug wählen",
                                                     value: null,
-                                                    style: {color: "#999", fontSize: 20}
+                                                    style: {color: "#999", fontSize: 20},
                                                 }}
                                                 useNativeAndroidPickerStyle={false}
                                                 style={{
                                                     placeholder: {
-                                                        fontSize: 18
-                                                    }
+                                                        fontSize: 18,
+                                                    },
                                                 }}
                                                 Icon={() => {
                                                     return (
@@ -159,7 +161,7 @@ export function RegisterFahrzeug({navigation}) {
             </View>
         </ScrollView>
     );
-}
+};
 
 export const styles = StyleSheet.create({
     formContainer: {
@@ -167,7 +169,8 @@ export const styles = StyleSheet.create({
         padding: 20,
         borderRadius: 25,
         backgroundColor: "#FFF",
-        height: "100%"
+        height: "100%",
+        paddingBottom: "30%",
     },
     closeButton: {
         borderWidth: 0,
@@ -184,34 +187,34 @@ export const styles = StyleSheet.create({
         shadowColor: "#000",
         shadowOffset: {
             width: 0,
-            height: 2
+            height: 2,
         },
         shadowOpacity: 0.25,
         shadowRadius: 3.84,
-        elevation: 5
+        elevation: 5,
     },
     inputContainer: {
-        flex: 1
+        flex: 1,
     },
     inputWrap: {
         flexDirection: "row",
         justifyContent: "space-around",
         alignItems: "flex-end",
         paddingVertical: 10,
-        flex: 1
+        flex: 1,
     },
     icon: {
-        flex: 1.2
+        flex: 1.2,
     },
     input: {
         backgroundColor: "#FFF",
         paddingRight: "5%",
-        flex: 12
+        flex: 12,
     },
     fahrzeugContainer: {
         flexDirection: "row",
         alignContent: "flex-start",
-        paddingBottom: 10
+        paddingBottom: 10,
     },
     pickerContainer: {
         flex: 40,
@@ -221,22 +224,22 @@ export const styles = StyleSheet.create({
         paddingRight: "5%",
         paddingTop: 15,
         paddingBottom: 5,
-        marginTop: 10
+        marginTop: 10,
     },
     pickerIconWrap: {
-        flex: 1.2
+        flex: 1.2,
     },
     pickerIcon: {
-        top: "15%"
+        top: "15%",
     },
     pickerWrap: {
         flex: 8,
         borderBottomColor: "#bbb",
-        borderBottomWidth: 1.3
+        borderBottomWidth: 1.3,
     },
     pickerArrows: {
         paddingTop: 5,
-        color: "#666"
+        color: "#666",
     },
     // inputAndroid: {
     //     color: "#999"
@@ -246,7 +249,7 @@ export const styles = StyleSheet.create({
     // },
     saveButtonContainer: {
         alignItems: "center",
-        marginTop: 50
+        marginTop: 50,
     },
     saveButton: {
         backgroundColor: "#3FA9F5",
@@ -254,10 +257,10 @@ export const styles = StyleSheet.create({
         width: 200,
         borderRadius: 30,
         alignItems: "center",
-        justifyContent: "center"
+        justifyContent: "center",
     },
     saveButtonTitle: {
         fontSize: 22,
-        fontWeight: "800"
-    }
+        fontWeight: "800",
+    },
 });

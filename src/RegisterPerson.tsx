@@ -5,7 +5,7 @@ import {Alert, Keyboard, ScrollView, StyleSheet, Text, TouchableOpacity, View} f
 import {Button, Input} from "react-native-elements";
 import {Header} from "./Header";
 
-export function RegisterPerson({navigation}) {
+export const RegisterPerson = ({navigation}) => {
     return (
         <ScrollView>
             <View>
@@ -27,9 +27,9 @@ export function RegisterPerson({navigation}) {
                         streetName: "",
                         postCode: "",
                         province: "",
-                        phone: ""
+                        phone: "",
                     }}
-                    onSubmit={values => {
+                    onSubmit={(values) => {
                         Alert.alert(JSON.stringify(values, null, 2));
                         Keyboard.dismiss();
                     }}
@@ -129,7 +129,7 @@ export function RegisterPerson({navigation}) {
             </View>
         </ScrollView>
     );
-}
+};
 
 export const styles = StyleSheet.create({
     formContainer: {
@@ -137,26 +137,27 @@ export const styles = StyleSheet.create({
         padding: 20,
         borderRadius: 25,
         backgroundColor: "#FFF",
-        height: "100%"
+        height: "100%",
+        paddingBottom: "30%",
     },
     input: {
         backgroundColor: "#FFF",
         width: "90%",
-        paddingRight: "5%"
+        paddingRight: "5%",
     },
     halfInputContainer: {
-        paddingLeft: "0.7%"
+        paddingLeft: "0.7%",
     },
     halfInput: {
         backgroundColor: "#FFF",
         width: "45%",
-        paddingRight: "5%"
+        paddingRight: "5%",
     },
     inputWrap: {
         flexDirection: "row",
         justifyContent: "space-around",
         alignItems: "flex-end",
-        paddingVertical: 10
+        paddingVertical: 10,
     },
     closeButton: {
         borderWidth: 0,
@@ -173,15 +174,15 @@ export const styles = StyleSheet.create({
         shadowColor: "#000",
         shadowOffset: {
             width: 0,
-            height: 2
+            height: 2,
         },
         shadowOpacity: 0.25,
         shadowRadius: 3.84,
-        elevation: 5
+        elevation: 5,
     },
     saveButtonContainer: {
         alignItems: "center",
-        marginTop: 50
+        marginTop: 50,
     },
     saveButton: {
         backgroundColor: "#3FA9F5",
@@ -189,15 +190,15 @@ export const styles = StyleSheet.create({
         width: 200,
         borderRadius: 30,
         alignItems: "center",
-        justifyContent: "center"
+        justifyContent: "center",
     },
     saveButtonTitle: {
         fontSize: 22,
-        fontWeight: "800"
+        fontWeight: "800",
     },
     saveButtonDisabled: {
         backgroundColor: "#FFF",
         borderWidth: 2,
-        borderColor: "#ccc"
-    }
+        borderColor: "#ccc",
+    },
 });
