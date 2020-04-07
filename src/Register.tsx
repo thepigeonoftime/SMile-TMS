@@ -7,7 +7,7 @@ import {RegisterContext} from "./RegisterProvider";
 
 export const Register = ({navigation}) => {
     const {logout} = useContext(AuthContext);
-    const {register} = useContext(RegisterContext);
+    const {register, registered} = useContext(RegisterContext);
 
     return (
         <ScrollView style={styles.container}>
@@ -36,17 +36,13 @@ export const Register = ({navigation}) => {
             <View>
                 <View style={styles.contentWrap}>
                     <View style={styles.contentInner}>
-                        <TouchableOpacity
-                            onPress={() => navigation.navigate("RegisterPerson")}
-                        >
+                        <TouchableOpacity onPress={() => navigation.navigate("RegisterPerson")}>
                             <Text style={[styles.navLink, {marginTop: 20}]}>
                                 Persönliche Informationen
                             </Text>
                         </TouchableOpacity>
                         <Text style={styles.statusText}>Unvollständig</Text>
-                        <TouchableOpacity
-                            onPress={() => navigation.navigate("RegisterFahrzeug")}
-                        >
+                        <TouchableOpacity onPress={() => navigation.navigate("RegisterFahrzeug")}>
                             <Text style={[styles.navLink]}>Fahrzeuginformationen</Text>
                         </TouchableOpacity>
                         <Text style={styles.statusText}>Unvollständig</Text>
@@ -65,7 +61,7 @@ export const Register = ({navigation}) => {
                     </View>
                     <View>
                         <Button
-                            title="Account erstellen"
+                            title={registered ? "Speichern" : "Account erstellen"}
                             onPress={() => {
                                 register();
                                 navigation.navigate("TourStarten");
@@ -98,7 +94,7 @@ export const styles = StyleSheet.create({
         alignItems: "center",
         justifyContent: "flex-start",
         width: "100%",
-        paddingBottom: "50%",
+        paddingBottom: "20%",
         borderTopLeftRadius: 40,
         borderTopRightRadius: 40,
         shadowColor: "#000",
