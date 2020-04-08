@@ -1,7 +1,7 @@
 import {Ionicons} from "@expo/vector-icons";
 import React, {useEffect, useState} from "react";
 import {ActivityIndicator, ScrollView, StyleSheet, Text, View} from "react-native";
-import {Center} from "./Center";
+import {Center} from "../Center";
 
 const getTour = (url: string) => {
     const [data, setData] = useState(null);
@@ -12,9 +12,9 @@ const getTour = (url: string) => {
         const response = await fetch(url);
         response
             .json()
-            .then(res => setData(res))
+            .then((res) => setData(res))
             .then(() => setLoading(false))
-            .catch(err => setError(err));
+            .catch((err) => setError(err));
     };
 
     useEffect(() => {
@@ -32,7 +32,7 @@ interface IRoute {
     loading: boolean;
 }
 
-export const TourView: React.FC<IRoute> = props => {
+export const TourView: React.FC<IRoute> = (props) => {
     const data = props.data;
     const loading = props.loading;
     return (
@@ -121,37 +121,37 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         justifyContent: "flex-start",
         alignItems: "stretch",
-        paddingTop: "20%"
+        paddingTop: "20%",
     },
     depotHeader: {
         color: "#666",
         fontSize: 24,
-        fontWeight: "bold"
+        fontWeight: "bold",
     },
     depotText: {
         color: "#666",
-        fontSize: 24
+        fontSize: 24,
     },
     tourLinkWrap: {
         flexDirection: "row",
         justifyContent: "space-between",
         alignItems: "stretch",
-        marginTop: 50
+        marginTop: 50,
     },
     tourLink: {
         color: "#41A9F5",
-        fontSize: 22
+        fontSize: 22,
     },
     iconWrap: {
-        right: 30
+        right: 30,
     },
     green: {
-        color: "#729628"
+        color: "#729628",
     },
     mFont: {
-        fontSize: 20
+        fontSize: 20,
     },
     pLeft: {
-        paddingLeft: 30
-    }
+        paddingLeft: 30,
+    },
 });

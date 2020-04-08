@@ -12,7 +12,7 @@ import {
 } from "react-native";
 import {Button, Input} from "react-native-elements";
 import {Switch, Text} from "react-native-paper";
-import {Header} from "./Header";
+import {Header} from "../Header";
 
 export const RegisterArbeitsZeiten = ({navigation}) => {
     const [isEnabled, setIsEnabled] = useState({

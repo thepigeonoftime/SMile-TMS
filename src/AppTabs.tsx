@@ -2,15 +2,15 @@ import {AntDesign, EvilIcons} from "@expo/vector-icons";
 import {createBottomTabNavigator} from "@react-navigation/bottom-tabs";
 import React, {useContext} from "react";
 import {StyleSheet, View} from "react-native";
-import {Home} from "./Home";
+import {Home} from "./Screens/Home";
 import {RegisterContext} from "./RegisterProvider";
 import {RegisterStack} from "./RegisterStack";
-import {Tour} from "./Tour";
+import {Tour} from "./Screens/Tour";
 import {AppTabsProps} from "./Types";
 
 const Tabs = createBottomTabNavigator<AppTabsProps>();
 
-export const AppTabs: React.FC = (AppTabsTypes) => {
+export const AppTabs: React.FC = () => {
     const {registered} = useContext(RegisterContext);
     return (
         <View style={styles.tabContainer}>
@@ -19,13 +19,9 @@ export const AppTabs: React.FC = (AppTabsTypes) => {
                 screenOptions={({route}) => ({
                     tabBarIcon: ({focused, color, size}) => {
                         if (route.name === "TourStarten") {
-                            return (
-                                <EvilIcons name={"location"} size={size} color={color} />
-                            );
+                            return <EvilIcons name={"location"} size={size} color={color} />;
                         } else if (route.name === "TourLogbuch") {
-                            return (
-                                <AntDesign name={"calendar"} size={size} color={color} />
-                            );
+                            return <AntDesign name={"calendar"} size={size} color={color} />;
                         } else if (route.name === "Settings") {
                             return <EvilIcons name={"gear"} size={size} color={color} />;
                         }

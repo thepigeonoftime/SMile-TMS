@@ -1,19 +1,15 @@
 import {AntDesign, FontAwesome, MaterialIcons, SimpleLineIcons} from "@expo/vector-icons";
 import {Formik} from "formik";
 import React from "react";
-import {Alert, Keyboard, ScrollView, StyleSheet, Text, TouchableOpacity, View} from "react-native";
+import {Alert, Keyboard, ScrollView, StyleSheet, TouchableOpacity, View} from "react-native";
 import {Button, Input} from "react-native-elements";
-import {Header} from "./Header";
+import {Header} from "../Header";
 
-export const RegisterPerson = ({navigation}) => {
+export const RegisterGebietPreis = ({navigation}) => {
     return (
         <ScrollView>
             <View>
-                <Header
-                    text={"Persönliche\nDaten"}
-                    subText="eingeben und verändern"
-                    color="#729628"
-                />
+                <Header text={"Zustellgebiet &\nPreise"} color="#729628" />
             </View>
             <View style={styles.formContainer}>
                 <TouchableOpacity style={styles.closeButton} onPress={() => navigation.goBack()}>
@@ -21,13 +17,12 @@ export const RegisterPerson = ({navigation}) => {
                 </TouchableOpacity>
                 <Formik
                     initialValues={{
-                        firstName: "",
-                        lastName: "",
-                        company: "",
-                        streetName: "",
-                        postCode: "",
-                        province: "",
-                        phone: "",
+                        zustellGebietPLZ: "",
+                        entfernungTour: "",
+                        vorlaufszeitTourStart: "",
+                        grundpreisTour: "",
+                        preisProKm: "",
+                        preisProStop: "",
                     }}
                     onSubmit={(values) => {
                         Alert.alert(JSON.stringify(values, null, 2));
@@ -41,20 +36,20 @@ export const RegisterPerson = ({navigation}) => {
                                     <SimpleLineIcons name="user" size={25} color="#ccc" />
                                     <Input
                                         containerStyle={styles.input}
-                                        onChangeText={handleChange("firstName")}
-                                        value={values.firstName}
-                                        label="Vorname"
-                                        placeholder="Vorname"
+                                        onChangeText={handleChange("zustellGebietPLZ")}
+                                        value={values.zustellGebietPLZ}
+                                        label="Postleitzahl Zustellgebiet"
+                                        placeholder="PLZ eingeben"
                                     />
                                 </View>
                                 <View style={styles.inputWrap}>
                                     <SimpleLineIcons name="user" size={25} color="#FFF" />
                                     <Input
                                         containerStyle={styles.input}
-                                        onChangeText={handleChange("lastName")}
-                                        value={values.lastName}
-                                        label="Nachname"
-                                        placeholder="Nachname"
+                                        onChangeText={handleChange("entfernungTour")}
+                                        value={values.entfernungTour}
+                                        label="Entfernung je Tour"
+                                        placeholder="Entfernung in km eingeben"
                                     />
                                 </View>
                                 <View style={styles.inputWrap}>
@@ -62,10 +57,10 @@ export const RegisterPerson = ({navigation}) => {
                                     <Input
                                         containerStyle={styles.input}
                                         style={styles.input}
-                                        onChangeText={handleChange("company")}
-                                        value={values.company}
-                                        label="Firma"
-                                        placeholder="Firma"
+                                        onChangeText={handleChange("vorlaufszeitTourStart")}
+                                        value={values.vorlaufszeitTourStart}
+                                        label="Vorlaufzeit bis Tour-Start"
+                                        placeholder="Vorlaufzeit in Minuten angeben"
                                     />
                                 </View>
                                 <View style={styles.inputWrap}>
@@ -73,29 +68,21 @@ export const RegisterPerson = ({navigation}) => {
                                     <Input
                                         containerStyle={styles.input}
                                         style={styles.input}
-                                        onChangeText={handleChange("streetName")}
-                                        value={values.streetName}
-                                        label="Straße"
-                                        placeholder="Straße"
+                                        onChangeText={handleChange("grundpreisTour")}
+                                        value={values.grundpreisTour}
+                                        label="Grundpreis pro Tour"
+                                        placeholder="Grundpreis in EUR eingeben"
                                     />
                                 </View>
-                                <View style={[styles.inputWrap, styles.halfInputContainer]}>
-                                    <SimpleLineIcons name="user" size={25} color="#fff" />
+                                <View style={styles.inputWrap}>
+                                    <FontAwesome name="map-signs" size={25} color="#ccc" />
                                     <Input
-                                        containerStyle={styles.halfInput}
+                                        containerStyle={styles.input}
                                         style={styles.input}
-                                        onChangeText={handleChange("postCode")}
-                                        value={values.postCode}
-                                        label="Postleitzahl"
-                                        placeholder="Postleitzahl"
-                                    />
-                                    <Input
-                                        containerStyle={styles.halfInput}
-                                        style={styles.input}
-                                        onChangeText={handleChange("province")}
-                                        value={values.province}
-                                        label="Ort"
-                                        placeholder="Ort"
+                                        onChangeText={handleChange("preisProKm")}
+                                        value={values.preisProKm}
+                                        label="Preis pro km"
+                                        placeholder="Kilometerpreis in EUR eingeben"
                                     />
                                 </View>
                                 <View style={styles.inputWrap}>
@@ -103,10 +90,10 @@ export const RegisterPerson = ({navigation}) => {
                                     <Input
                                         containerStyle={styles.input}
                                         style={styles.input}
-                                        onChangeText={handleChange("phone")}
-                                        value={values.phone}
-                                        label="Mobiltelefon"
-                                        placeholder="Mobiltelefon"
+                                        onChangeText={handleChange("preisProStop")}
+                                        value={values.preisProStop}
+                                        label="Preis pro Stop"
+                                        placeholder="Preis pro Stop in EUR eingeben"
                                     />
                                 </View>
                             </View>
@@ -115,7 +102,7 @@ export const RegisterPerson = ({navigation}) => {
                                     buttonStyle={styles.saveButton}
                                     titleStyle={styles.saveButtonTitle}
                                     disabledStyle={styles.saveButtonDisabled}
-                                    disabled={true}
+                                    disabled={false}
                                     title="Speichern"
                                     onPress={() => {
                                         handleSubmit;
@@ -143,14 +130,6 @@ export const styles = StyleSheet.create({
     input: {
         backgroundColor: "#FFF",
         width: "90%",
-        paddingRight: "5%",
-    },
-    halfInputContainer: {
-        paddingLeft: "0.7%",
-    },
-    halfInput: {
-        backgroundColor: "#FFF",
-        width: "45%",
         paddingRight: "5%",
     },
     inputWrap: {

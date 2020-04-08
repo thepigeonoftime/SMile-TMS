@@ -2,10 +2,10 @@ import {createStackNavigator} from "@react-navigation/stack";
 import React, {useContext} from "react";
 import {StyleSheet, Text, TouchableOpacity, View} from "react-native";
 import {Button} from "react-native-elements";
-import {AuthContext} from "./AuthProvider";
-import {Header} from "./Header";
-import {RegisterContext} from "./RegisterProvider";
-import {HomeProps} from "./Types";
+import {AuthContext} from "../AuthProvider";
+import {Header} from "../Header";
+import {RegisterContext} from "../RegisterProvider";
+import {HomeProps} from "../Types";
 
 const Stack = createStackNavigator<HomeProps>();
 
@@ -40,11 +40,7 @@ export const Home = ({navigation}) => {
                 </TouchableOpacity>
             </View>
             <View>
-                <Header
-                    text="Suche jetzt"
-                    color="#FFF"
-                    subText="nach einer vefügbaren Route!"
-                />
+                <Header text="Suche jetzt" color="#FFF" subText="nach einer vefügbaren Route!" />
             </View>
             <View style={{justifyContent: "center", alignItems: "center", top: "10%"}}>
                 <Button

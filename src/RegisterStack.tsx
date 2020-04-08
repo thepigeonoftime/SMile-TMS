@@ -1,10 +1,10 @@
 import {createStackNavigator} from "@react-navigation/stack";
 import * as React from "react";
-import {Register} from "./Register";
-import {RegisterArbeitsZeiten} from "./RegisterArbeitsZeiten";
-import {RegisterFahrzeug} from "./RegisterFahrzeug";
-import {RegisterGebietPreis} from "./RegisterGebietPreis";
-import {RegisterPerson} from "./RegisterPerson";
+import {Register} from "./Screens/Register";
+import {RegisterArbeitsZeiten} from "./Screens/RegisterArbeitsZeiten";
+import {RegisterFahrzeug} from "./Screens/RegisterFahrzeug";
+import {RegisterGebietPreis} from "./Screens/RegisterGebietPreis";
+import {RegisterPerson} from "./Screens/RegisterPerson";
 
 const Stack = createStackNavigator();
 

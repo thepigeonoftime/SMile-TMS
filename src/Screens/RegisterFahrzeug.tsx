@@ -4,7 +4,7 @@ import React, {useState} from "react";
 import {Alert, Keyboard, ScrollView, StyleSheet, TouchableOpacity, View} from "react-native";
 import {Button, Input} from "react-native-elements";
 import RNPickerSelect from "react-native-picker-select";
-import {Header} from "./Header";
+import {Header} from "../Header";
 
 export const RegisterFahrzeug = ({navigation}) => {
     return (

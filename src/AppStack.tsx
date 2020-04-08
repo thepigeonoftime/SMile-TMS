@@ -3,10 +3,10 @@ import {createBottomTabNavigator} from "@react-navigation/bottom-tabs";
 import {createStackNavigator} from "@react-navigation/stack";
 import React, {useContext} from "react";
 import {StyleSheet, View} from "react-native";
-import {Home} from "./Home";
+import {Home} from "./Screens/Home";
 import {RegisterContext} from "./RegisterProvider";
 import {TestStack} from "./TestStack";
-import {Tour} from "./Tour";
+import {Tour} from "./Screens/Tour";
 import {AppProps} from "./Types";
 
 const Tabs = createBottomTabNavigator<AppProps>();
@@ -33,13 +33,13 @@ export const AppTabs: React.FC<{}> = ({}) => {
                         } else if (route.name === "Settings") {
                             return <EvilIcons name={"gear"} size={size} color={color} />;
                         }
-                    }
+                    },
                 })}
                 tabBarOptions={{
                     activeTintColor: "#41A9F5",
                     inactiveTintColor: "gray",
                     style: styles.tabBar,
-                    labelStyle: styles.tabLabel
+                    labelStyle: styles.tabLabel,
                 }}
             >
                 <Tabs.Screen
@@ -75,7 +75,7 @@ export const AppStack = () => {
 const styles = StyleSheet.create({
     tabContainer: {
         height: "100%",
-        backgroundColor: "transparent"
+        backgroundColor: "transparent",
     },
     tabBar: {
         bottom: "3%",
@@ -96,11 +96,11 @@ const styles = StyleSheet.create({
         elevation: 5,
         shadowOffset: {
             width: 0,
-            height: 2
+            height: 2,
         },
-        position: "absolute"
+        position: "absolute",
     },
     tabLabel: {
-        fontSize: 13
-    }
+        fontSize: 13,
+    },
 });

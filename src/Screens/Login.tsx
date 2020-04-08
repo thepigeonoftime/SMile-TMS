@@ -1,12 +1,12 @@
 import React, {useContext} from "react";
 import {Button, Text, TextInput, TouchableOpacity} from "react-native";
-import {AuthContext} from "./AuthProvider";
-import {Center} from "./Center";
-import AuthStyles from "./Styles/AuthStyles";
-import {AuthNavProps} from "./Types";
+import {AuthContext} from "../AuthProvider";
+import {Center} from "../Center";
+import AuthStyles from "../Styles/AuthStyles";
+import {AuthNavProps} from "../Types";
 
-export const Signup = ({navigation, route}: AuthNavProps<"Register">) => {
-    const {signup} = useContext(AuthContext);
+export const Login = ({navigation}: AuthNavProps<"Login">) => {
+    const {login} = useContext(AuthContext);
     return (
         <Center>
             <TextInput style={AuthStyles.authInput} placeholder="E-Mail Adresse" />
@@ -14,15 +14,15 @@ export const Signup = ({navigation, route}: AuthNavProps<"Register">) => {
             <TouchableOpacity
                 style={AuthStyles.authButton}
                 onPress={() => {
-                    signup();
-                }}>
-                <Text>Registrieren</Text>
+                    login();
+                }}
+            >
+                <Text>Einloggen</Text>
             </TouchableOpacity>
             <Button
-                title="Ich habe bereits einen Login"
+                title="Ich habe noch kein Login"
                 onPress={() => {
-                    navigation.navigate("Login");
-                    // navigation.goBack()
+                    navigation.navigate("Register");
                 }}
             />
         </Center>

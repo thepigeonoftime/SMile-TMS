@@ -1,11 +1,11 @@
 import {AntDesign, EvilIcons, Ionicons} from "@expo/vector-icons";
 import {createBottomTabNavigator} from "@react-navigation/bottom-tabs";
 import React, {useContext} from "react";
-import {Maps} from "./Maps";
-import {QRTest} from "./QRTest";
+import {Maps} from "./Screens/Maps";
+import {QRTest} from "./Screens/QRTest";
 import {RegisterContext} from "./RegisterProvider";
-import {Settings} from "./Settings";
-import {Signature} from "./Signature";
+import {Settings} from "./Screens/Settings";
+import {Signature} from "./Screens/Signature";
 import {AppProps} from "./Types";
 
 const Tabs = createBottomTabNavigator<AppProps>();
@@ -27,7 +27,7 @@ export const TestStack: React.FC<{}> = ({}) => {
                     }
                     // default fallback
                     return <AntDesign name={"home"} size={size} color={color} />;
-                }
+                },
             })}
             tabBarOptions={{
                 activeTintColor: "tomato",
@@ -42,8 +42,8 @@ export const TestStack: React.FC<{}> = ({}) => {
                     borderTopColor: "transparent",
                     backgroundColor: "#FFF",
                     paddingTop: 15,
-                    paddingBottom: 15
-                }
+                    paddingBottom: 15,
+                },
             }}
         >
             <Tabs.Screen options={{title: "Karte"}} name="Maps" component={Maps} />

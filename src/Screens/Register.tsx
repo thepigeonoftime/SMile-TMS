@@ -1,9 +1,9 @@
 import React, {useContext} from "react";
 import {ScrollView, StyleSheet, Text, TouchableOpacity, View} from "react-native";
 import {Button} from "react-native-elements";
-import {AuthContext} from "./AuthProvider";
-import {Header} from "./Header";
-import {RegisterContext} from "./RegisterProvider";
+import {AuthContext} from "../AuthProvider";
+import {Header} from "../Header";
+import {RegisterContext} from "../RegisterProvider";
 
 export const Register = ({navigation}) => {
     const {logout} = useContext(AuthContext);
