@@ -8,7 +8,10 @@ import {RegisterPerson} from "./Screens/RegisterPerson";
 
 const Stack = createStackNavigator();
 
-export const RegisterStack = () => {
+export const RegisterStack = ({navigation, route}) => {
+    navigation.setOptions({
+        tabBarVisible: route.state ? (route.state.index > 0 ? false : true) : null,
+    });
     return (
         <Stack.Navigator mode="modal" headerMode="none">
             <Stack.Screen name="Register" component={Register} options={{}} />
