@@ -7,13 +7,28 @@ import {RegisterContext} from "./RegisterProvider";
 import {RegisterStack} from "./RegisterStack";
 import {Tour} from "./Screens/Tour";
 import {AppTabsProps} from "./Types";
+import {StatusBar} from "react-native";
 
 const Tabs = createBottomTabNavigator<AppTabsProps>();
 
 export const AppTabs: React.FC = () => {
+    StatusBar.setBackgroundColor("rgba(0,0,0,0)");
+    StatusBar.setBarStyle("dark-content");
+
     const {registered} = useContext(RegisterContext);
     return (
         <View style={styles.tabContainer}>
+            <View
+                style={{
+                    height: 20,
+                    width: "100%",
+                    backgroundColor: "#F2F2F2",
+                    zIndex: 3,
+                    position: "absolute",
+                    top: 0,
+                    left: 0,
+                }}
+            />
             <Tabs.Navigator
                 initialRouteName="Settings"
                 screenOptions={({route}) => ({
