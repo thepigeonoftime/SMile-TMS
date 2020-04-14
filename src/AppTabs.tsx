@@ -12,7 +12,7 @@ import {StatusBar} from "react-native";
 const Tabs = createBottomTabNavigator<AppTabsProps>();
 
 export const AppTabs: React.FC = () => {
-    StatusBar.setBackgroundColor("rgba(0,0,0,0)");
+    // StatusBar.setBackgroundColor("rgba(0,0,0,0)");
     StatusBar.setBarStyle("dark-content");
 
     const {registered} = useContext(RegisterContext);
