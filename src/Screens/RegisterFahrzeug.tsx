@@ -1,7 +1,15 @@
 import {AntDesign, Entypo, FontAwesome, MaterialIcons, SimpleLineIcons} from "@expo/vector-icons";
 import React from "react";
 import {Controller, useForm} from "react-hook-form";
-import {Alert, ScrollView, StyleSheet, Text, TouchableOpacity, View} from "react-native";
+import {
+    Alert,
+    ScrollView,
+    StyleSheet,
+    Text,
+    TouchableOpacity,
+    View,
+    KeyboardAvoidingView,
+} from "react-native";
 import {Button, Input} from "react-native-elements";
 import RNPickerSelect from "react-native-picker-select";
 import * as Yup from "yup";
@@ -74,118 +82,155 @@ export const RegisterFahrzeug = ({navigation}) => {
         );
     };
     return (
-        <ScrollView>
-            <View>
-                <Header text="Fahrzeugart" subText="auswählen" color="#729628" />
-            </View>
-            <View style={styles.container}>
-                <TouchableOpacity style={styles.closeButton} onPress={() => navigation.goBack()}>
-                    <AntDesign name={"close"} size={20} color="#f89e3b" />
-                </TouchableOpacity>
-                <View style={styles.formContainer}>
-                    <View style={styles.pickerContainer}>
-                        <View style={styles.pickerIconWrap}>
-                            <AntDesign
-                                name="car"
-                                style={styles.pickerIcon}
+        <KeyboardAvoidingView
+            style={{
+                flex: 1,
+                flexDirection: "column",
+                justifyContent: "center",
+                backgroundColor: "#FFF",
+            }}
+            behavior="padding"
+        >
+            <ScrollView>
+                <View>
+                    <Header text="Fahrzeugart" subText="auswählen" color="#729628" />
+                </View>
+                <View style={styles.container}>
+                    <TouchableOpacity
+                        style={styles.closeButton}
+                        onPress={() => navigation.goBack()}
+                    >
+                        <AntDesign name={"close"} size={20} color="#f89e3b" />
+                    </TouchableOpacity>
+                    <View style={styles.formContainer}>
+                        <View style={styles.pickerContainer}>
+                            <View style={styles.pickerIconWrap}>
+                                <AntDesign
+                                    name="car"
+                                    style={styles.pickerIcon}
+                                    size={25}
+                                    color="#ccc"
+                                />
+                            </View>
+                            <View style={styles.pickerWrap}>
+                                <Controller
+                                    as={<RNPicker />}
+                                    name="fahrzeugArt"
+                                    control={control}
+                                />
+                            </View>
+                            {errors.fahrzeugArt && (
+                                <Text style={styles.error}>{errors.fahrzeugArt.message}</Text>
+                            )}
+                        </View>
+                    </View>
+                    <View style={styles.inputContainer}>
+                        <View style={styles.inputWrap}>
+                            <SimpleLineIcons
+                                style={styles.icon}
+                                name="user"
                                 size={25}
                                 color="#ccc"
                             />
+                            <Controller
+                                as={<Input />}
+                                control={control}
+                                name="ladevolumen"
+                                onChangeText={(text: number) => {
+                                    setValue("ladevolumen", text);
+                                    errors.ladevolumen && triggerValidation("ladevolumen");
+                                }}
+                                label="Ladevolumen"
+                                placeholder="Volumen in qm² eingeben"
+                                errorMessage={errors.ladevolumen ? errors.ladevolumen.message : " "}
+                                containerStyle={styles.input}
+                                inputContainerStyle={errors.ladevolumen && styles.inputError}
+                                errorStyle={styles.error}
+                            />
                         </View>
-                        <View style={styles.pickerWrap}>
-                            <Controller as={<RNPicker />} name="fahrzeugArt" control={control} />
-                        </View>
-                        {errors.fahrzeugArt && (
-                            <Text style={styles.error}>{errors.fahrzeugArt.message}</Text>
-                        )}
-                    </View>
-                </View>
-                <View style={styles.inputContainer}>
-                    <View style={styles.inputWrap}>
-                        <SimpleLineIcons style={styles.icon} name="user" size={25} color="#ccc" />
-                        <Controller
-                            as={<Input />}
-                            control={control}
-                            name="ladevolumen"
-                            onChangeText={(text: number) => {
-                                setValue("ladevolumen", text);
-                                errors.ladevolumen && triggerValidation("ladevolumen");
-                            }}
-                            label="Ladevolumen"
-                            placeholder="Volumen in qm² eingeben"
-                            errorMessage={errors.ladevolumen ? errors.ladevolumen.message : " "}
-                            containerStyle={styles.input}
-                            inputContainerStyle={errors.ladevolumen && styles.inputError}
-                            errorStyle={styles.error}
-                        />
-                    </View>
 
-                    <View style={styles.inputWrap}>
-                        <MaterialIcons style={styles.icon} name="store" size={30} color="#ccc" />
-                        <Controller
-                            as={<Input />}
-                            control={control}
-                            name="laenge"
-                            onChangeText={(text) => {
-                                setValue("laenge", text);
-                                errors.laenge && triggerValidation("laenge");
-                            }}
-                            label="Länge der Sendung"
-                            placeholder="max. Länge in cm eingeben"
-                            errorMessage={errors.laenge ? errors.laenge.message : " "}
-                            containerStyle={styles.input}
-                            inputContainerStyle={errors.laenge && styles.inputError}
-                            errorStyle={styles.error}
-                        />
-                    </View>
-                    <View style={styles.inputWrap}>
-                        <FontAwesome style={styles.icon} name="map-signs" size={25} color="#ccc" />
-                        <Controller
-                            as={<Input />}
-                            control={control}
-                            name="breite"
-                            onChangeText={(text) => {
-                                setValue("breite", text);
-                                errors.breite && triggerValidation("breite");
-                            }}
-                            label="Breite der Sendung"
-                            placeholder="max. Breite in cm eingeben"
-                            errorMessage={errors.breite ? errors.breite.message : " "}
-                            containerStyle={styles.input}
-                            inputContainerStyle={errors.breite && styles.inputError}
-                            errorStyle={styles.error}
-                        />
-                    </View>
-                    <View style={styles.inputWrap}>
-                        <FontAwesome style={styles.icon} name="map-signs" size={25} color="#ccc" />
-                        <Controller
-                            as={<Input />}
-                            control={control}
-                            name="hoehe"
-                            onChangeText={(text) => {
-                                setValue("hoehe", text);
-                                errors.hoehe && triggerValidation("hoehe");
-                            }}
-                            label="Höhe der Sendung"
-                            placeholder="max. Höhe in cm eingeben"
-                            errorMessage={errors.hoehe ? errors.hoehe.message : " "}
-                            containerStyle={styles.input}
-                            inputContainerStyle={errors.hoehe && styles.inputError}
-                            errorStyle={styles.error}
-                        />
-                    </View>
-                    <View style={styles.saveButtonContainer}>
-                        <Button
-                            buttonStyle={styles.saveButton}
-                            titleStyle={styles.saveButtonTitle}
-                            disabled={!formState.isValid}
-                            title="Speichern"
-                            onPress={handleSubmit(onSubmit)}
-                        />
+                        <View style={styles.inputWrap}>
+                            <MaterialIcons
+                                style={styles.icon}
+                                name="store"
+                                size={30}
+                                color="#ccc"
+                            />
+                            <Controller
+                                as={<Input />}
+                                control={control}
+                                name="laenge"
+                                onChangeText={(text) => {
+                                    setValue("laenge", text);
+                                    errors.laenge && triggerValidation("laenge");
+                                }}
+                                label="Länge der Sendung"
+                                placeholder="max. Länge in cm eingeben"
+                                errorMessage={errors.laenge ? errors.laenge.message : " "}
+                                containerStyle={styles.input}
+                                inputContainerStyle={errors.laenge && styles.inputError}
+                                errorStyle={styles.error}
+                            />
+                        </View>
+                        <View style={styles.inputWrap}>
+                            <FontAwesome
+                                style={styles.icon}
+                                name="map-signs"
+                                size={25}
+                                color="#ccc"
+                            />
+                            <Controller
+                                as={<Input />}
+                                control={control}
+                                name="breite"
+                                onChangeText={(text) => {
+                                    setValue("breite", text);
+                                    errors.breite && triggerValidation("breite");
+                                }}
+                                label="Breite der Sendung"
+                                placeholder="max. Breite in cm eingeben"
+                                errorMessage={errors.breite ? errors.breite.message : " "}
+                                containerStyle={styles.input}
+                                inputContainerStyle={errors.breite && styles.inputError}
+                                errorStyle={styles.error}
+                            />
+                        </View>
+                        <View style={styles.inputWrap}>
+                            <FontAwesome
+                                style={styles.icon}
+                                name="map-signs"
+                                size={25}
+                                color="#ccc"
+                            />
+                            <Controller
+                                as={<Input />}
+                                control={control}
+                                name="hoehe"
+                                onChangeText={(text) => {
+                                    setValue("hoehe", text);
+                                    errors.hoehe && triggerValidation("hoehe");
+                                }}
+                                label="Höhe der Sendung"
+                                placeholder="max. Höhe in cm eingeben"
+                                errorMessage={errors.hoehe ? errors.hoehe.message : " "}
+                                containerStyle={styles.input}
+                                inputContainerStyle={errors.hoehe && styles.inputError}
+                                errorStyle={styles.error}
+                            />
+                        </View>
+                        <View style={styles.saveButtonContainer}>
+                            <Button
+                                buttonStyle={styles.saveButton}
+                                titleStyle={styles.saveButtonTitle}
+                                disabled={!formState.isValid}
+                                title="Speichern"
+                                onPress={handleSubmit(onSubmit)}
+                            />
+                        </View>
                     </View>
                 </View>
-            </View>
-        </ScrollView>
+            </ScrollView>
+        </KeyboardAvoidingView>
     );
 };
 
