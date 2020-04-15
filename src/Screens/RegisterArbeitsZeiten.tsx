@@ -13,8 +13,33 @@ import {
 import {Button, Input} from "react-native-elements";
 import {Switch, Text} from "react-native-paper";
 import {Header} from "../Header";
+import {Controller, useForm} from "react-hook-form";
+import * as Yup from "yup";
+import moment from "moment";
+import TimeField from "react-advanced-timefield";
 
 export const RegisterArbeitsZeiten = ({navigation}) => {
+    const timeSchema = Yup.string()
+        .required("Benötigt")
+        .test("is-time", "Keine gültige Zeit", function (value) {
+            return moment(value, "HH:mm", true).isValid();
+        });
+
+    const validationSchema = Yup.object().shape({
+        moVon: timeSchema,
+        moBis: timeSchema,
+        diVon: timeSchema,
+        diBis: timeSchema,
+        miVon: timeSchema,
+        miBis: timeSchema,
+        doVon: timeSchema,
+        doBis: timeSchema,
+        frVon: timeSchema,
+        frBis: timeSchema,
+        saVon: timeSchema,
+        saBis: timeSchema,
+    });
+
     const [isEnabled, setIsEnabled] = useState({
         montag: false,
         dienstag: false,
@@ -28,6 +53,36 @@ export const RegisterArbeitsZeiten = ({navigation}) => {
         setIsEnabled({...isEnabled, [key]: !isEnabled[key]});
     };
 
+    const formatTime = (time) => {
+        time.length > 2 &&
+            !time.includes(":") &&
+            lastKey !== "Backspace" &&
+            (time = time.slice(0, 2) + ":" + time.slice(2));
+        return time;
+    };
+
+    let lastKey = "";
+
+    const {
+        register,
+        setValue,
+        handleSubmit,
+        errors,
+        triggerValidation,
+        control,
+        formState,
+    } = useForm({
+        mode: "onBlur",
+        reValidateMode: "onChange",
+        validationSchema: validationSchema,
+        submitFocusError: true,
+    });
+
+    const onSubmit = (data) => {
+        Alert.alert("Form Data", JSON.stringify(data));
+        navigation.goBack();
+    };
+
     return (
         <ScrollView>
             <View>
@@ -37,269 +92,369 @@ export const RegisterArbeitsZeiten = ({navigation}) => {
                 <TouchableOpacity style={styles.closeButton} onPress={() => navigation.goBack()}>
                     <AntDesign name={"close"} size={20} color="#f89e3b" />
                 </TouchableOpacity>
-                <Formik
-                    initialValues={{
-                        moVon: "",
-                        moBis: "",
-                        diVon: "",
-                        diBis: "",
-                        miVon: "",
-                        miBis: "",
-                        doVon: "",
-                        doBis: "",
-                        frVon: "",
-                        frBis: "",
-                        saVon: "",
-                        saBis: "",
-                    }}
-                    onSubmit={(values) => {
-                        Alert.alert(JSON.stringify(values, null, 2));
-                        Keyboard.dismiss();
-                    }}
-                >
-                    {({handleChange, handleSubmit, values}) => (
-                        <View style={styles.rowContainer}>
-                            <View style={styles.labelWrap}>
-                                <Text style={styles.labelSpacer} />
-                                <Text style={styles.label}>Montag</Text>
-                            </View>
-                            <View style={styles.lineWrap}>
-                                <AntDesign
-                                    name="calendar"
-                                    style={styles.icon}
-                                    size={25}
-                                    color="#ccc"
-                                />
-                                <Switch
-                                    trackColor={{false: "#e6e6e6", true: "#e6e6e6"}}
-                                    thumbColor={isEnabled.montag ? "#729628" : "#f4f3f4"}
-                                    ios_backgroundColor="#e6e6e6"
-                                    onValueChange={() => toggleSwitch("montag")}
-                                    value={isEnabled.montag}
-                                    style={styles.switch}
-                                />
-                                <View style={styles.inputWrap}>
-                                    <Input
-                                        value={values.moVon}
-                                        onChangeText={handleChange("moVon")}
-                                        containerStyle={styles.input}
-                                        inputStyle={styles.inputText}
-                                        keyboardType={"numeric"}
-                                    />
-                                    <Input
-                                        value={values.moBis}
-                                        onChangeText={handleChange("moBis")}
-                                        containerStyle={styles.input}
-                                        inputStyle={styles.inputText}
-                                        keyboardType={"numeric"}
-                                    />
-                                </View>
-                            </View>
-                            <View style={styles.rowContainer}>
-                                <View style={styles.labelWrap}>
-                                    <Text style={styles.labelSpacer} />
-                                    <Text style={styles.label}>Dienstag</Text>
-                                </View>
-                                <View style={styles.lineWrap}>
-                                    <AntDesign
-                                        name="calendar"
-                                        style={styles.icon}
-                                        size={25}
-                                        color="#ccc"
-                                    />
-                                    <Switch
-                                        trackColor={{false: "#e6e6e6", true: "#e6e6e6"}}
-                                        thumbColor={isEnabled.dienstag ? "#729628" : "#f4f3f4"}
-                                        ios_backgroundColor="#e6e6e6"
-                                        onValueChange={() => toggleSwitch("dienstag")}
-                                        value={isEnabled.dienstag}
-                                        style={styles.switch}
-                                    />
-                                    <View style={styles.inputWrap}>
-                                        <Input
-                                            value={values.diVon}
-                                            onChangeText={handleChange("diVon")}
-                                            containerStyle={styles.input}
-                                            inputStyle={styles.inputText}
-                                            keyboardType={"numeric"}
-                                        />
-                                        <Input
-                                            value={values.diBis}
-                                            onChangeText={handleChange("diBis")}
-                                            containerStyle={styles.input}
-                                            inputStyle={styles.inputText}
-                                            keyboardType={"numeric"}
-                                        />
-                                    </View>
-                                </View>
-                            </View>
-                            <View style={styles.rowContainer}>
-                                <View style={styles.labelWrap}>
-                                    <Text style={styles.labelSpacer} />
-                                    <Text style={styles.label}>Mittwoch</Text>
-                                </View>
-                                <View style={styles.lineWrap}>
-                                    <AntDesign
-                                        name="calendar"
-                                        style={styles.icon}
-                                        size={25}
-                                        color="#ccc"
-                                    />
-                                    <Switch
-                                        trackColor={{false: "#e6e6e6", true: "#e6e6e6"}}
-                                        thumbColor={isEnabled.mittwoch ? "#729628" : "#f4f3f4"}
-                                        ios_backgroundColor="#e6e6e6"
-                                        onValueChange={() => toggleSwitch("mittwoch")}
-                                        value={isEnabled.mittwoch}
-                                        style={styles.switch}
-                                    />
-                                    <View style={styles.inputWrap}>
-                                        <Input
-                                            value={values.miVon}
-                                            onChangeText={handleChange("miVon")}
-                                            containerStyle={styles.input}
-                                            inputStyle={styles.inputText}
-                                            keyboardType={"numeric"}
-                                        />
-                                        <Input
-                                            value={values.miBis}
-                                            onChangeText={handleChange("miBis")}
-                                            containerStyle={styles.input}
-                                            inputStyle={styles.inputText}
-                                            keyboardType={"numeric"}
-                                        />
-                                    </View>
-                                </View>
-                            </View>
-                            <View style={styles.rowContainer}>
-                                <View style={styles.labelWrap}>
-                                    <Text style={styles.labelSpacer} />
-                                    <Text style={styles.label}>Donnerstag</Text>
-                                </View>
-                                <View style={styles.lineWrap}>
-                                    <AntDesign
-                                        name="calendar"
-                                        style={styles.icon}
-                                        size={25}
-                                        color="#ccc"
-                                    />
-                                    <Switch
-                                        trackColor={{false: "#e6e6e6", true: "#e6e6e6"}}
-                                        thumbColor={isEnabled.donnerstag ? "#729628" : "#f4f3f4"}
-                                        ios_backgroundColor="#e6e6e6"
-                                        onValueChange={() => toggleSwitch("donnerstag")}
-                                        value={isEnabled.donnerstag}
-                                        style={styles.switch}
-                                    />
-                                    <View style={styles.inputWrap}>
-                                        <Input
-                                            value={values.doVon}
-                                            onChangeText={handleChange("doVon")}
-                                            containerStyle={styles.input}
-                                            inputStyle={styles.inputText}
-                                            keyboardType={"numeric"}
-                                        />
-                                        <Input
-                                            value={values.doBis}
-                                            onChangeText={handleChange("doBis")}
-                                            containerStyle={styles.input}
-                                            inputStyle={styles.inputText}
-                                            keyboardType={"numeric"}
-                                        />
-                                    </View>
-                                </View>
-                            </View>
-                            <View style={styles.rowContainer}>
-                                <View style={styles.labelWrap}>
-                                    <Text style={styles.labelSpacer} />
-                                    <Text style={styles.label}>Freitag</Text>
-                                </View>
-                                <View style={styles.lineWrap}>
-                                    <AntDesign
-                                        name="calendar"
-                                        style={styles.icon}
-                                        size={25}
-                                        color="#ccc"
-                                    />
-                                    <Switch
-                                        trackColor={{false: "#e6e6e6", true: "#e6e6e6"}}
-                                        thumbColor={isEnabled.freitag ? "#729628" : "#f4f3f4"}
-                                        ios_backgroundColor="#e6e6e6"
-                                        onValueChange={() => toggleSwitch("freitag")}
-                                        value={isEnabled.freitag}
-                                        style={styles.switch}
-                                    />
-                                    <View style={styles.inputWrap}>
-                                        <Input
-                                            value={values.frVon}
-                                            onChangeText={handleChange("frVon")}
-                                            containerStyle={styles.input}
-                                            inputStyle={styles.inputText}
-                                            keyboardType={"numeric"}
-                                        />
-                                        <Input
-                                            value={values.frBis}
-                                            onChangeText={handleChange("frBis")}
-                                            containerStyle={styles.input}
-                                            inputStyle={styles.inputText}
-                                            keyboardType={"numeric"}
-                                        />
-                                    </View>
-                                </View>
-                            </View>
-                            <View style={styles.rowContainer}>
-                                <View style={styles.labelWrap}>
-                                    <Text style={styles.labelSpacer} />
-                                    <Text style={styles.label}>Samstag</Text>
-                                </View>
-                                <View style={styles.lineWrap}>
-                                    <AntDesign
-                                        name="calendar"
-                                        style={styles.icon}
-                                        size={25}
-                                        color="#ccc"
-                                    />
-                                    <Switch
-                                        trackColor={{false: "#e6e6e6", true: "#e6e6e6"}}
-                                        thumbColor={isEnabled.samstag ? "#729628" : "#f4f3f4"}
-                                        ios_backgroundColor="#e6e6e6"
-                                        onValueChange={() => toggleSwitch("samstag")}
-                                        value={isEnabled.samstag}
-                                        style={styles.switch}
-                                    />
-                                    <View style={styles.inputWrap}>
-                                        <Input
-                                            value={values.saVon}
-                                            onChangeText={handleChange("saVon")}
-                                            containerStyle={styles.input}
-                                            inputStyle={styles.inputText}
-                                            keyboardType={"numeric"}
-                                        />
-                                        <Input
-                                            value={values.saBis}
-                                            onChangeText={handleChange("saBis")}
-                                            containerStyle={styles.input}
-                                            inputStyle={styles.inputText}
-                                            keyboardType={"numeric"}
-                                        />
-                                    </View>
-                                </View>
-                            </View>
-                            <View style={styles.saveButtonContainer}>
-                                <Button
-                                    buttonStyle={styles.saveButton}
-                                    titleStyle={styles.saveButtonTitle}
-                                    disabled={false}
-                                    title="Speichern"
-                                    onPress={() => {
-                                        handleSubmit;
-                                        navigation.goBack();
+                <View style={styles.rowContainer}>
+                    <View style={styles.labelWrap}>
+                        <Text style={styles.labelSpacer} />
+                        <Text style={styles.label}>Montag</Text>
+                    </View>
+                    <View style={styles.lineWrap}>
+                        <AntDesign name="calendar" style={styles.icon} size={25} color="#ccc" />
+                        <Switch
+                            trackColor={{false: "#e6e6e6", true: "#e6e6e6"}}
+                            thumbColor={isEnabled.montag ? "#729628" : "#f4f3f4"}
+                            ios_backgroundColor="#e6e6e6"
+                            onValueChange={() => toggleSwitch("montag")}
+                            value={isEnabled.montag}
+                            style={styles.switch}
+                        />
+                        <View style={styles.inputWrap}>
+                            <Controller
+                                as={<Input />}
+                                control={control}
+                                name="moVon"
+                                lastkey="none"
+                                onKeyPress={({nativeEvent}) => {
+                                    lastKey = nativeEvent.key;
+                                }}
+                                onChangeText={(time) => {
+                                    setValue("moVon", formatTime(time));
+                                    errors.moVon && triggerValidation("moVon");
+                                }}
+                                maxLength={5}
+                                errorMessage={errors.moVon ? errors.moVon.message : " "}
+                                containerStyle={styles.input}
+                                inputStyle={styles.inputText}
+                                keyboardType={"numeric"}
+                                inputContainerStyle={errors.moVon && styles.inputError}
+                                errorStyle={styles.error}
+                            />
+                            <Controller
+                                as={<Input />}
+                                control={control}
+                                name="moBis"
+                                lastkey="none"
+                                onKeyPress={({nativeEvent}) => {
+                                    lastKey = nativeEvent.key;
+                                }}
+                                onChangeText={(time) => {
+                                    setValue("moBis", formatTime(time));
+                                    errors.moBis && triggerValidation("moBis");
+                                }}
+                                maxLength={5}
+                                errorMessage={errors.moBis ? errors.moBis.message : " "}
+                                containerStyle={styles.input}
+                                inputStyle={styles.inputText}
+                                keyboardType={"numeric"}
+                                inputContainerStyle={errors.moBis && styles.inputError}
+                                errorStyle={styles.error}
+                            />
+                        </View>
+                    </View>
+                    <View style={styles.rowContainer}>
+                        <View style={styles.labelWrap}>
+                            <Text style={styles.labelSpacer} />
+                            <Text style={styles.label}>Dienstag</Text>
+                        </View>
+                        <View style={styles.lineWrap}>
+                            <AntDesign name="calendar" style={styles.icon} size={25} color="#ccc" />
+                            <Switch
+                                trackColor={{false: "#e6e6e6", true: "#e6e6e6"}}
+                                thumbColor={isEnabled.dienstag ? "#729628" : "#f4f3f4"}
+                                ios_backgroundColor="#e6e6e6"
+                                onValueChange={() => toggleSwitch("dienstag")}
+                                value={isEnabled.dienstag}
+                                style={styles.switch}
+                            />
+                            <View style={styles.inputWrap}>
+                                <Controller
+                                    as={<Input />}
+                                    control={control}
+                                    name="diVon"
+                                    lastkey="none"
+                                    onKeyPress={({nativeEvent}) => {
+                                        lastKey = nativeEvent.key;
                                     }}
+                                    onChangeText={(time) => {
+                                        setValue("diVon", formatTime(time));
+                                        errors.diVon && triggerValidation("diVon");
+                                    }}
+                                    maxLength={5}
+                                    errorMessage={errors.diVon ? errors.diVon.message : " "}
+                                    containerStyle={styles.input}
+                                    inputStyle={styles.inputText}
+                                    keyboardType={"numeric"}
+                                    inputContainerStyle={errors.diVon && styles.inputError}
+                                    errorStyle={styles.error}
+                                />
+                                <Controller
+                                    as={<Input />}
+                                    control={control}
+                                    name="diBis"
+                                    lastkey="none"
+                                    onKeyPress={({nativeEvent}) => {
+                                        lastKey = nativeEvent.key;
+                                    }}
+                                    onChangeText={(time) => {
+                                        setValue("diBis", formatTime(time));
+                                        errors.diBis && triggerValidation("diBis");
+                                    }}
+                                    maxLength={5}
+                                    errorMessage={errors.diBis ? errors.diBis.message : " "}
+                                    containerStyle={styles.input}
+                                    inputStyle={styles.inputText}
+                                    keyboardType={"numeric"}
+                                    inputContainerStyle={errors.diBis && styles.inputError}
+                                    errorStyle={styles.error}
                                 />
                             </View>
                         </View>
-                    )}
-                </Formik>
+                    </View>
+                    <View style={styles.rowContainer}>
+                        <View style={styles.labelWrap}>
+                            <Text style={styles.labelSpacer} />
+                            <Text style={styles.label}>Mittwoch</Text>
+                        </View>
+                        <View style={styles.lineWrap}>
+                            <AntDesign name="calendar" style={styles.icon} size={25} color="#ccc" />
+                            <Switch
+                                trackColor={{false: "#e6e6e6", true: "#e6e6e6"}}
+                                thumbColor={isEnabled.mittwoch ? "#729628" : "#f4f3f4"}
+                                ios_backgroundColor="#e6e6e6"
+                                onValueChange={() => toggleSwitch("mittwoch")}
+                                value={isEnabled.mittwoch}
+                                style={styles.switch}
+                            />
+                            <View style={styles.inputWrap}>
+                                <Controller
+                                    as={<Input />}
+                                    control={control}
+                                    name="miVon"
+                                    lastkey="none"
+                                    onKeyPress={({nativeEvent}) => {
+                                        lastKey = nativeEvent.key;
+                                    }}
+                                    onChangeText={(time) => {
+                                        setValue("miVon", formatTime(time));
+                                        errors.miVon && triggerValidation("miVon");
+                                    }}
+                                    maxLength={5}
+                                    errorMessage={errors.miVon ? errors.miVon.message : " "}
+                                    containerStyle={styles.input}
+                                    inputStyle={styles.inputText}
+                                    keyboardType={"numeric"}
+                                    inputContainerStyle={errors.miVon && styles.inputError}
+                                    errorStyle={styles.error}
+                                />
+                                <Controller
+                                    as={<Input />}
+                                    control={control}
+                                    name="miBis"
+                                    lastkey="none"
+                                    onKeyPress={({nativeEvent}) => {
+                                        lastKey = nativeEvent.key;
+                                    }}
+                                    onChangeText={(time) => {
+                                        setValue("miBis", formatTime(time));
+                                        errors.miBis && triggerValidation("miBis");
+                                    }}
+                                    maxLength={5}
+                                    errorMessage={errors.miBis ? errors.miBis.message : " "}
+                                    containerStyle={styles.input}
+                                    inputStyle={styles.inputText}
+                                    keyboardType={"numeric"}
+                                    inputContainerStyle={errors.miBis && styles.inputError}
+                                    errorStyle={styles.error}
+                                />
+                            </View>
+                        </View>
+                    </View>
+                    <View style={styles.rowContainer}>
+                        <View style={styles.labelWrap}>
+                            <Text style={styles.labelSpacer} />
+                            <Text style={styles.label}>Donnerstag</Text>
+                        </View>
+                        <View style={styles.lineWrap}>
+                            <AntDesign name="calendar" style={styles.icon} size={25} color="#ccc" />
+                            <Switch
+                                trackColor={{false: "#e6e6e6", true: "#e6e6e6"}}
+                                thumbColor={isEnabled.donnerstag ? "#729628" : "#f4f3f4"}
+                                ios_backgroundColor="#e6e6e6"
+                                onValueChange={() => toggleSwitch("donnerstag")}
+                                value={isEnabled.donnerstag}
+                                style={styles.switch}
+                            />
+                            <View style={styles.inputWrap}>
+                                <Controller
+                                    as={<Input />}
+                                    control={control}
+                                    name="doVon"
+                                    lastkey="none"
+                                    onKeyPress={({nativeEvent}) => {
+                                        lastKey = nativeEvent.key;
+                                    }}
+                                    onChangeText={(time) => {
+                                        setValue("doVon", formatTime(time));
+                                        errors.doVon && triggerValidation("doVon");
+                                    }}
+                                    maxLength={5}
+                                    errorMessage={errors.doVon ? errors.doVon.message : " "}
+                                    containerStyle={styles.input}
+                                    inputStyle={styles.inputText}
+                                    keyboardType={"numeric"}
+                                    inputContainerStyle={errors.doVon && styles.inputError}
+                                    errorStyle={styles.error}
+                                />
+                                <Controller
+                                    as={<Input />}
+                                    control={control}
+                                    name="doBis"
+                                    lastkey="none"
+                                    onKeyPress={({nativeEvent}) => {
+                                        lastKey = nativeEvent.key;
+                                    }}
+                                    onChangeText={(time) => {
+                                        setValue("doBis", formatTime(time));
+                                        errors.doBis && triggerValidation("doBis");
+                                    }}
+                                    maxLength={5}
+                                    errorMessage={errors.doBis ? errors.doBis.message : " "}
+                                    containerStyle={styles.input}
+                                    inputStyle={styles.inputText}
+                                    keyboardType={"numeric"}
+                                    inputContainerStyle={errors.doBis && styles.inputError}
+                                    errorStyle={styles.error}
+                                />
+                            </View>
+                        </View>
+                    </View>
+                    <View style={styles.rowContainer}>
+                        <View style={styles.labelWrap}>
+                            <Text style={styles.labelSpacer} />
+                            <Text style={styles.label}>Freitag</Text>
+                        </View>
+                        <View style={styles.lineWrap}>
+                            <AntDesign name="calendar" style={styles.icon} size={25} color="#ccc" />
+                            <Switch
+                                trackColor={{false: "#e6e6e6", true: "#e6e6e6"}}
+                                thumbColor={isEnabled.freitag ? "#729628" : "#f4f3f4"}
+                                ios_backgroundColor="#e6e6e6"
+                                onValueChange={() => toggleSwitch("freitag")}
+                                value={isEnabled.freitag}
+                                style={styles.switch}
+                            />
+                            <View style={styles.inputWrap}>
+                                <Controller
+                                    as={<Input />}
+                                    control={control}
+                                    name="frVon"
+                                    lastkey="none"
+                                    onKeyPress={({nativeEvent}) => {
+                                        lastKey = nativeEvent.key;
+                                    }}
+                                    onChangeText={(time) => {
+                                        setValue("frVon", formatTime(time));
+                                        errors.frVon && triggerValidation("frVon");
+                                    }}
+                                    maxLength={5}
+                                    errorMessage={errors.frVon ? errors.frVon.message : " "}
+                                    containerStyle={styles.input}
+                                    inputStyle={styles.inputText}
+                                    keyboardType={"numeric"}
+                                    inputContainerStyle={errors.frVon && styles.inputError}
+                                    errorStyle={styles.error}
+                                />
+                                <Controller
+                                    as={<Input />}
+                                    control={control}
+                                    name="frBis"
+                                    lastkey="none"
+                                    onKeyPress={({nativeEvent}) => {
+                                        lastKey = nativeEvent.key;
+                                    }}
+                                    onChangeText={(time) => {
+                                        setValue("frBis", formatTime(time));
+                                        errors.frBis && triggerValidation("frBis");
+                                    }}
+                                    maxLength={5}
+                                    errorMessage={errors.frBis ? errors.frBis.message : " "}
+                                    containerStyle={styles.input}
+                                    inputStyle={styles.inputText}
+                                    keyboardType={"numeric"}
+                                    inputContainerStyle={errors.frBis && styles.inputError}
+                                    errorStyle={styles.error}
+                                />
+                            </View>
+                        </View>
+                    </View>
+                    <View style={styles.rowContainer}>
+                        <View style={styles.labelWrap}>
+                            <Text style={styles.labelSpacer} />
+                            <Text style={styles.label}>Samstag</Text>
+                        </View>
+                        <View style={styles.lineWrap}>
+                            <AntDesign name="calendar" style={styles.icon} size={25} color="#ccc" />
+                            <Switch
+                                trackColor={{false: "#e6e6e6", true: "#e6e6e6"}}
+                                thumbColor={isEnabled.samstag ? "#729628" : "#f4f3f4"}
+                                ios_backgroundColor="#e6e6e6"
+                                onValueChange={() => toggleSwitch("samstag")}
+                                value={isEnabled.samstag}
+                                style={styles.switch}
+                            />
+                            <View style={styles.inputWrap}>
+                                <Controller
+                                    as={<Input />}
+                                    control={control}
+                                    name="saVon"
+                                    lastkey="none"
+                                    onKeyPress={({nativeEvent}) => {
+                                        lastKey = nativeEvent.key;
+                                    }}
+                                    onChangeText={(time) => {
+                                        setValue("saVon", formatTime(time));
+                                        errors.saVon && triggerValidation("saVon");
+                                    }}
+                                    maxLength={5}
+                                    errorMessage={errors.saVon ? errors.saVon.message : " "}
+                                    containerStyle={styles.input}
+                                    inputStyle={styles.inputText}
+                                    keyboardType={"numeric"}
+                                    inputContainerStyle={errors.saVon && styles.inputError}
+                                    errorStyle={styles.error}
+                                />
+                                <Controller
+                                    as={<Input />}
+                                    control={control}
+                                    name="saBis"
+                                    lastkey="none"
+                                    onKeyPress={({nativeEvent}) => {
+                                        lastKey = nativeEvent.key;
+                                    }}
+                                    onChangeText={(time) => {
+                                        setValue("saBis", formatTime(time));
+                                        errors.saBis && triggerValidation("saBis");
+                                    }}
+                                    maxLength={5}
+                                    errorMessage={errors.saBis ? errors.saBis.message : " "}
+                                    containerStyle={styles.input}
+                                    inputStyle={styles.inputText}
+                                    keyboardType={"numeric"}
+                                    inputContainerStyle={errors.saBis && styles.inputError}
+                                    errorStyle={styles.error}
+                                />
+                            </View>
+                        </View>
+                    </View>
+                    <View style={styles.saveButtonContainer}>
+                        <Button
+                            buttonStyle={styles.saveButton}
+                            titleStyle={styles.saveButtonTitle}
+                            disabled={!formState.isValid}
+                            title="Speichern"
+                            onPress={handleSubmit(onSubmit)}
+                        />
+                    </View>
+                </View>
             </View>
         </ScrollView>
     );
@@ -358,7 +513,7 @@ export const styles = StyleSheet.create({
     lineWrap: {
         flexDirection: "row",
         justifyContent: "flex-start",
-        alignItems: "flex-end",
+        alignItems: "center",
         flex: 1,
         width: "100%",
     },
@@ -375,8 +530,9 @@ export const styles = StyleSheet.create({
         flexDirection: "row",
         justifyContent: "space-around",
         marginLeft: 10,
-        marginBottom: 5,
+        // marginBottom: 5,
         paddingLeft: 10,
+        marginBottom: -5,
     },
     input: {
         backgroundColor: "#FFF",
@@ -385,6 +541,13 @@ export const styles = StyleSheet.create({
     },
     inputText: {
         color: "#729628",
+    },
+    inputError: {
+        borderColor: "#ff8787",
+    },
+    error: {
+        color: "#ff8787",
+        marginLeft: -1,
     },
     saveButtonContainer: {
         alignItems: "center",
