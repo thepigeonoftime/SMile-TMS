@@ -19,13 +19,13 @@ export const Signup = ({navigation, route}: AuthNavProps<"Register">) => {
             >
                 <Text>Registrieren</Text>
             </TouchableOpacity>
-            <Button
-                title="Ich habe bereits einen Login"
+            <TouchableOpacity
                 onPress={() => {
                     navigation.navigate("Login");
-                    // navigation.goBack()
                 }}
-            />
+            >
+                <Text style={{marginTop: 20, color: "#3fa9f5"}}>Ich habe einen Login</Text>
+            </TouchableOpacity>
         </Center>
     );
 };

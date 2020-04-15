@@ -19,12 +19,13 @@ export const Login = ({navigation}: AuthNavProps<"Login">) => {
             >
                 <Text>Einloggen</Text>
             </TouchableOpacity>
-            <Button
-                title="Ich habe noch kein Login"
+            <TouchableOpacity
                 onPress={() => {
                     navigation.navigate("Register");
                 }}
-            />
+            >
+                <Text style={{marginTop: 20, color: "#3fa9f5"}}>Ich habe keinen Login</Text>
+            </TouchableOpacity>
         </Center>
     );
 };
