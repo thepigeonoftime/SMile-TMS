@@ -114,7 +114,42 @@ export const RegisterFahrzeug = ({navigation}) => {
                             </View>
                             <View style={styles.pickerWrap}>
                                 <Controller
-                                    as={<RNPicker />}
+                                    as={
+                                        // eslint-disable-next-line prettier/prettier
+                                        <RNPickerSelect
+                                            onValueChange={(value) => {
+                                                setValue("fahrzeugArt", value);
+                                                triggerValidation("fahrzeugArt");
+                                            }}
+                                            items={[
+                                                {
+                                                    label: "Sprinter",
+                                                    value: "Sprinter",
+                                                },
+                                                {label: "Golf", value: "Golf"},
+                                                {label: "Bugatti", value: "Bugatti"},
+                                            ]}
+                                            placeholder={{
+                                                label: "Fahrzeug wählen",
+                                                value: null,
+                                                style: {color: "#999", fontSize: 20},
+                                            }}
+                                            useNativeAndroidPickerStyle={false}
+                                            style={{
+                                                placeholder: {
+                                                    fontSize: 18,
+                                                },
+                                            }}
+                                            Icon={() => {
+                                                return (
+                                                    <Entypo
+                                                        name="select-arrows"
+                                                        style={styles.pickerArrows}
+                                                    />
+                                                );
+                                            }}
+                                        />
+                                    }
                                     name="fahrzeugArt"
                                     control={control}
                                 />
