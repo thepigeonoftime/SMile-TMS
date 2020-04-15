@@ -8,6 +8,7 @@ import {RegisterStack} from "./RegisterStack";
 import {Tour} from "./Screens/Tour";
 import {AppTabsProps} from "./Types";
 import {StatusBar} from "react-native";
+import {TestStack} from "./TestStack";
 
 const Tabs = createBottomTabNavigator<AppTabsProps>();
 
@@ -65,7 +66,7 @@ export const AppTabs: React.FC = () => {
                 <Tabs.Screen
                     options={{title: "Tourenlogbuch"}}
                     name="TourLogbuch"
-                    component={Tour}
+                    component={TestStack}
                     listeners={{
                         tabPress: (e) => {
                             if (!registered) {

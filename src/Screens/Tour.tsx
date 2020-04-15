@@ -1,7 +1,16 @@
 import {Ionicons} from "@expo/vector-icons";
 import React, {useEffect, useState} from "react";
-import {ActivityIndicator, ScrollView, StyleSheet, Text, View} from "react-native";
+import {
+    ActivityIndicator,
+    ScrollView,
+    StyleSheet,
+    Text,
+    View,
+    TouchableOpacity,
+} from "react-native";
 import {Center} from "../Center";
+import {createStackNavigator} from "@react-navigation/stack";
+import {Maps} from "./Maps";
 
 const getTour = (url: string) => {
     const [data, setData] = useState(null);
@@ -30,9 +39,12 @@ interface IRoute {
         };
     };
     loading: boolean;
+    navigation: any;
 }
 
-export const TourView: React.FC<IRoute> = (props) => {
+const Stack = createStackNavigator();
+
+export const TourView: React.FC<IRoute> = (props, {navigation}) => {
     const data = props.data;
     const loading = props.loading;
     return (
@@ -55,7 +67,9 @@ export const TourView: React.FC<IRoute> = (props) => {
                         </View>
                         <View style={styles.tourLinkWrap}>
                             <View>
-                                <Text style={styles.tourLink}>Gesamte Tour anzeigen</Text>
+                                <TouchableOpacity onPress={() => props.navigation.navigate("Maps")}>
+                                    <Text style={styles.tourLink}>Gesamte Tour anzeigen</Text>
+                                </TouchableOpacity>
                             </View>
                             <View style={styles.iconWrap}>
                                 <Ionicons name="ios-arrow-forward" size={25} color={"#555"} />
@@ -103,13 +117,19 @@ type BottomTabProps = {
     Settings: undefined;
 };
 
-export const Tour = ({}) => {
+export const Tour = ({navigation}) => {
     // const { data, loading } = getRoute("https://bpt-lab.org/smile/sphinx/getTours");
     const {data, loading} = getTour("http://localhost:3001/tours");
+    const TourWrap = () => {
+        return <TourView data={data} loading={loading} navigation={navigation} />;
+    };
+
     if (!loading) {
         return (
-            //  <Text> {JSON.stringify(data, null, 2)} </Text>
-            <TourView data={data} loading={loading} />
+            <Stack.Navigator mode="modal" headerMode="none">
+                <Stack.Screen name="Tour" component={TourWrap} options={{}} />
+                <Stack.Screen name="Maps" component={Maps} options={{}} />
+            </Stack.Navigator>
         );
     } else {
         return <ActivityIndicator />;

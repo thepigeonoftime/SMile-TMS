@@ -6,10 +6,11 @@ import {AuthContext} from "../AuthProvider";
 import {Header} from "../Header";
 import {RegisterContext} from "../RegisterProvider";
 import {HomeProps} from "../Types";
+import {Tour} from "./Tour";
 
 const Stack = createStackNavigator<HomeProps>();
 
-export const Home = ({navigation}) => {
+export const HomeView = ({navigation}) => {
     const {unregister} = useContext(RegisterContext);
     const {logout} = useContext(AuthContext);
     return (
@@ -49,7 +50,9 @@ export const Home = ({navigation}) => {
                     disabledStyle={styles.saveButtonDisabled}
                     disabled={false}
                     title="Suche starten"
-                    onPress={() => {}}
+                    onPress={() => {
+                        navigation.navigate("Tour");
+                    }}
                 />
                 <Button
                     buttonStyle={styles.saveButton}
@@ -62,6 +65,15 @@ export const Home = ({navigation}) => {
                 />
             </View>
         </View>
+    );
+};
+
+export const Home = ({navigation}) => {
+    return (
+        <Stack.Navigator mode="modal" headerMode="none">
+            <Stack.Screen name="Home" component={HomeView} options={{}} />
+            <Stack.Screen name="Tour" component={Tour} options={{}} />
+        </Stack.Navigator>
     );
 };
 
