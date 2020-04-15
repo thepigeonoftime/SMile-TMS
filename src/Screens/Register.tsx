@@ -80,6 +80,7 @@ export const Register = ({navigation}) => {
 export const styles = StyleSheet.create({
     container: {
         backgroundColor: "#FFF",
+        marginBottom: "-20%",
     },
     logout: {
         position: "absolute",
@@ -88,17 +89,17 @@ export const styles = StyleSheet.create({
         zIndex: 10,
     },
     contentWrap: {
-        top: "-7%",
+        top: "-4%",
         backgroundColor: "#FFF",
         flex: 1,
         alignItems: "center",
         justifyContent: "flex-start",
         width: "100%",
-        paddingBottom: "20%",
+        paddingBottom: "45%",
         borderTopLeftRadius: 40,
         borderTopRightRadius: 40,
         shadowColor: "#000",
-        shadowOffset: {width: 0, height: -1},
+        shadowOffset: {width: 0, height: -10000},
         shadowOpacity: 0.1,
         shadowRadius: 2.84,
         elevation: 5,
