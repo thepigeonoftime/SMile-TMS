@@ -33,7 +33,8 @@ export const TestStack: React.FC<{}> = ({}) => {
                 activeTintColor: "tomato",
                 inactiveTintColor: "gray",
                 tabStyle: {
-                    bottom: "25%",
+                    position: "relative",
+                    top: "-40%",
                     left: "5%",
                     width: "90%",
                     height: 70,
@@ -46,10 +47,9 @@ export const TestStack: React.FC<{}> = ({}) => {
                 },
             }}
         >
-            <Tabs.Screen options={{title: "Karte"}} name="Maps" component={Maps} />
             <Tabs.Screen options={{title: "QR Codes"}} name="QRTest" component={QRTest} />
             <Tabs.Screen name="Signature" component={Signature} />
-            <Tabs.Screen options={{title: "Einstellungen"}} name="Settings" component={Settings} />
+            <Tabs.Screen options={{title: "Karte"}} name="Maps" component={Maps} />
         </Tabs.Navigator>
     );
 };
