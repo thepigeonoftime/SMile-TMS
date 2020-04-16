@@ -50,3 +50,10 @@ export type SignatureProps = {
 export type SettingsProps = {
     Settings: undefined;
 };
+
+export type TourStackProps = {
+    TourSuche: undefined;
+    TourStart: undefined;
+    TourLogbuch: undefined;
+    Settings: undefined;
+};
