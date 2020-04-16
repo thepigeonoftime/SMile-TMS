@@ -1,18 +1,34 @@
-import {createStackNavigator} from "@react-navigation/stack";
-import React, {useContext} from "react";
-import {StyleSheet, Text, TouchableOpacity, View} from "react-native";
+import Axios from "axios";
+import React, {useContext, useState} from "react";
+import {Text, TouchableOpacity, View, StyleSheet} from "react-native";
 import {Button} from "react-native-elements";
 import {AuthContext} from "../AuthProvider";
 import {Header} from "../Header";
 import {RegisterContext} from "../RegisterProvider";
-import {HomeProps} from "../Types";
-import {Tour} from "./Tour";
+import {TourContext} from "../TourProvider";
 
-const Stack = createStackNavigator<HomeProps>();
-
-export const HomeView = ({navigation}) => {
+export const TourSuche = ({navigation}) => {
     const {unregister} = useContext(RegisterContext);
     const {logout} = useContext(AuthContext);
+    const {tour, setTour, removeTour, setError} = useContext(TourContext);
+    const [sucheDisabled, setSucheDisabled] = useState(false);
+
+    const fetchTour = () => {
+        Axios.get("http://localhost:3001/tours")
+            .then((response) => {
+                setTour(response.data);
+                navigation.navigate("TourStart");
+            })
+            .catch((error) => {
+                setError(error);
+            });
+    };
+
+    const getTour = () => {
+        setSucheDisabled(true);
+        setTimeout(fetchTour, 2000);
+    };
+
     return (
         <View style={styles.container}>
             <View
@@ -48,32 +64,23 @@ export const HomeView = ({navigation}) => {
                     buttonStyle={styles.saveButton}
                     titleStyle={styles.saveButtonTitle}
                     disabledStyle={styles.saveButtonDisabled}
-                    disabled={false}
+                    disabled={sucheDisabled}
                     title="Suche starten"
-                    onPress={() => {
-                        navigation.navigate("Tour");
-                    }}
+                    onPress={getTour}
                 />
                 <Button
                     buttonStyle={styles.saveButton}
                     titleStyle={styles.saveButtonTitle}
                     disabledStyle={styles.saveButtonDisabled}
                     disabledTitleStyle={styles.saveButtonTitleDisabled}
-                    disabled={true}
+                    disabled={!sucheDisabled}
                     title="abbrechen"
-                    onPress={() => {}}
+                    onPress={() => {
+                        setSucheDisabled(false);
+                    }}
                 />
             </View>
         </View>
-    );
-};
-
-export const Home = ({navigation}) => {
-    return (
-        <Stack.Navigator mode="modal" headerMode="none">
-            <Stack.Screen name="Home" component={HomeView} options={{}} />
-            <Stack.Screen name="Tour" component={Tour} options={{}} />
-        </Stack.Navigator>
     );
 };
 
