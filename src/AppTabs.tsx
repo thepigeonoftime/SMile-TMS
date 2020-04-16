@@ -1,15 +1,12 @@
 import {AntDesign, EvilIcons} from "@expo/vector-icons";
 import {createBottomTabNavigator} from "@react-navigation/bottom-tabs";
 import React, {useContext} from "react";
-import {StyleSheet, View} from "react-native";
-import {Home} from "./Screens/Home";
+import {StatusBar, StyleSheet, View} from "react-native";
 import {RegisterContext} from "./RegisterProvider";
 import {RegisterStack} from "./RegisterStack";
-import {Tour} from "./Screens/Tour";
-import {AppTabsProps} from "./Types";
-import {StatusBar} from "react-native";
-import {TestStack} from "./TestStack";
 import {QRTest} from "./Screens/QRTest";
+import {TourContainer} from "./TourContainer";
+import {AppTabsProps} from "./Types";
 
 const Tabs = createBottomTabNavigator<AppTabsProps>();
 
@@ -55,7 +52,7 @@ export const AppTabs: React.FC = () => {
                 <Tabs.Screen
                     options={{title: "Tour Starten"}}
                     name="TourStarten"
-                    component={Home}
+                    component={TourContainer}
                     listeners={{
                         tabPress: (e) => {
                             if (!registered) {
