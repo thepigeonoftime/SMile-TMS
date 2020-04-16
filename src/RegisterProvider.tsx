@@ -10,7 +10,7 @@ export const RegisterContext = React.createContext<{
 }>({
     registered: null,
     register: () => {},
-    unregister: () => {}
+    unregister: () => {},
 });
 
 interface RegisterProviderProps {}
@@ -29,8 +29,9 @@ export const RegisterProvider: React.FC<RegisterProviderProps> = ({children}) =>
                     setRegistered(null);
                     AsyncStorage.removeItem("registered");
                     console.log("unregistered");
-                }
-            }}>
+                },
+            }}
+        >
             {children}
         </RegisterContext.Provider>
     );
