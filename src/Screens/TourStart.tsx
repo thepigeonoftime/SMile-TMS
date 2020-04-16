@@ -1,68 +1,38 @@
 import {Ionicons} from "@expo/vector-icons";
-import React, {useEffect, useState} from "react";
-import {
-    ActivityIndicator,
-    ScrollView,
-    StyleSheet,
-    Text,
-    View,
-    TouchableOpacity,
-} from "react-native";
-import {Center} from "../Center";
-import {createStackNavigator} from "@react-navigation/stack";
-import {Maps} from "./Maps";
-
-const getTour = (url: string) => {
-    const [data, setData] = useState(null);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
-
-    const fetchRoute = async (url: string) => {
-        const response = await fetch(url);
-        response
-            .json()
-            .then((res) => setData(res))
-            .then(() => setLoading(false))
-            .catch((err) => setError(err));
-    };
-
-    useEffect(() => {
-        fetchRoute(url);
-    }, []);
-    return {data, loading};
-};
+import React, {useContext} from "react";
+import {ScrollView, StyleSheet, Text, TouchableOpacity, View} from "react-native";
+import {TourContext} from "../TourProvider";
 
 interface IRoute {
-    data: {
+    tour: {
         tours: {
             stops: [string | number];
         };
     };
     loading: boolean;
     navigation: any;
+    error: string;
 }
 
-const Stack = createStackNavigator();
+export const TourStart: React.FC<IRoute> = (props, {navigation}) => {
+    const {tour, setTour, removeTour, setError, error} = useContext(TourContext);
 
-export const TourView: React.FC<IRoute> = (props, {navigation}) => {
-    const data = props.data;
-    const loading = props.loading;
     return (
         <ScrollView>
-            {!loading && (
+            {!error && tour && (
                 <View style={styles.container}>
                     <View style={{flex: 1}} />
                     <View style={{flex: 10}}>
                         <View>
                             <Text style={[styles.depotHeader]}>Zentraldepot:</Text>
                             <Text style={[styles.depotText]}>
-                                {data.tours[0].stops[0].streetName}
+                                {tour.tours[0].stops[0].streetName}
                             </Text>
                             <Text style={[styles.depotText]}>
-                                Nummer: {data.tours[0].stops[0].streetNumber}
+                                Nummer: {tour.tours[0].stops[0].streetNumber}
                             </Text>
                             <Text style={[styles.depotText]}>
-                                {data.tours[0].stops[0].zip + " " + data.tours[0].stops[0].city}
+                                {tour.tours[0].stops[0].zip + " " + tour.tours[0].stops[0].city}
                             </Text>
                         </View>
                         <View style={styles.tourLinkWrap}>
@@ -78,10 +48,10 @@ export const TourView: React.FC<IRoute> = (props, {navigation}) => {
                         <View style={[styles.pLeft]}>
                             <View style={[{flexDirection: "column", marginTop: "10%"}]}>
                                 <Text style={[styles.mFont, styles.green]}>
-                                    {Object.keys(data.tours[0].packets).length} Pakete
+                                    {Object.keys(tour.tours[0].packets).length} Pakete
                                 </Text>
                                 <Text style={[styles.mFont, styles.green, {marginTop: "5%"}]}>
-                                    {Object.keys(data.tours[0].stops).length} Stops
+                                    {Object.keys(tour.tours[0].stops).length} Stops
                                 </Text>
                                 {/* Google Maps calc distance */}
                                 <Text style={[styles.mFont, styles.green, {marginTop: "5%"}]}>
@@ -91,20 +61,19 @@ export const TourView: React.FC<IRoute> = (props, {navigation}) => {
                         </View>
                         <View style={styles.tourLinkWrap}>
                             <View>
-                                <Text style={[styles.tourLink]}>Pakete laden und Tour starten</Text>
+                                <TouchableOpacity
+                                    onPress={() => props.navigation.navigate("PaketeLaden")}
+                                >
+                                    <Text style={[styles.tourLink]}>
+                                        Pakete laden und Tour starten
+                                    </Text>
+                                </TouchableOpacity>
                             </View>
                             <View style={styles.iconWrap}>
                                 <Ionicons name="ios-arrow-forward" size={25} color={"#555"} />
                             </View>
                         </View>
                     </View>
-                </View>
-            )}
-            {loading && (
-                <View>
-                    <Center>
-                        <Text>loading..</Text>
-                    </Center>
                 </View>
             )}
         </ScrollView>
@@ -115,25 +84,6 @@ type BottomTabProps = {
     Home: undefined;
     Route: undefined;
     Settings: undefined;
-};
-
-export const Tour = ({navigation}) => {
-    // const { data, loading } = getRoute("https://bpt-lab.org/smile/sphinx/getTours");
-    const {data, loading} = getTour("http://localhost:3001/tours");
-    const TourWrap = () => {
-        return <TourView data={data} loading={loading} navigation={navigation} />;
-    };
-
-    if (!loading) {
-        return (
-            <Stack.Navigator mode="modal" headerMode="none">
-                <Stack.Screen name="Tour" component={TourWrap} options={{}} />
-                <Stack.Screen name="Maps" component={Maps} options={{}} />
-            </Stack.Navigator>
-        );
-    } else {
-        return <ActivityIndicator />;
-    }
 };
 
 const styles = StyleSheet.create({
