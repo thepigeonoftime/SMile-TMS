@@ -35,7 +35,7 @@ const MapsView = ({navigation}) => {
     );
 };
 
-export const Maps: React.FC<{}> = ({}) => {
+export const HereMaps: React.FC<{}> = ({}) => {
     return (
         <Stack.Navigator
             initialRouteName="Maps"

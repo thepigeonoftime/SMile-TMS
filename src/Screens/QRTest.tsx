@@ -5,7 +5,7 @@ import {Button} from "react-native";
 import {CodeScanner} from "./CodeScanner";
 import {CodeGenerator} from "./CodeGenerator";
 import {QRTestProps} from "../Types";
-import {Maps} from "./Maps";
+import {HereMaps} from "./HereMaps";
 
 const Stack = createStackNavigator<QRTestProps>();
 
@@ -45,7 +45,7 @@ export const QRTest: React.FC<{}> = ({}) => {
                 name="QRGenerator"
                 component={CodeGenerator}
             />
-            <Stack.Screen options={{title: "QR Scanner"}} name="Maps" component={Maps} />
+            <Stack.Screen options={{title: "QR Scanner"}} name="HereMaps" component={HereMaps} />
         </Stack.Navigator>
     );
 };
