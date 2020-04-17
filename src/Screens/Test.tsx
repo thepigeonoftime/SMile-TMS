@@ -9,7 +9,7 @@ import {HereMaps} from "./HereMaps";
 
 const Stack = createStackNavigator<QRTestProps>();
 
-const QRTestView = ({navigation}) => {
+const TestView = ({navigation}) => {
     let content = "smile QR Code test";
     return (
         <Center>
@@ -28,24 +28,24 @@ const QRTestView = ({navigation}) => {
             <Button
                 title="Maps"
                 onPress={() => {
-                    navigation.navigate("Maps");
+                    navigation.navigate("HereMaps");
                 }}
             />
         </Center>
     );
 };
 
-export const QRTest: React.FC<{}> = ({}) => {
+export const Test: React.FC<{}> = ({}) => {
     return (
         <Stack.Navigator initialRouteName="QRTest">
-            <Stack.Screen options={{title: "QR Code"}} name="QRTest" component={QRTestView} />
+            <Stack.Screen options={{title: "Test Component"}} name="Test" component={TestView} />
             <Stack.Screen options={{title: "QR Scanner"}} name="QRScan" component={CodeScanner} />
             <Stack.Screen
                 options={{title: "QR Generator"}}
                 name="QRGenerator"
                 component={CodeGenerator}
             />
-            <Stack.Screen options={{title: "QR Scanner"}} name="HereMaps" component={HereMaps} />
+            <Stack.Screen options={{title: "Here Maps"}} name="HereMaps" component={HereMaps} />
         </Stack.Navigator>
     );
 };

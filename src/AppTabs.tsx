@@ -4,7 +4,7 @@ import React, {useContext} from "react";
 import {StatusBar, StyleSheet, View} from "react-native";
 import {RegisterContext} from "./RegisterProvider";
 import {RegisterStack} from "./RegisterStack";
-import {QRTest} from "./Screens/QRTest";
+import {Test} from "./Screens/Test";
 import {TourContainer} from "./TourContainer";
 import {AppTabsProps} from "./Types";
 
@@ -64,7 +64,7 @@ export const AppTabs: React.FC = () => {
                 <Tabs.Screen
                     options={{title: "Tourenlogbuch"}}
                     name="TourLogbuch"
-                    component={QRTest}
+                    component={Test}
                     listeners={{
                         tabPress: (e) => {
                             if (!registered) {
