@@ -14,7 +14,7 @@ interface IRoute {
     error: string;
 }
 
-export const TourStart: React.FC<IRoute> = (props, {navigation}) => {
+export const TourStart: React.FC<IRoute> = ({navigation}) => {
     const {tour, setTour, removeTour, setError, error} = useContext(TourContext);
 
     return (
@@ -37,7 +37,7 @@ export const TourStart: React.FC<IRoute> = (props, {navigation}) => {
                         </View>
                         <View style={styles.tourLinkWrap}>
                             <View>
-                                <TouchableOpacity onPress={() => props.navigation.navigate("Maps")}>
+                                <TouchableOpacity onPress={() => navigation.navigate("Maps")}>
                                     <Text style={styles.tourLink}>Gesamte Tour anzeigen</Text>
                                 </TouchableOpacity>
                             </View>
@@ -62,7 +62,7 @@ export const TourStart: React.FC<IRoute> = (props, {navigation}) => {
                         <View style={styles.tourLinkWrap}>
                             <View>
                                 <TouchableOpacity
-                                    onPress={() => props.navigation.navigate("PaketeLaden")}
+                                    onPress={() => navigation.navigate("PaketeLaden")}
                                 >
                                     <Text style={[styles.tourLink]}>
                                         Pakete laden und Tour starten
@@ -71,6 +71,13 @@ export const TourStart: React.FC<IRoute> = (props, {navigation}) => {
                             </View>
                             <View style={styles.iconWrap}>
                                 <Ionicons name="ios-arrow-forward" size={25} color={"#555"} />
+                            </View>
+                        </View>
+                        <View style={styles.tourLinkWrap}>
+                            <View>
+                                <TouchableOpacity onPress={() => navigation.goBack()}>
+                                    <Text>abbrechen</Text>
+                                </TouchableOpacity>
                             </View>
                         </View>
                     </View>
