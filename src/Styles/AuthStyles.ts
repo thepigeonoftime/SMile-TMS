@@ -1,24 +1,88 @@
-import { StyleSheet } from "react-native";
+import {StyleSheet} from "react-native";
+import {useFonts} from "@use-expo/font";
+/* tslint:disable:no-unused-styles */
 
-const AuthStyles = StyleSheet.create({
-    authInput: {
-        height: 40,
-        width: "70%",
-        color: "#000",
-        backgroundColor: "#ddd",
-        paddingHorizontal: 10,
-        marginBottom: 10,
-        borderRadius: 10,
+export const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        backgroundColor: "#FFF",
     },
-    authButton: {
-        alignItems: "center",
+    header: {
+        paddingHorizontal: "15%",
+        paddingTop: "15%",
+        paddingBottom: "33%",
+    },
+    loginHeaderText: {
+        fontWeight: "bold",
+        color: "#FFF",
+        fontSize: 18,
+    },
+    loginHeaderSubText: {
+        color: "#FFF",
+        fontSize: 16,
+        paddingTop: 5,
+    },
+    signupHeaderText: {
+        fontWeight: "bold",
+        color: "#FFF",
+        fontSize: 40,
+    },
+    signupHeaderSubText: {
+        color: "#FFF",
+        fontSize: 16,
+        marginBottom: 20,
+    },
+    textWrapper: {},
+    image: {},
+    contentWrap: {
+        flex: 10,
         justifyContent: "center",
-        backgroundColor: "#90CAF9",
-        borderRadius: 10,
+        alignItems: "center",
+        borderTopLeftRadius: 40,
+        borderTopRightRadius: 40,
+        backgroundColor: "#fff",
+        top: "-13%",
+        paddingHorizontal: "10%",
+    },
+    inputHeader: {
+        fontSize: 21,
+        color: "#696d7d",
+        fontWeight: "bold",
+        paddingTop: "8%",
+    },
+    inputWrap: {
+        flex: 1,
+        flexDirection: "column",
+        justifyContent: "flex-start",
+        alignItems: "flex-start",
+        marginTop: "10%",
+        paddingRight: "5%",
+        paddingLeft: "5%",
+    },
+    lineWrap: {
+        paddingTop: "2%",
+        flexDirection: "row",
+        justifyContent: "flex-start",
+        alignItems: "flex-end",
+    },
+    inputContainer: {},
+    input: {
+        fontSize: 14,
+    },
+    buttonContainer: {
+        flex: 4,
+        alignItems: "center",
+    },
+    buttonWrap: {
+        width: "75%",
+    },
+    button: {
+        borderRadius: 40,
         height: 40,
-        width: "50%",
-
-    }
+        marginHorizontal: "5%",
+    },
+    buttonTitle: {
+        fontWeight: "bold",
+        fontSize: 20,
+    },
 });
-
-export default AuthStyles;
