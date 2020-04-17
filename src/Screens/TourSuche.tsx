@@ -14,9 +14,10 @@ export const TourSuche = ({navigation}) => {
     const [sucheDisabled, setSucheDisabled] = useState(false);
 
     const fetchTour = () => {
-        Axios.get("http://localhost:3001/tours")
+        Axios.get("https://unsafe.run/getTours")
             .then((response) => {
                 setTour(response.data);
+                setSucheDisabled(false);
                 navigation.navigate("TourStart");
             })
             .catch((error) => {
