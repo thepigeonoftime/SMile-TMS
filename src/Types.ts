@@ -3,7 +3,7 @@ import {StackNavigationProp} from "@react-navigation/stack";
 
 export type AuthProps = {
     Login: undefined;
-    Register: undefined;
+    Signup: undefined;
 };
 
 export type AuthNavProps<T extends keyof AuthProps> = {
