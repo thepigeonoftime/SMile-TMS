@@ -1,5 +1,6 @@
 import React from "react";
 import {StyleSheet, Text, View} from "react-native";
+import {useFonts} from "@use-expo/font";
 
 interface HeaderProps {
     text: string;
@@ -8,43 +9,56 @@ interface HeaderProps {
     containerStyle?: {};
     textStyle?: {};
     subTextStyle?: {};
+    bgColor?: string;
 }
 
-export const Header: React.SFC<HeaderProps> = props => {
-    const color = propcolor => {
-        if (propcolor) {
-            return {
-                color: propcolor
-            };
-        } else {
-            return {
-                color: "#729628"
-            };
-        }
+export const Header: React.SFC<HeaderProps> = (props) => {
+    let [fontsLoaded] = useFonts({
+        KonnectBlack: require("../assets/fonts/Konnect-Black.otf"),
+    });
+    const color = (propcolor) => {
+        return propcolor ? {color: propcolor} : {color: "#729628"};
     };
-    return (
-        <View style={[props.containerStyle ? props.containerStyle : styles.containerDefault]}>
-            <View style={styles.spacer} />
-            <View style={styles.textWrapper}>
-                <Text
-                    style={[
-                        color(props.color),
-                        [props.textStyle ? props.textStyle : styles.textDefault]
-                    ]}
-                >
-                    {props.text}
-                </Text>
-                <Text
-                    style={[
-                        color(props.color),
-                        [props.subTextStyle ? props.subTextStyle : styles.subTextDefault]
-                    ]}
-                >
-                    {props.subText}
-                </Text>
+    const bgColor = (propbgColor) => {
+        return propbgColor ? {backgroundColor: propbgColor} : {backgroundColor: "#F2F2F2"};
+    };
+
+    if (!fontsLoaded) {
+        return (
+            <View>
+                <Text>loading</Text>
             </View>
-        </View>
-    );
+        );
+    } else {
+        return (
+            <View
+                style={[
+                    [props.containerStyle ? props.containerStyle : styles.containerDefault],
+                    [bgColor(props.bgColor)],
+                ]}
+            >
+                <View style={styles.spacer} />
+                <View style={styles.textWrapper}>
+                    <Text
+                        style={[
+                            color(props.color),
+                            [props.textStyle ? props.textStyle : styles.textDefault],
+                        ]}
+                    >
+                        {props.text}
+                    </Text>
+                    <Text
+                        style={[
+                            color(props.color),
+                            [props.subTextStyle ? props.subTextStyle : styles.subTextDefault],
+                        ]}
+                    >
+                        {props.subText}
+                    </Text>
+                </View>
+            </View>
+        );
+    }
 };
 
 const styles = StyleSheet.create({
@@ -52,19 +66,21 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         alignItems: "flex-start",
         paddingTop: "15%",
-        height: 190
+        height: 240,
     },
     spacer: {
-        flex: 2
+        flex: 2,
     },
     textWrapper: {
-        flex: 10
+        flex: 10,
     },
     textDefault: {
         fontSize: 36,
-        fontWeight: "800"
+        lineHeight: 40,
+        fontWeight: "900",
+        fontFamily: "KonnectBlack",
     },
     subTextDefault: {
-        fontSize: 20
-    }
+        fontSize: 20,
+    },
 });
