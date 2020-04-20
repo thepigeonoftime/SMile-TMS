@@ -58,9 +58,14 @@ export const TourSuche = ({navigation}) => {
                 </TouchableOpacity>
             </View>
             <View>
-                <Header text="Suche jetzt" color="#FFF" subText="nach einer vefügbaren Route!" />
+                <Header
+                    text="Suche jetzt"
+                    color="#FFF"
+                    bgColor="transparent"
+                    subText="nach einer vefügbaren Route!"
+                />
             </View>
-            <View style={{justifyContent: "center", alignItems: "center", top: "10%"}}>
+            <View style={{justifyContent: "center", alignItems: "center"}}>
                 <Button
                     buttonStyle={styles.saveButton}
                     titleStyle={styles.saveButtonTitle}
