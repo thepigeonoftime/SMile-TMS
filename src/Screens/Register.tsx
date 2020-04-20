@@ -12,15 +12,6 @@ export const Register = ({navigation}) => {
     return (
         <ScrollView style={styles.container}>
             <View>
-                <View style={styles.logout}>
-                    <TouchableOpacity
-                        onPress={() => {
-                            logout();
-                        }}
-                    >
-                        <Text>LOGOUT</Text>
-                    </TouchableOpacity>
-                </View>
                 <Header
                     text="Profil"
                     subText={"anlegen und individuelle\nTouren erhalten"}
@@ -89,7 +80,7 @@ export const styles = StyleSheet.create({
         zIndex: 10,
     },
     contentWrap: {
-        top: "-4%",
+        top: "-5%",
         backgroundColor: "#FFF",
         flex: 1,
         alignItems: "center",
@@ -99,7 +90,7 @@ export const styles = StyleSheet.create({
         borderTopLeftRadius: 40,
         borderTopRightRadius: 40,
         shadowColor: "#000",
-        shadowOffset: {width: 0, height: -10000},
+        shadowOffset: {width: 0, height: -1},
         shadowOpacity: 0.1,
         shadowRadius: 2.84,
         elevation: 5,

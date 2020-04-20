@@ -3,12 +3,12 @@ import React from "react";
 import {Controller, useForm} from "react-hook-form";
 import {
     Alert,
+    KeyboardAvoidingView,
     ScrollView,
     StyleSheet,
     Text,
     TouchableOpacity,
     View,
-    KeyboardAvoidingView,
 } from "react-native";
 import {Button, Input} from "react-native-elements";
 import RNPickerSelect from "react-native-picker-select";
@@ -39,47 +39,17 @@ export const RegisterFahrzeug = ({navigation}) => {
             .matches(/^\d+$/, "Nur Zahlen")
             .required("Benötigt"),
     });
+
     const {setValue, handleSubmit, errors, triggerValidation, control, formState} = useForm({
         mode: "onBlur",
         reValidateMode: "onChange",
         validationSchema: registerSchema,
         submitFocusError: true,
     });
+
     const onSubmit = (data) => {
         Alert.alert("Form Data", JSON.stringify(data));
         navigation.goBack();
-    };
-    const RNPicker = () => {
-        return (
-            <RNPickerSelect
-                onValueChange={(value) => {
-                    setValue("fahrzeugArt", value);
-                    triggerValidation("fahrzeugArt");
-                }}
-                items={[
-                    {
-                        label: "Sprinter",
-                        value: "Sprinter",
-                    },
-                    {label: "Golf", value: "Golf"},
-                    {label: "Bugatti", value: "Bugatti"},
-                ]}
-                placeholder={{
-                    label: "Fahrzeug wählen",
-                    value: null,
-                    style: {color: "#999", fontSize: 20},
-                }}
-                useNativeAndroidPickerStyle={false}
-                style={{
-                    placeholder: {
-                        fontSize: 18,
-                    },
-                }}
-                Icon={() => {
-                    return <Entypo name="select-arrows" style={styles.pickerArrows} />;
-                }}
-            />
-        );
     };
     return (
         <KeyboardAvoidingView
@@ -96,12 +66,14 @@ export const RegisterFahrzeug = ({navigation}) => {
                     <Header text="Fahrzeugart" subText="auswählen" color="#729628" />
                 </View>
                 <View style={styles.container}>
-                    <TouchableOpacity
-                        style={styles.closeButton}
-                        onPress={() => navigation.goBack()}
-                    >
-                        <AntDesign name={"close"} size={20} color="#f89e3b" />
-                    </TouchableOpacity>
+                    <View style={styles.closeButtonContainer}>
+                        <TouchableOpacity
+                            onPress={() => navigation.goBack()}
+                            style={styles.closeButton}
+                        >
+                            <AntDesign name={"close"} size={20} color="#f89e3b" />
+                        </TouchableOpacity>
+                    </View>
                     <View style={styles.formContainer}>
                         <View style={styles.pickerContainer}>
                             <View style={styles.pickerIconWrap}>
@@ -159,8 +131,8 @@ export const RegisterFahrzeug = ({navigation}) => {
                             )}
                         </View>
                     </View>
-                    <View style={styles.inputContainer}>
-                        <View style={styles.inputWrap}>
+                    <View style={styles.inputWrap}>
+                        <View style={styles.lineWrap}>
                             <SimpleLineIcons
                                 style={styles.icon}
                                 name="user"
@@ -179,12 +151,12 @@ export const RegisterFahrzeug = ({navigation}) => {
                                 placeholder="Volumen in qm² eingeben"
                                 errorMessage={errors.ladevolumen ? errors.ladevolumen.message : " "}
                                 containerStyle={styles.input}
-                                inputContainerStyle={errors.ladevolumen && styles.inputError}
+                                inputWrapStyle={errors.ladevolumen && styles.inputError}
                                 errorStyle={styles.error}
                             />
                         </View>
 
-                        <View style={styles.inputWrap}>
+                        <View style={styles.lineWrap}>
                             <MaterialIcons
                                 style={styles.icon}
                                 name="store"
@@ -203,11 +175,11 @@ export const RegisterFahrzeug = ({navigation}) => {
                                 placeholder="max. Länge in cm eingeben"
                                 errorMessage={errors.laenge ? errors.laenge.message : " "}
                                 containerStyle={styles.input}
-                                inputContainerStyle={errors.laenge && styles.inputError}
+                                inputWrapStyle={errors.laenge && styles.inputError}
                                 errorStyle={styles.error}
                             />
                         </View>
-                        <View style={styles.inputWrap}>
+                        <View style={styles.lineWrap}>
                             <FontAwesome
                                 style={styles.icon}
                                 name="map-signs"
@@ -226,11 +198,11 @@ export const RegisterFahrzeug = ({navigation}) => {
                                 placeholder="max. Breite in cm eingeben"
                                 errorMessage={errors.breite ? errors.breite.message : " "}
                                 containerStyle={styles.input}
-                                inputContainerStyle={errors.breite && styles.inputError}
+                                inputWrapStyle={errors.breite && styles.inputError}
                                 errorStyle={styles.error}
                             />
                         </View>
-                        <View style={styles.inputWrap}>
+                        <View style={styles.lineWrap}>
                             <FontAwesome
                                 style={styles.icon}
                                 name="map-signs"
@@ -249,7 +221,7 @@ export const RegisterFahrzeug = ({navigation}) => {
                                 placeholder="max. Höhe in cm eingeben"
                                 errorMessage={errors.hoehe ? errors.hoehe.message : " "}
                                 containerStyle={styles.input}
-                                inputContainerStyle={errors.hoehe && styles.inputError}
+                                inputWrapStyle={errors.hoehe && styles.inputError}
                                 errorStyle={styles.error}
                             />
                         </View>
@@ -271,17 +243,26 @@ export const RegisterFahrzeug = ({navigation}) => {
 
 export const styles = StyleSheet.create({
     container: {
-        paddingTop: "5%",
+        top: "-7%",
         padding: 20,
         borderRadius: 25,
         backgroundColor: "#FFF",
         height: "100%",
-        paddingBottom: "25%",
+        shadowColor: "#000",
+        shadowOffset: {width: 0, height: -1},
+        shadowOpacity: 0.1,
+        shadowRadius: 2.84,
+        elevation: 5,
     },
     formContainer: {
         flexDirection: "row",
         alignContent: "flex-start",
-        paddingBottom: 10,
+    },
+    closeButtonContainer: {
+        alignItems: "flex-end",
+        padding: 5,
+        marginTop: -40,
+        marginRight: 20,
     },
     closeButton: {
         borderWidth: 0,
@@ -292,9 +273,6 @@ export const styles = StyleSheet.create({
         backgroundColor: "#fff",
         borderRadius: 30,
         borderColor: "#FFF",
-        position: "absolute",
-        top: -20,
-        right: 20,
         shadowColor: "#000",
         shadowOffset: {
             width: 0,
@@ -304,18 +282,18 @@ export const styles = StyleSheet.create({
         shadowRadius: 3.84,
         elevation: 5,
     },
-    inputContainer: {
-        flex: 1,
-    },
     inputWrap: {
+        // flex: 1,
+    },
+    lineWrap: {
         flexDirection: "row",
-        justifyContent: "space-around",
+        justifyContent: "flex-start",
         alignItems: "center",
-        paddingVertical: 10,
+        paddingVertical: 5,
         flex: 1,
     },
     icon: {
-        flex: 1.2,
+        flex: 1.5,
         marginTop: 10,
     },
     input: {
@@ -330,11 +308,11 @@ export const styles = StyleSheet.create({
         justifyContent: "flex-end",
         paddingRight: "5%",
         paddingTop: 15,
-        paddingBottom: 5,
+        paddingBottom: 25,
         marginTop: 10,
     },
     pickerIconWrap: {
-        flex: 1.2,
+        flex: 1.3,
     },
     pickerIcon: {
         top: "15%",
