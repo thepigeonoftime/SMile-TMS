@@ -27,7 +27,7 @@ export const TourSuche = ({navigation}) => {
 
     const getTour = () => {
         setSucheDisabled(true);
-        setTimeout(fetchTour, 2000);
+        setTimeout(fetchTour, 1000);
     };
 
     return (
