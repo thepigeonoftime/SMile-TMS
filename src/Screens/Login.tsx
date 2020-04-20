@@ -88,7 +88,7 @@ export const Login = ({navigation}: AuthNavProps<"Login">) => {
             >
                 <TouchableOpacity
                     onPress={() => {
-                        navigation.navigate("Register");
+                        navigation.navigate("Signup");
                     }}
                 >
                     <Text style={{color: "#3fa9f5"}}>Ich habe keinen Login</Text>
