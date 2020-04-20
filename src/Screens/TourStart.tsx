@@ -1,7 +1,10 @@
-import {Ionicons} from "@expo/vector-icons";
+import {Entypo, Ionicons} from "@expo/vector-icons";
 import React, {useContext} from "react";
 import {ScrollView, StyleSheet, Text, TouchableOpacity, View} from "react-native";
 import {TourContext} from "../TourProvider";
+import PaketIcon from "../../assets/svg/icn-mini_collie-no.svg";
+import StopsIcon from "../../assets/svg/menu-icn_tour_stops.svg";
+import LaengeIcon from "../../assets/svg/icn-mini_tour-length.svg";
 
 interface IRoute {
     tour: {
@@ -42,21 +45,111 @@ export const TourStart: React.FC<IRoute> = ({navigation}) => {
                                 </TouchableOpacity>
                             </View>
                             <View style={styles.iconWrap}>
-                                <Ionicons name="ios-arrow-forward" size={25} color={"#555"} />
+                                <Ionicons name="ios-arrow-forward" size={25} color="#ccc" />
                             </View>
                         </View>
                         <View style={[styles.pLeft]}>
-                            <View style={[{flexDirection: "column", marginTop: "10%"}]}>
-                                <Text style={[styles.mFont, styles.green]}>
-                                    {Object.keys(tour.tours[0].packets).length} Pakete
-                                </Text>
-                                <Text style={[styles.mFont, styles.green, {marginTop: "5%"}]}>
-                                    {Object.keys(tour.tours[0].stops).length} Stops
-                                </Text>
-                                {/* Google Maps calc distance */}
-                                <Text style={[styles.mFont, styles.green, {marginTop: "5%"}]}>
-                                    10 Kilometer{" "}
-                                </Text>
+                            <View
+                                style={[
+                                    {
+                                        flexDirection: "column",
+                                        // marginTop: "10%",
+                                        justifyContent: "flex-start",
+                                    },
+                                ]}
+                            >
+                                <View
+                                    style={{
+                                        marginLeft: -25,
+                                        marginRight: 20,
+                                        marginTop: 10,
+                                    }}
+                                >
+                                    <Entypo
+                                        size={15}
+                                        name="dots-three-vertical"
+                                        color="#ccc"
+                                        style={{}}
+                                    />
+                                </View>
+                                <View
+                                    style={{
+                                        flexDirection: "row",
+                                        justifyContent: "flex-start",
+                                        marginTop: "1%",
+                                    }}
+                                >
+                                    <PaketIcon
+                                        width={25}
+                                        height={25}
+                                        fill="#ccc"
+                                        style={{marginLeft: -30, marginRight: 20}}
+                                    />
+                                    <Text style={[styles.mFont, styles.green]}>
+                                        {Object.keys(tour.tours[0].packets).length} Pakete
+                                    </Text>
+                                </View>
+                                <View
+                                    style={{
+                                        marginLeft: -25,
+                                        marginRight: 20,
+                                        marginTop: 10,
+                                    }}
+                                >
+                                    <Entypo
+                                        size={15}
+                                        name="dots-three-vertical"
+                                        color="#ccc"
+                                        style={{}}
+                                    />
+                                </View>
+                                <View
+                                    style={{
+                                        flexDirection: "row",
+                                        justifyContent: "flex-start",
+                                        marginTop: "1%",
+                                    }}
+                                >
+                                    <StopsIcon
+                                        width={25}
+                                        height={25}
+                                        fill="#ccc"
+                                        style={{marginLeft: -30, marginRight: 20}}
+                                    />
+                                    <Text style={[styles.mFont, styles.green]}>
+                                        {Object.keys(tour.tours[0].stops).length} Stops
+                                    </Text>
+                                </View>
+                                <View
+                                    style={{
+                                        marginLeft: -25,
+                                        marginRight: 20,
+                                        marginTop: 10,
+                                    }}
+                                >
+                                    <Entypo
+                                        size={15}
+                                        name="dots-three-vertical"
+                                        color="#ccc"
+                                        style={{}}
+                                    />
+                                </View>
+                                <View
+                                    style={{
+                                        flexDirection: "row",
+                                        justifyContent: "flex-start",
+                                        marginTop: "1%",
+                                    }}
+                                >
+                                    <LaengeIcon
+                                        width={25}
+                                        height={25}
+                                        fill="#ccc"
+                                        style={{marginLeft: -30, marginRight: 20}}
+                                    />
+                                    {/* Google Maps calc distance */}
+                                    <Text style={[styles.mFont, styles.green]}>10 Kilometer </Text>
+                                </View>
                             </View>
                         </View>
                         <View style={styles.tourLinkWrap}>
@@ -70,14 +163,7 @@ export const TourStart: React.FC<IRoute> = ({navigation}) => {
                                 </TouchableOpacity>
                             </View>
                             <View style={styles.iconWrap}>
-                                <Ionicons name="ios-arrow-forward" size={25} color={"#555"} />
-                            </View>
-                        </View>
-                        <View style={styles.tourLinkWrap}>
-                            <View>
-                                <TouchableOpacity onPress={() => navigation.goBack()}>
-                                    <Text>abbrechen</Text>
-                                </TouchableOpacity>
+                                <Ionicons name="ios-arrow-forward" size={25} color="#ccc" />
                             </View>
                         </View>
                     </View>
@@ -113,11 +199,12 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         justifyContent: "space-between",
         alignItems: "stretch",
-        marginTop: 50,
+        marginTop: 40,
     },
     tourLink: {
         color: "#41A9F5",
-        fontSize: 22,
+        fontSize: 20,
+        fontWeight: "bold",
     },
     iconWrap: {
         right: 30,
