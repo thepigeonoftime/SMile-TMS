@@ -1,5 +1,5 @@
 import {AntDesign, Entypo, FontAwesome, MaterialIcons, SimpleLineIcons} from "@expo/vector-icons";
-import React from "react";
+import React, {useContext} from "react";
 import {Controller, useForm} from "react-hook-form";
 import {
     Alert,
@@ -14,8 +14,11 @@ import {Button, Input} from "react-native-elements";
 import RNPickerSelect from "react-native-picker-select";
 import * as Yup from "yup";
 import {Header} from "../Header";
+import {RegisterContext} from "../RegisterProvider";
 
 export const RegisterFahrzeug = ({navigation}) => {
+    const {storeDataFahrzeug} = useContext(RegisterContext);
+
     const registerSchema = Yup.object().shape({
         fahrzeugArt: Yup.string().nullable().required("Benötigt"),
         ladevolumen: Yup.string()
@@ -48,7 +51,7 @@ export const RegisterFahrzeug = ({navigation}) => {
     });
 
     const onSubmit = (data) => {
-        Alert.alert("Form Data", JSON.stringify(data));
+        storeDataFahrzeug(JSON.stringify(data));
         navigation.goBack();
     };
     return (

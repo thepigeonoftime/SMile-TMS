@@ -1,6 +1,6 @@
 import {AntDesign} from "@expo/vector-icons";
 import moment from "moment";
-import React, {useState} from "react";
+import React, {useState, useContext} from "react";
 import {Controller, useForm} from "react-hook-form";
 import {
     Alert,
@@ -15,13 +15,18 @@ import {Button, Input} from "react-native-elements";
 import {Switch, Text} from "react-native-paper";
 import * as Yup from "yup";
 import {Header} from "../Header";
+import {RegisterContext} from "../RegisterProvider";
 
 export const RegisterArbeitsZeiten = ({navigation}) => {
-    const timeSchema = Yup.string()
-        .required("Benötigt")
-        .test("is-time", "Keine gültige Zeit", function (value) {
+    const {storeDataZeiten} = useContext(RegisterContext);
+
+    const timeSchema = Yup.string().test("is-time", "Keine gültige Zeit", function (value) {
+        if (value) {
             return moment(value, "HH:mm", true).isValid();
-        });
+        } else {
+            return true;
+        }
+    });
 
     const validationSchema = Yup.object().shape({
         moVon: timeSchema,
@@ -77,7 +82,7 @@ export const RegisterArbeitsZeiten = ({navigation}) => {
     });
 
     const onSubmit = (data) => {
-        Alert.alert("Form Data", JSON.stringify(data));
+        storeDataZeiten(JSON.stringify(data));
         navigation.goBack();
     };
 
@@ -492,7 +497,7 @@ export const RegisterArbeitsZeiten = ({navigation}) => {
                                 <Button
                                     buttonStyle={styles.saveButton}
                                     titleStyle={styles.saveButtonTitle}
-                                    disabled={!formState.isValid}
+                                    disabled={false}
                                     title="Speichern"
                                     onPress={handleSubmit(onSubmit)}
                                 />

@@ -1,5 +1,5 @@
-import React, {useContext} from "react";
-import {ScrollView, StyleSheet, Text, TouchableOpacity, View} from "react-native";
+import React, {useContext, useEffect} from "react";
+import {ScrollView, StyleSheet, Text, TouchableOpacity, View, AsyncStorage} from "react-native";
 import {Button} from "react-native-elements";
 import {AuthContext} from "../AuthProvider";
 import {Header} from "../Header";
@@ -7,7 +7,58 @@ import {RegisterContext} from "../RegisterProvider";
 
 export const Register = ({navigation}) => {
     const {logout} = useContext(AuthContext);
-    const {register, registered} = useContext(RegisterContext);
+    const {
+        register,
+        registered,
+        dataPerson,
+        dataFahrzeug,
+        dataGebiet,
+        dataZeiten,
+        storeDataPerson,
+        storeDataFahrzeug,
+        storeDataGebiet,
+        storeDataZeiten,
+    } = useContext(RegisterContext);
+
+    useEffect(() => {
+        AsyncStorage.getItem("dataPerson")
+            .then((data) => {
+                if (data) {
+                    storeDataPerson(data);
+                }
+            })
+            .catch((err) => {
+                console.log(err);
+            });
+        AsyncStorage.getItem("dataFahrzeug")
+            .then((data) => {
+                console.log("register.tsx df: " + data);
+                if (data) {
+                    storeDataFahrzeug(data);
+                }
+            })
+            .catch((err) => {
+                console.log(err);
+            });
+        AsyncStorage.getItem("dataGebiet")
+            .then((data) => {
+                if (data) {
+                    storeDataGebiet(data);
+                }
+            })
+            .catch((err) => {
+                console.log(err);
+            });
+        AsyncStorage.getItem("dataZeiten")
+            .then((data) => {
+                if (data) {
+                    storeDataZeiten(data);
+                }
+            })
+            .catch((err) => {
+                console.log(err);
+            });
+    });
 
     return (
         <ScrollView style={styles.container}>
@@ -32,23 +83,40 @@ export const Register = ({navigation}) => {
                                 Persönliche Informationen
                             </Text>
                         </TouchableOpacity>
-                        <Text style={styles.statusText}>Unvollständig</Text>
+                        {dataPerson ? (
+                            <Text style={styles.statusComplete}>Vollständig</Text>
+                        ) : (
+                            <Text style={styles.statusIncomplete}>Unvollständig</Text>
+                        )}
+
                         <TouchableOpacity onPress={() => navigation.navigate("RegisterFahrzeug")}>
                             <Text style={[styles.navLink]}>Fahrzeuginformationen</Text>
                         </TouchableOpacity>
-                        <Text style={styles.statusText}>Unvollständig</Text>
+                        {dataFahrzeug ? (
+                            <Text style={styles.statusComplete}>Vollständig</Text>
+                        ) : (
+                            <Text style={styles.statusIncomplete}>Unvollständig</Text>
+                        )}
                         <TouchableOpacity
                             onPress={() => navigation.navigate("RegisterGebietPreis")}
                         >
                             <Text style={[styles.navLink]}>Gebiet & Preis</Text>
                         </TouchableOpacity>
-                        <Text style={styles.statusText}>Unvollständig</Text>
+                        {dataGebiet ? (
+                            <Text style={styles.statusComplete}>Vollständig</Text>
+                        ) : (
+                            <Text style={styles.statusIncomplete}>Unvollständig</Text>
+                        )}
                         <TouchableOpacity
                             onPress={() => navigation.navigate("RegisterArbeitszeiten")}
                         >
                             <Text style={[styles.navLink]}>Arbeitszeiten</Text>
                         </TouchableOpacity>
-                        <Text style={styles.statusText}>Unvollständig</Text>
+                        {dataZeiten ? (
+                            <Text style={styles.statusComplete}>Vollständig</Text>
+                        ) : (
+                            <Text style={styles.statusIncomplete}>Unvollständig</Text>
+                        )}
                     </View>
                     <View>
                         <Button
@@ -60,7 +128,21 @@ export const Register = ({navigation}) => {
                             buttonStyle={styles.button}
                             titleStyle={styles.buttonTitle}
                             containerStyle={styles.buttonContainer}
+                            disabled={
+                                registered
+                                    ? false
+                                    : !(dataPerson && dataFahrzeug && dataGebiet && dataZeiten)
+                            }
                         />
+                        {/* <View style={{alignItems: "center"}}>
+                            <TouchableOpacity
+                                onPress={() => {
+                                    register();
+                                }}
+                            >
+                                <Text>register</Text>
+                            </TouchableOpacity>
+                        </View> */}
                     </View>
                 </View>
             </View>
@@ -107,8 +189,13 @@ export const styles = StyleSheet.create({
         fontWeight: "bold",
         padding: 10,
     },
-    statusText: {
+    statusIncomplete: {
         color: "#D4CCC3",
+        marginLeft: 10,
+        fontSize: 16,
+    },
+    statusComplete: {
+        color: "#729628",
         marginLeft: 10,
         fontSize: 16,
     },

@@ -1,5 +1,5 @@
 import {AntDesign, FontAwesome, MaterialIcons, SimpleLineIcons} from "@expo/vector-icons";
-import React from "react";
+import React, {useContext} from "react";
 import {Controller, useForm} from "react-hook-form";
 import {
     Alert,
@@ -12,8 +12,11 @@ import {
 import {Button, Input} from "react-native-elements";
 import * as Yup from "yup";
 import {Header} from "../Header";
+import {RegisterContext} from "../RegisterProvider";
 
 export const RegisterGebietPreis = ({navigation}) => {
+    const {storeDataGebiet} = useContext(RegisterContext);
+
     const registerSchema = Yup.object().shape({
         zustellGebietPLZ: Yup.string()
             .matches(/^[0-9]{5}$/, "5-stellige Zahl")
@@ -59,7 +62,7 @@ export const RegisterGebietPreis = ({navigation}) => {
         submitFocusError: true,
     });
     const onSubmit = (data) => {
-        Alert.alert("Form Data", JSON.stringify(data));
+        storeDataGebiet(JSON.stringify(data));
         navigation.goBack();
     };
     return (
