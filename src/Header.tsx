@@ -42,6 +42,7 @@ export const Header: React.SFC<HeaderProps> = (props) => {
                     <Text
                         style={[
                             color(props.color),
+                            {fontFamily: "KonnectBlack"},
                             [props.textStyle ? props.textStyle : styles.textDefault],
                         ]}
                     >
@@ -78,7 +79,6 @@ const styles = StyleSheet.create({
         fontSize: 36,
         lineHeight: 40,
         fontWeight: "900",
-        fontFamily: "KonnectBlack",
     },
     subTextDefault: {
         fontSize: 20,
