@@ -6,7 +6,7 @@ import ExpoPixi from "expo-pixi";
 
 const Stack = createStackNavigator<SignatureProps>();
 
-const SignView = ({navigation}) => {
+export const Signature = ({navigation}) => {
     let ref = useRef(0);
     return (
         <View style={styles.container}>
@@ -43,14 +43,6 @@ const styles = StyleSheet.create({
     sketchContainer: {
         height: "100%",
     },
-    image: {
-        flex: 1,
-    },
-    label: {
-        width: "100%",
-        padding: 5,
-        alignItems: "center",
-    },
     button: {
         zIndex: 1,
         padding: 12,
@@ -58,11 +50,3 @@ const styles = StyleSheet.create({
         minHeight: 48,
     },
 });
-
-export const Signature: React.FC<{}> = ({}) => {
-    return (
-        <Stack.Navigator initialRouteName="Signature">
-            <Stack.Screen options={{title: "Unterschrift"}} name="Signature" component={SignView} />
-        </Stack.Navigator>
-    );
-};

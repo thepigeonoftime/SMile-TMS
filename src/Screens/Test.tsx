@@ -6,8 +6,9 @@ import {CodeScanner} from "./CodeScanner";
 import {CodeGenerator} from "./CodeGenerator";
 import {QRTestProps} from "../Types";
 import {HereMaps} from "./HereMaps";
+import {Signature} from "./Signature";
 
-const Stack = createStackNavigator<QRTestProps>();
+const Stack = createStackNavigator();
 
 const TestView = ({navigation}) => {
     let content = "smile QR Code test";
@@ -26,6 +27,12 @@ const TestView = ({navigation}) => {
                 }}
             />
             <Button
+                title="Signature"
+                onPress={() => {
+                    navigation.navigate("Signature");
+                }}
+            />
+            <Button
                 title="Maps"
                 onPress={() => {
                     navigation.navigate("HereMaps");
@@ -40,6 +47,11 @@ export const Test: React.FC<{}> = ({}) => {
         <Stack.Navigator initialRouteName="QRTest">
             <Stack.Screen options={{title: "Test Component"}} name="Test" component={TestView} />
             <Stack.Screen options={{title: "QR Scanner"}} name="QRScan" component={CodeScanner} />
+            <Stack.Screen
+                options={{title: "Unterschrift"}}
+                name="Signature"
+                component={Signature}
+            />
             <Stack.Screen
                 options={{title: "QR Generator"}}
                 name="QRGenerator"
