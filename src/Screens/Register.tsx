@@ -62,6 +62,26 @@ export const Register = ({navigation}) => {
 
     return (
         <ScrollView style={styles.container}>
+            <View
+                style={{
+                    position: "absolute",
+                    top: 30,
+                    right: 30,
+                    zIndex: 10,
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                    padding: 10,
+                }}
+            >
+                <TouchableOpacity
+                    onPress={() => {
+                        register();
+                        navigation.navigate("Settings");
+                    }}
+                >
+                    <Text>register</Text>
+                </TouchableOpacity>
+            </View>
             <View>
                 <Header
                     text="Profil"
