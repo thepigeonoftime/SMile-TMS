@@ -7,6 +7,7 @@ import {CodeGenerator} from "./CodeGenerator";
 import {QRTestProps} from "../Types";
 import {HereMaps} from "./HereMaps";
 import {Signature} from "./Signature";
+import {Offline} from "./Offline";
 
 const Stack = createStackNavigator();
 
@@ -38,6 +39,12 @@ const TestView = ({navigation}) => {
                     navigation.navigate("HereMaps");
                 }}
             />
+            <Button
+                title="Offline"
+                onPress={() => {
+                    navigation.navigate("Offline");
+                }}
+            />
         </Center>
     );
 };
@@ -58,6 +65,7 @@ export const Test: React.FC<{}> = ({}) => {
                 component={CodeGenerator}
             />
             <Stack.Screen options={{title: "Here Maps"}} name="HereMaps" component={HereMaps} />
+            <Stack.Screen options={{title: "Offline"}} name="Offline" component={Offline} />
         </Stack.Navigator>
     );
 };
