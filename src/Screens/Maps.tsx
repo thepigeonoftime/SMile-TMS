@@ -16,7 +16,7 @@ export const Maps = ({navigation}) => {
                     paddingLeft: "10%",
                     paddingTop: "10%",
                     alignItems: "flex-start",
-                    paddingBottom: "3%",
+                    paddingBottom: "4%",
                     backgroundColor: "#F2F2F2",
                 }}
             />

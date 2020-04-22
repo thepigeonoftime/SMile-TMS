@@ -38,7 +38,7 @@ export const TourSuche = ({navigation}) => {
                     zIndex: 10,
                     flexDirection: "row",
                     justifyContent: "space-between",
-                    padding: 10,
+                    paddingHorizontal: 10,
                 }}
             >
                 <TouchableOpacity
@@ -65,7 +65,7 @@ export const TourSuche = ({navigation}) => {
                     subText="nach einer vefügbaren Route!"
                 />
             </View>
-            <View style={{justifyContent: "center", alignItems: "center"}}>
+            <View style={styles.buttonWrap}>
                 <Button
                     buttonStyle={styles.saveButton}
                     titleStyle={styles.saveButtonTitle}
@@ -97,6 +97,12 @@ const styles = StyleSheet.create({
         flexDirection: "column",
         height: "100%",
         justifyContent: "flex-start",
+    },
+    buttonWrap: {
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+        marginTop: -40,
     },
     saveButton: {
         backgroundColor: "#3FA9F5",

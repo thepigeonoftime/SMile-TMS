@@ -64,6 +64,7 @@ export const Header: React.SFC<HeaderProps> = (props) => {
 
 const styles = StyleSheet.create({
     containerDefault: {
+        flex: 1,
         flexDirection: "row",
         alignItems: "flex-start",
         paddingTop: "15%",
