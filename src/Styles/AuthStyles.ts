@@ -4,13 +4,14 @@ import {useFonts} from "@use-expo/font";
 
 export const styles = StyleSheet.create({
     container: {
-        flex: 1,
+        // flex: 1,
         backgroundColor: "#FFF",
+        minHeight: "100%",
     },
     header: {
         paddingHorizontal: "15%",
         paddingTop: "15%",
-        paddingBottom: "33%",
+        paddingBottom: "30%",
     },
     loginHeaderText: {
         fontWeight: "bold",
@@ -35,7 +36,7 @@ export const styles = StyleSheet.create({
     textWrapper: {},
     image: {},
     contentWrap: {
-        flex: 10,
+        // flex: 1,
         justifyContent: "center",
         alignItems: "center",
         borderTopLeftRadius: 40,
@@ -48,7 +49,7 @@ export const styles = StyleSheet.create({
         fontSize: 21,
         color: "#696d7d",
         fontWeight: "bold",
-        paddingTop: "8%",
+        paddingTop: "10%",
     },
     inputWrap: {
         flex: 1,
@@ -60,7 +61,8 @@ export const styles = StyleSheet.create({
         paddingLeft: "5%",
     },
     lineWrap: {
-        paddingTop: "2%",
+        flex: 1,
+        paddingTop: "1%",
         flexDirection: "row",
         justifyContent: "flex-start",
         alignItems: "flex-end",
@@ -70,8 +72,9 @@ export const styles = StyleSheet.create({
         fontSize: 14,
     },
     buttonContainer: {
-        flex: 4,
+        flex: 10,
         alignItems: "center",
+        top: "-5%",
     },
     buttonWrap: {
         width: "75%",

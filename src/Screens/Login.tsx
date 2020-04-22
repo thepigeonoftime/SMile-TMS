@@ -1,23 +1,22 @@
 import {AntDesign, SimpleLineIcons} from "@expo/vector-icons";
 import React, {useContext} from "react";
-import {
-    ImageBackground,
-    SafeAreaView,
-    StyleSheet,
-    Text,
-    TouchableOpacity,
-    View,
-    KeyboardAvoidingView,
-} from "react-native";
+import {ImageBackground, KeyboardAvoidingView, Text, TouchableOpacity, View} from "react-native";
 import {Button, Input} from "react-native-elements";
 import {AuthContext} from "../AuthProvider";
-import {AuthNavProps} from "../Types";
 import {styles} from "../Styles/AuthStyles";
+import {AuthNavProps} from "../Types";
+import {KeyboardAwareScrollView} from "react-native-keyboard-aware-scroll-view";
 
-export const Login = ({navigation}: AuthNavProps<"Login">) => {
+export const Login = ({navigation, route}: AuthNavProps<"Signup">) => {
     const {login} = useContext(AuthContext);
     return (
-        <KeyboardAvoidingView style={styles.container}>
+        <KeyboardAwareScrollView
+            style={{backgroundColor: "#FFF"}}
+            resetScrollToCoords={{x: 0, y: 0}}
+            contentContainerStyle={styles.container}
+            scrollEnabled={false}
+            enableOnAndroid={true}
+        >
             <ImageBackground source={require("../../assets/signupbg.png")} style={styles.image}>
                 <View style={[styles.header]}>
                     <View style={styles.textWrapper}>
@@ -25,14 +24,7 @@ export const Login = ({navigation}: AuthNavProps<"Login">) => {
                         <Text style={styles.loginHeaderSubText}>
                             Anmelden, Touren übernehmen, Pakete ausliefern.
                         </Text>
-                        <Text
-                            style={[
-                                styles.loginHeaderSubText,
-                                {
-                                    fontWeight: "bold",
-                                },
-                            ]}
-                        >
+                        <Text style={[styles.loginHeaderSubText, {fontWeight: "bold"}]}>
                             Ganz einfach.
                         </Text>
                     </View>
@@ -69,7 +61,7 @@ export const Login = ({navigation}: AuthNavProps<"Login">) => {
             <View style={styles.buttonContainer}>
                 <View style={[styles.buttonWrap]}>
                     <Button
-                        title={"Login"}
+                        title={"Weiter"}
                         onPress={() => {
                             login();
                         }}
@@ -80,10 +72,8 @@ export const Login = ({navigation}: AuthNavProps<"Login">) => {
             </View>
             <View
                 style={{
-                    // justifyContent: "flex-end",
                     alignItems: "center",
                     paddingBottom: 20,
-                    // height: 50,
                 }}
             >
                 <TouchableOpacity
@@ -91,9 +81,9 @@ export const Login = ({navigation}: AuthNavProps<"Login">) => {
                         navigation.navigate("Signup");
                     }}
                 >
-                    <Text style={{color: "#3fa9f5"}}>Ich habe keinen Login</Text>
+                    <Text style={{color: "#3fa9f5"}}>Ich habe einen Login</Text>
                 </TouchableOpacity>
             </View>
-        </KeyboardAvoidingView>
+        </KeyboardAwareScrollView>
     );
 };

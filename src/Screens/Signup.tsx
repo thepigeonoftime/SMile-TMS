@@ -5,11 +5,18 @@ import {Button, Input} from "react-native-elements";
 import {AuthContext} from "../AuthProvider";
 import {styles} from "../Styles/AuthStyles";
 import {AuthNavProps} from "../Types";
+import {KeyboardAwareScrollView} from "react-native-keyboard-aware-scroll-view";
 
 export const Signup = ({navigation, route}: AuthNavProps<"Signup">) => {
     const {signup} = useContext(AuthContext);
     return (
-        <KeyboardAvoidingView behavior="padding" style={styles.container}>
+        <KeyboardAwareScrollView
+            style={{backgroundColor: "#FFF"}}
+            resetScrollToCoords={{x: 0, y: 0}}
+            contentContainerStyle={styles.container}
+            scrollEnabled={false}
+            enableOnAndroid={true}
+        >
             <ImageBackground source={require("../../assets/signupbg.png")} style={styles.image}>
                 <View style={[styles.header]}>
                     <View style={styles.textWrapper}>
@@ -83,6 +90,6 @@ export const Signup = ({navigation, route}: AuthNavProps<"Signup">) => {
                     <Text style={{color: "#3fa9f5"}}>Ich habe einen Login</Text>
                 </TouchableOpacity>
             </View>
-        </KeyboardAvoidingView>
+        </KeyboardAwareScrollView>
     );
 };
