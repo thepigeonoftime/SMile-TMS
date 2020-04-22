@@ -28,6 +28,7 @@
     "react-hook-form": "^5.3.1",
     "react-native": "https://github.com/expo/react-native/archive/sdk-36.0.0.tar.gz",
     "react-native-barcode-mask": "^1.1.0",
+    "react-native-custom-qr-codes": "^2.0.0",
     "react-native-custom-qr-codes-expo": "^2.2.0",
     "react-native-elements": "^1.2.7",
     "react-native-gesture-handler": "^1.5.6",

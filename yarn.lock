@@ -5385,6 +5385,13 @@ react-native-custom-qr-codes-expo@^2.2.0:
   dependencies:
     prop-types "^15.7.2"
 
+react-native-custom-qr-codes@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/react-native-custom-qr-codes/-/react-native-custom-qr-codes-2.0.0.tgz#95fc813e1cbb5190cbdaf2657d361c5220a4feef"
+  integrity sha512-tUQipLzDorDgv/gzuhAISSqCCNOTtM+QveAUTnV1deeEKDAtdfdzY9QJIqLZYmfYvusySpXOK1Sdu9X+6AR2Jg==
+  dependencies:
+    prop-types "^15.5.10"
+
 react-native-elements@^1.2.7:
   version "1.2.7"
   resolved "https://registry.yarnpkg.com/react-native-elements/-/react-native-elements-1.2.7.tgz#1eca2db715c41722aeb67aea62bd2a4621adb134"
