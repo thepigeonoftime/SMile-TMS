@@ -1,3 +1,4 @@
+import {TourListe} from "./Screens/TourListe";
 import {ZielStack} from "./ZielStack";
 import {PaketeLaden} from "./Screens/PaketeLaden";
 import {RouteProp} from "@react-navigation/native";
@@ -66,4 +67,5 @@ export type TourStackProps = {
 export type ZielStackProps = {
     ZielView: undefined;
     Navigation: undefined;
+    TourListe: undefined;
 };

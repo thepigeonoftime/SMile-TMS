@@ -1,11 +1,9 @@
 import {AntDesign} from "@expo/vector-icons";
 import React from "react";
 import {StyleSheet, Text, TouchableOpacity, View} from "react-native";
-import {QRCode} from "react-native-custom-qr-codes-expo";
 import {Header} from "../Header";
 
 export const Maps = ({navigation}) => {
-    let content = "smile QR Code test";
     return (
         <View style={{flex: 1}}>
             <Header
