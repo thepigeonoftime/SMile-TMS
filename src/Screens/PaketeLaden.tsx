@@ -37,6 +37,11 @@ export const PaketeLaden = ({navigation}) => {
                         style={{backgroundColor: "#FFF"}}
                     />
                 </View>
+                <View style={{flex: 1, alignItems: "center"}}>
+                    <TouchableOpacity onPress={() => navigation.navigate("ZielStack")}>
+                        <Text>Nächstes Ziel</Text>
+                    </TouchableOpacity>
+                </View>
             </View>
         </View>
     );
@@ -79,7 +84,7 @@ const styles = StyleSheet.create({
         elevation: 5,
     },
     qrContainer: {
-        flex: 1,
+        flex: 2,
         flexDirection: "column",
         justifyContent: "flex-start",
         alignItems: "center",
