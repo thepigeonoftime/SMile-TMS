@@ -23,7 +23,7 @@ export const TourStart: React.FC<IRoute> = ({navigation}) => {
 
     return (
         <ScrollView>
-            {!error && tour && (
+            {tour && (
                 <View style={{}}>
                     <Header
                         text="Tourvorbereitung"

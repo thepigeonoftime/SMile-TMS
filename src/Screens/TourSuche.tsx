@@ -1,17 +1,20 @@
 import Axios from "axios";
 import React, {useContext, useState} from "react";
-import {Text, TouchableOpacity, View, StyleSheet} from "react-native";
+import {Text, TouchableOpacity, View, StyleSheet, Animated} from "react-native";
 import {Button} from "react-native-elements";
 import {AuthContext} from "../AuthProvider";
 import {Header} from "../Header";
 import {RegisterContext} from "../RegisterProvider";
 import {TourContext} from "../TourProvider";
+import {useAnimation} from "react-native-animation-hooks";
+import IconClose from "~/assets/svg/menu-icn_close.svg";
 
 export const TourSuche = ({navigation}) => {
     const {unregister} = useContext(RegisterContext);
     const {logout} = useContext(AuthContext);
     const {tour, setTour, removeTour, setError} = useContext(TourContext);
     const [sucheDisabled, setSucheDisabled] = useState(false);
+    const [showError, setShowError] = useState(false);
 
     const fetchTour = () => {
         Axios.get("https://unsafe.run/getTours")
@@ -21,17 +24,44 @@ export const TourSuche = ({navigation}) => {
                 navigation.navigate("TourStart");
             })
             .catch((error) => {
+                setShowError(true);
+                setSucheDisabled(false);
                 setError(error);
             });
     };
 
     const getTour = () => {
+        setShowError(false);
         setSucheDisabled(true);
         setTimeout(fetchTour, 1000);
     };
 
+    const aHeight = useAnimation({
+        type: "timing",
+        initialValue: 0,
+        toValue: showError ? 100 : 0,
+        duration: showError ? 300 : 200,
+    });
+
     return (
         <View style={styles.container}>
+            <TouchableOpacity onPress={() => setShowError(false)}>
+                <Animated.View
+                    style={{
+                        height: aHeight,
+                        backgroundColor: "#fb9f54",
+                        flexDirection: "row",
+                        justifyContent: "space-between",
+                        alignItems: "center",
+                        paddingHorizontal: 20,
+                    }}
+                >
+                    <Text style={{color: "#fff", paddingTop: 10}}>
+                        Probleme beim Laden der Tour. Bitte erneut versuchen.
+                    </Text>
+                    <IconClose width={15} height={15} fill="#FFF" />
+                </Animated.View>
+            </TouchableOpacity>
             <View
                 style={{
                     top: 30,
@@ -83,6 +113,7 @@ export const TourSuche = ({navigation}) => {
                     title="abbrechen"
                     onPress={() => {
                         setSucheDisabled(false);
+                        setShowError(false);
                     }}
                 />
             </View>
