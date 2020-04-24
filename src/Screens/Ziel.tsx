@@ -66,7 +66,7 @@ export const Ziel = ({navigation}) => {
                         </View>
                         <TourListe />
                         <Navigation />
-                        <PaketGeben />
+                        <PaketGeben navigation={navigation} />
                     </View>
                 </View>
             )}

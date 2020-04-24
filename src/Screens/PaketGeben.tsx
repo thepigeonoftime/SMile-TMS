@@ -5,7 +5,7 @@ import {TourContext} from "../TourProvider";
 import Modal from "react-native-modal";
 import IconClose from "~/assets/svg/menu-icn_close.svg";
 
-export const PaketGeben = (props) => {
+export const PaketGeben = ({navigation}) => {
     const {tour, showPaketGeben, togglePaketGeben} = useContext(TourContext);
     return (
         <Modal isVisible={showPaketGeben} style={styles.modal} backdropOpacity={0.4}>
@@ -29,6 +29,10 @@ export const PaketGeben = (props) => {
                             // disabledStyle={styles.buttonDisabled}
                             disabled={false}
                             title="Paket übergeben"
+                            onPress={() => {
+                                navigation.navigate("Authentifizierung");
+                                togglePaketGeben();
+                            }}
                         />
                         <Button
                             buttonStyle={styles.buttonGrey}
