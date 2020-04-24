@@ -16,6 +16,8 @@ export const TourContext = React.createContext<{
     toggleTourListe: () => void;
     showPaketGeben: boolean;
     togglePaketGeben: () => void;
+    signatureURI: null | string;
+    saveSignature: (uri) => void;
 }>({
     tour: null,
     error: null,
@@ -28,6 +30,8 @@ export const TourContext = React.createContext<{
     toggleTourListe: () => {},
     showPaketGeben: false,
     togglePaketGeben: () => {},
+    signatureURI: null,
+    saveSignature: () => {},
 });
 
 interface TourProviderProps {}
@@ -37,6 +41,7 @@ export const TourProvider: React.FC<TourProviderProps> = ({children}) => {
     const [showTourListe, setShowTourListe] = useState(false);
     const [showNavigation, setShowNavigation] = useState(false);
     const [showPaketGeben, setShowPaketGeben] = useState(false);
+    const [signatureURI, setSignatureURI] = useState(null);
 
     return (
         <TourContext.Provider
@@ -46,6 +51,7 @@ export const TourProvider: React.FC<TourProviderProps> = ({children}) => {
                 showNavigation,
                 showTourListe,
                 showPaketGeben,
+                signatureURI,
                 setTour: (tour) => {
                     setTour(tour);
                     // AsyncStorage.setItem("tour", tour);
@@ -65,6 +71,9 @@ export const TourProvider: React.FC<TourProviderProps> = ({children}) => {
                 },
                 togglePaketGeben: () => {
                     setShowPaketGeben(!showPaketGeben);
+                },
+                saveSignature: (uri) => {
+                    setSignatureURI(uri);
                 },
             }}
         >
