@@ -32,7 +32,6 @@ export const Register = ({navigation}) => {
             });
         AsyncStorage.getItem("dataFahrzeug")
             .then((data) => {
-                console.log("register.tsx df: " + data);
                 if (data) {
                     storeDataFahrzeug(data);
                 }

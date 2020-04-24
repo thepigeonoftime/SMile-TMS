@@ -1,96 +1,83 @@
 import React, {useContext} from "react";
-import {ScrollView, StyleSheet, Text, View} from "react-native";
+import {StyleSheet, Text, View, TouchableOpacity} from "react-native";
 import {Button} from "react-native-elements";
-import {Header} from "../Header";
 import {TourContext} from "../TourProvider";
+import Modal from "react-native-modal";
+import IconClose from "~/assets/svg/menu-icn_close.svg";
 
-export const Navigation = ({navigation}) => {
-    const {tour} = useContext(TourContext);
+export const Navigation = (props) => {
+    const {showNavigation, toggleNavigation} = useContext(TourContext);
     return (
-        <ScrollView>
-            {tour && (
-                <View>
-                    <Header text="Nächstes Ziel" color="#729628" containerStyle={styles.header} />
-                    <View style={styles.content}>
-                        <View style={{paddingLeft: "10%", paddingTop: "10%", paddingBottom: "70%"}}>
-                            <View>
-                                <Text style={[styles.zielText, {fontWeight: "bold"}]}>
-                                    {tour.tours[0].stops[1].streetName}
-                                </Text>
-                                <Text style={[styles.zielText]}>
-                                    Nummer: {tour.tours[0].stops[1].streetNumber}
-                                </Text>
-                                <Text style={[styles.zielText]}>
-                                    {tour.tours[0].stops[1].zip + " " + tour.tours[0].stops[1].city}
-                                </Text>
-                            </View>
-                        </View>
-                    </View>
+        <Modal
+            isVisible={showNavigation}
+            // deviceWidth={deviceWidth}
+            style={styles.modal}
+            backdropOpacity={0.05}
+        >
+            <View style={styles.container}>
+                <View style={styles.closeButtonContainer}>
+                    <TouchableOpacity onPress={toggleNavigation} style={styles.closeButton}>
+                        <IconClose height={20} width={20} fill="#f89e3b" />
+                    </TouchableOpacity>
                 </View>
-            )}
-        </ScrollView>
+                <View style={styles.content}>
+                    <Text>Navigation</Text>
+                </View>
+            </View>
+        </Modal>
     );
 };
 
 const styles = StyleSheet.create({
-    header: {
-        paddingLeft: "10%",
-        paddingTop: "13%",
-        alignItems: "flex-start",
-        paddingBottom: "1%",
-        backgroundColor: "#F2F2F2",
+    modal: {
+        flex: 1,
+        alignItems: "center",
+        justifyContent: "center",
+        left: -20,
+        width: "100%",
     },
-    content: {
-        justifyContent: "flex-start",
-        alignItems: "flex-start",
-        // paddingTop: "7%",
-        marginBottom: "40%",
+    container: {
+        flex: 1,
+        // alignItems: "center",
+        width: "100%",
+        top: 110,
+        // height: "50%",
+        paddingTop: "10%",
+        paddingHorizontal: "10%",
         borderRadius: 25,
         backgroundColor: "#FFF",
-        height: "100%",
         shadowColor: "#000",
         shadowOffset: {width: 0, height: -1},
-        shadowOpacity: 0.05,
+        shadowOpacity: 0.1,
         shadowRadius: 1.0,
         elevation: 2,
     },
-    buttonWhite: {
-        backgroundColor: "#FFF",
-        height: 50,
-        width: "100%",
-        borderRadius: 30,
+    closeButtonContainer: {
+        // flex: 1,
+        alignItems: "flex-end",
+        padding: 5,
+        marginTop: -55,
+        marginRight: 0,
+    },
+    closeButton: {
+        borderWidth: 0,
         alignItems: "center",
         justifyContent: "center",
-        marginBottom: 20,
-        borderColor: "#3FA9F5",
-        borderWidth: 2,
-    },
-    buttonWhiteTitle: {
-        color: "#3FA9F5",
-        fontSize: 22,
-        fontWeight: "600",
-    },
-    buttonBlue: {
-        backgroundColor: "#3FA9F5",
-        height: 50,
-        width: "100%",
+        width: 40,
+        height: 40,
+        backgroundColor: "#fff",
         borderRadius: 30,
+        borderColor: "#FFF",
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 3.84,
+        elevation: 5,
+    },
+    content: {
         alignItems: "center",
-        justifyContent: "center",
-        marginBottom: 20,
-    },
-    buttonBlueTitle: {
-        color: "#FFF",
-        fontSize: 22,
-        fontWeight: "600",
-    },
-    buttonDisabled: {
-        backgroundColor: "transparent",
-        borderWidth: 2,
-        borderColor: "#ccc",
-    },
-    zielText: {
-        color: "#666",
-        fontSize: 20,
     },
 });

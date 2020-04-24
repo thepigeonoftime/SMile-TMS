@@ -5,7 +5,7 @@ import {TourSuche} from "./Screens/TourSuche";
 import {TourStackProps} from "./Types";
 import {Maps} from "./Screens/Maps";
 import {PaketeLaden} from "./Screens/PaketeLaden";
-import {ZielStack} from "./ZielStack";
+import {ZielView} from "./Screens/ZielView";
 
 const Stack = createStackNavigator<TourStackProps>();
 
@@ -16,7 +16,7 @@ export const TourStack = () => {
             <Stack.Screen name="TourStart" component={TourStart} options={{}} />
             <Stack.Screen name="Maps" component={Maps} options={{}} />
             <Stack.Screen name="PaketeLaden" component={PaketeLaden} options={{}} />
-            <Stack.Screen name="ZielStack" component={ZielStack} options={{}} />
+            <Stack.Screen name="ZielView" component={ZielView} options={{}} />
         </Stack.Navigator>
     );
 };

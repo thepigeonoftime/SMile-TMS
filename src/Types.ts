@@ -1,6 +1,3 @@
-import {TourListe} from "./Screens/TourListe";
-import {ZielStack} from "./ZielStack";
-import {PaketeLaden} from "./Screens/PaketeLaden";
 import {RouteProp} from "@react-navigation/native";
 import {StackNavigationProp} from "@react-navigation/stack";
 
@@ -61,11 +58,5 @@ export type TourStackProps = {
     Settings: undefined;
     Maps: undefined;
     PaketeLaden: undefined;
-    ZielStack: undefined;
-};
-
-export type ZielStackProps = {
     ZielView: undefined;
-    Navigation: undefined;
-    TourListe: undefined;
 };

@@ -3,9 +3,11 @@ import {ScrollView, StyleSheet, Text, View} from "react-native";
 import {Button} from "react-native-elements";
 import {Header} from "../Header";
 import {TourContext} from "../TourProvider";
+import {Navigation} from "./Navigation";
+import {TourListe} from "./TourListe";
 
 export const ZielView = ({navigation}) => {
-    const {tour} = useContext(TourContext);
+    const {tour, toggleTourListe, toggleNavigation} = useContext(TourContext);
     return (
         <ScrollView>
             {tour && (
@@ -38,9 +40,7 @@ export const ZielView = ({navigation}) => {
                                 disabledStyle={styles.buttonDisabled}
                                 disabled={false}
                                 title="Tourliste"
-                                onPress={() => {
-                                    navigation.navigate("TourListe");
-                                }}
+                                onPress={toggleTourListe}
                             />
                             <Button
                                 buttonStyle={styles.buttonWhite}
@@ -48,21 +48,21 @@ export const ZielView = ({navigation}) => {
                                 disabledStyle={styles.buttonDisabled}
                                 disabled={false}
                                 title="Navigation"
-                                onPress={() => {
-                                    navigation.navigate("Navigation");
-                                }}
+                                onPress={toggleNavigation}
                             />
                             <Button
                                 buttonStyle={styles.buttonBlue}
                                 titleStyle={styles.buttonBlueTitle}
                                 disabledStyle={styles.buttonDisabled}
                                 disabled={false}
-                                title="Pakete übergeben"
+                                title="Paket übergeben"
                                 onPress={() => {
                                     /*modal*/
                                 }}
                             />
                         </View>
+                        <TourListe />
+                        <Navigation />
                     </View>
                 </View>
             )}
@@ -79,7 +79,7 @@ const styles = StyleSheet.create({
         backgroundColor: "#F2F2F2",
     },
     content: {
-        justifyContent: "flex-start",
+        justifyContent: "center",
         alignItems: "flex-start",
         // paddingTop: "7%",
         marginBottom: "40%",
