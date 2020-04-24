@@ -38,7 +38,7 @@ export const PaketeLaden = ({navigation}) => {
                     />
                 </View>
                 <View style={{flex: 1, alignItems: "center"}}>
-                    <TouchableOpacity onPress={() => navigation.navigate("ZielView")}>
+                    <TouchableOpacity onPress={() => navigation.navigate("Ziel")}>
                         <Text>Nächstes Ziel</Text>
                     </TouchableOpacity>
                 </View>

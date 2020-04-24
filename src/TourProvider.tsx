@@ -14,6 +14,8 @@ export const TourContext = React.createContext<{
     toggleNavigation: () => void;
     showTourListe: boolean;
     toggleTourListe: () => void;
+    showPaketGeben: boolean;
+    togglePaketGeben: () => void;
 }>({
     tour: null,
     error: null,
@@ -24,14 +26,18 @@ export const TourContext = React.createContext<{
     toggleNavigation: () => {},
     showTourListe: false,
     toggleTourListe: () => {},
+    showPaketGeben: false,
+    togglePaketGeben: () => {},
 });
 
 interface TourProviderProps {}
 export const TourProvider: React.FC<TourProviderProps> = ({children}) => {
     const [tour, setTour] = useState(null);
     const [error, setError] = useState(null);
-    const [showNavigation, setShowNavigation] = useState(false);
     const [showTourListe, setShowTourListe] = useState(false);
+    const [showNavigation, setShowNavigation] = useState(false);
+    const [showPaketGeben, setShowPaketGeben] = useState(false);
+
     return (
         <TourContext.Provider
             value={{
@@ -39,6 +45,7 @@ export const TourProvider: React.FC<TourProviderProps> = ({children}) => {
                 error,
                 showNavigation,
                 showTourListe,
+                showPaketGeben,
                 setTour: (tour) => {
                     setTour(tour);
                     // AsyncStorage.setItem("tour", tour);
@@ -55,6 +62,9 @@ export const TourProvider: React.FC<TourProviderProps> = ({children}) => {
                 },
                 toggleTourListe: () => {
                     setShowTourListe(!showTourListe);
+                },
+                togglePaketGeben: () => {
+                    setShowPaketGeben(!showPaketGeben);
                 },
             }}
         >

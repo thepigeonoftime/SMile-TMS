@@ -58,5 +58,5 @@ export type TourStackProps = {
     Settings: undefined;
     Maps: undefined;
     PaketeLaden: undefined;
-    ZielView: undefined;
+    Ziel: undefined;
 };

@@ -5,9 +5,10 @@ import {Header} from "../Header";
 import {TourContext} from "../TourProvider";
 import {Navigation} from "./Navigation";
 import {TourListe} from "./TourListe";
+import {PaketGeben} from "./PaketGeben";
 
-export const ZielView = ({navigation}) => {
-    const {tour, toggleTourListe, toggleNavigation} = useContext(TourContext);
+export const Ziel = ({navigation}) => {
+    const {tour, toggleTourListe, toggleNavigation, togglePaketGeben} = useContext(TourContext);
     return (
         <ScrollView>
             {tour && (
@@ -16,6 +17,10 @@ export const ZielView = ({navigation}) => {
                     <View style={styles.content}>
                         <View style={{flex: 1, paddingLeft: "10%", paddingTop: "10%"}}>
                             <View>
+                                <Text style={[styles.zielText, {fontWeight: "bold"}]}>
+                                    {tour.tours[0].stops[1].firstName}{" "}
+                                    {tour.tours[0].stops[1].lastName}
+                                </Text>
                                 <Text style={[styles.zielText, {fontWeight: "bold"}]}>
                                     {tour.tours[0].stops[1].streetName}
                                 </Text>
@@ -56,13 +61,12 @@ export const ZielView = ({navigation}) => {
                                 disabledStyle={styles.buttonDisabled}
                                 disabled={false}
                                 title="Paket übergeben"
-                                onPress={() => {
-                                    /*modal*/
-                                }}
+                                onPress={togglePaketGeben}
                             />
                         </View>
                         <TourListe />
                         <Navigation />
+                        <PaketGeben />
                     </View>
                 </View>
             )}
