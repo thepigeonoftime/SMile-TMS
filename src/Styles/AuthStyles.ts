@@ -72,9 +72,10 @@ export const styles = StyleSheet.create({
         fontSize: 14,
     },
     buttonContainer: {
-        flex: 10,
+        flex: 1,
         alignItems: "center",
-        top: "-5%",
+        // top: "-5%",
+        marginTop: "-5%",
     },
     buttonWrap: {
         width: "75%",

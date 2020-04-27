@@ -81,7 +81,7 @@ export const Login = ({navigation, route}: AuthNavProps<"Signup">) => {
                         navigation.navigate("Signup");
                     }}
                 >
-                    <Text style={{color: "#3fa9f5"}}>Ich habe einen Login</Text>
+                    <Text style={{color: "#3fa9f5"}}>Ich habe keinen Login</Text>
                 </TouchableOpacity>
             </View>
         </KeyboardAwareScrollView>
