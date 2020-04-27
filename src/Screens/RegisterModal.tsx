@@ -1,11 +1,36 @@
-import React, {useContext} from "react";
-import {StyleSheet, Text, View} from "react-native";
+import React, {useContext, useState} from "react";
+import {StyleSheet, Text, View, TouchableOpacity, Animated} from "react-native";
 import {Button} from "react-native-elements";
 import Modal from "react-native-modal";
 import {RegisterContext} from "../RegisterProvider";
+import {useAnimation} from "react-native-animation-hooks";
+import IconClose from "~/assets/svg/menu-icn_close.svg";
 
 export const RegisterModal = ({navigation}) => {
     const {register, showRegModal, toggleRegModal} = useContext(RegisterContext);
+    const [showError, setShowError] = useState(false);
+
+    const onSubmit = () => {
+        register()
+            .then((response) => {
+                console.log(response);
+                toggleRegModal();
+                navigation.navigate("TourStarten");
+            })
+            .catch((error) => {
+                if (error) {
+                    // push to queue
+                    console.log(error);
+                }
+                setShowError(true);
+            });
+    };
+    const aHeight = useAnimation({
+        type: "timing",
+        initialValue: 0,
+        toValue: showError ? 70 : 0,
+        duration: showError ? 300 : 200,
+    });
     return (
         <Modal isVisible={showRegModal} style={styles.modal} backdropOpacity={0.4}>
             <View style={styles.container}>
@@ -23,11 +48,7 @@ export const RegisterModal = ({navigation}) => {
                             // disabledStyle={styles.buttonDisabled}
                             disabled={false}
                             title="Account erstellen"
-                            onPress={() => {
-                                register();
-                                toggleRegModal();
-                                navigation.navigate("TourStarten");
-                            }}
+                            onPress={onSubmit}
                         />
                         <Button
                             buttonStyle={styles.buttonGrey}
@@ -40,6 +61,23 @@ export const RegisterModal = ({navigation}) => {
                     </View>
                 </View>
             </View>
+            <TouchableOpacity onPress={() => setShowError(false)}>
+                <Animated.View
+                    style={{
+                        height: aHeight,
+                        backgroundColor: "#fb9f54",
+                        flexDirection: "row",
+                        justifyContent: "space-between",
+                        alignItems: "center",
+                        paddingHorizontal: 20,
+                    }}
+                >
+                    <Text style={{color: "#fff"}}>
+                        Probleme beim erstellen des Accounts. {"\n"}Bitte erneut versuchen.
+                    </Text>
+                    <IconClose width={15} height={15} fill={showError ? "#FFF" : "#696d7d"} />
+                </Animated.View>
+            </TouchableOpacity>
         </Modal>
     );
 };
@@ -71,6 +109,7 @@ const styles = StyleSheet.create({
         shadowRadius: 1.0,
         elevation: 2,
         margin: 0,
+        paddingBottom: 30,
     },
     content: {
         flex: 1,
