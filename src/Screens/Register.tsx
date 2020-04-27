@@ -4,6 +4,7 @@ import {Button} from "react-native-elements";
 import {AuthContext} from "../AuthProvider";
 import {Header} from "../Header";
 import {RegisterContext} from "../RegisterProvider";
+import {RegisterModal} from "./RegisterModal";
 
 export const Register = ({navigation}) => {
     const {logout} = useContext(AuthContext);
@@ -18,6 +19,7 @@ export const Register = ({navigation}) => {
         storeDataFahrzeug,
         storeDataGebiet,
         storeDataZeiten,
+        toggleRegModal,
     } = useContext(RegisterContext);
 
     useEffect(() => {
@@ -58,6 +60,16 @@ export const Register = ({navigation}) => {
                 console.log(err);
             });
     });
+
+    const onSubmit = () => {
+        if (registered) {
+            // send data update request
+            navigation.navigate("TourStarten");
+            // toggleRegModal();
+        } else if (dataPerson && dataFahrzeug && dataGebiet && dataZeiten) {
+            toggleRegModal();
+        }
+    };
 
     return (
         <ScrollView style={styles.container}>
@@ -140,10 +152,7 @@ export const Register = ({navigation}) => {
                     <View>
                         <Button
                             title={registered ? "Speichern" : "Account erstellen"}
-                            onPress={() => {
-                                register();
-                                navigation.navigate("TourStarten");
-                            }}
+                            onPress={onSubmit}
                             buttonStyle={styles.button}
                             titleStyle={styles.buttonTitle}
                             containerStyle={styles.buttonContainer}
@@ -164,6 +173,7 @@ export const Register = ({navigation}) => {
                         </View> */}
                     </View>
                 </View>
+                <RegisterModal navigation={navigation} />
             </View>
         </ScrollView>
     );

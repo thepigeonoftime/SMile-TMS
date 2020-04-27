@@ -9,24 +9,28 @@ export const RegisterContext = React.createContext<{
     dataFahrzeug: any;
     dataGebiet: any;
     dataZeiten: any;
+    showRegModal: boolean;
     register: () => void;
     unregister: () => void;
     storeDataPerson: (data) => void;
     storeDataFahrzeug: (data) => void;
     storeDataGebiet: (data) => void;
     storeDataZeiten: (data) => void;
+    toggleRegModal: () => void;
 }>({
     registered: null,
     dataPerson: null,
     dataFahrzeug: null,
     dataGebiet: null,
     dataZeiten: null,
+    showRegModal: false,
     register: () => {},
     unregister: () => {},
     storeDataPerson: (data) => {},
     storeDataFahrzeug: (data) => {},
     storeDataGebiet: (data) => {},
     storeDataZeiten: (data) => {},
+    toggleRegModal: () => {},
 });
 
 interface RegisterProviderProps {}
@@ -36,6 +40,7 @@ export const RegisterProvider: React.FC<RegisterProviderProps> = ({children}) =>
     const [dataFahrzeug, setDataFahrzeug] = useState<registerType>(null);
     const [dataGebiet, setDataGebiet] = useState<registerType>(null);
     const [dataZeiten, setDataZeiten] = useState<registerType>(null);
+    const [showRegModal, setShowRegModal] = useState<boolean>(false);
 
     return (
         <RegisterContext.Provider
@@ -45,6 +50,7 @@ export const RegisterProvider: React.FC<RegisterProviderProps> = ({children}) =>
                 dataFahrzeug,
                 dataGebiet,
                 dataZeiten,
+                showRegModal,
                 register: () => {
                     setRegistered("smile");
                     AsyncStorage.setItem("registered", "true");
@@ -82,6 +88,9 @@ export const RegisterProvider: React.FC<RegisterProviderProps> = ({children}) =>
                         setDataZeiten(data);
                         AsyncStorage.setItem("dataZeiten", data);
                     }
+                },
+                toggleRegModal: () => {
+                    setShowRegModal(!showRegModal);
                 },
             }}
         >
