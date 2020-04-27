@@ -191,6 +191,7 @@ export const TourStart: React.FC<IRoute> = ({navigation}) => {
 
 const styles = StyleSheet.create({
     tourContainer: {
+        // flex: 11
         flexDirection: "row",
         justifyContent: "flex-start",
         alignItems: "stretch",
@@ -198,7 +199,7 @@ const styles = StyleSheet.create({
         marginBottom: "40%",
         borderRadius: 25,
         backgroundColor: "#FFF",
-        height: "200%",
+        height: "100%",
         shadowColor: "#000",
         shadowOffset: {width: 0, height: -1},
         shadowOpacity: 0.05,

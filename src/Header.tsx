@@ -35,6 +35,7 @@ export const Header: React.SFC<HeaderProps> = (props) => {
                 style={[
                     [props.containerStyle ? props.containerStyle : styles.containerDefault],
                     [bgColor(props.bgColor)],
+                    // {height: 210},
                 ]}
             >
                 <View style={styles.spacer} />
@@ -43,7 +44,7 @@ export const Header: React.SFC<HeaderProps> = (props) => {
                         style={[
                             color(props.color),
                             {fontFamily: "KonnectBlack"},
-                            [props.textStyle ? props.textStyle : styles.textDefault],
+                            [styles.textDefault, props.textStyle],
                         ]}
                     >
                         {props.text}

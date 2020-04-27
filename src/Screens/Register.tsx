@@ -197,6 +197,7 @@ export const styles = StyleSheet.create({
         elevation: 5,
     },
     contentInner: {
+        flex: 1,
         backgroundColor: "#FFF",
         borderRadius: 20,
         paddingTop: "1%",
