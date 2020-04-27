@@ -1,7 +1,7 @@
 import {AntDesign} from "@expo/vector-icons";
 import React from "react";
 import {StyleSheet, Text, TouchableOpacity, View} from "react-native";
-import {QRCode} from "react-native-custom-qr-codes-expo";
+import QRCode from "react-native-qrcode-svg";
 import {Header} from "../Header";
 
 export const PaketeLaden = ({navigation}) => {
@@ -12,7 +12,7 @@ export const PaketeLaden = ({navigation}) => {
                 text="Tourvorbereitung"
                 color="#729628"
                 containerStyle={{
-                    flex: 2,
+                    flex: 0.25,
                     paddingLeft: "10%",
                     paddingTop: "10%",
                     alignItems: "flex-start",
@@ -31,15 +31,15 @@ export const PaketeLaden = ({navigation}) => {
                 </View>
                 <View style={styles.qrContainer}>
                     <QRCode
-                        codeStyle="square"
-                        content={content}
-                        size={300}
-                        style={{backgroundColor: "#FFF"}}
+                        // codeStyle="square"
+                        value={content}
+                        size={250}
+                        // style={{backgroundColor: "#FFF"}}
                     />
                 </View>
                 <View style={{flex: 1, alignItems: "center"}}>
                     <TouchableOpacity onPress={() => navigation.navigate("Ziel")}>
-                        <Text>Nächstes Ziel</Text>
+                        <Text style={{color: "#3FA9F5"}}>Nächstes Ziel</Text>
                     </TouchableOpacity>
                 </View>
             </View>
@@ -49,7 +49,7 @@ export const PaketeLaden = ({navigation}) => {
 
 const styles = StyleSheet.create({
     container: {
-        flex: 10,
+        flex: 1,
         borderRadius: 25,
         backgroundColor: "#FFF",
         shadowColor: "#000",
@@ -58,6 +58,7 @@ const styles = StyleSheet.create({
         shadowRadius: 1.0,
         elevation: 2,
         marginTop: -50,
+        justifyContent: "center",
     },
     closeButtonContainer: {
         alignItems: "flex-end",
@@ -86,8 +87,8 @@ const styles = StyleSheet.create({
     qrContainer: {
         flex: 2,
         flexDirection: "column",
-        justifyContent: "flex-start",
+        justifyContent: "center",
         alignItems: "center",
-        paddingTop: "12%",
+        // paddingTop: "5%",
     },
 });
