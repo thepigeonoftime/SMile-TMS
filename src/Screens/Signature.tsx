@@ -43,7 +43,7 @@ export const Signature = ({navigation}) => {
                 </View>
                 <View style={styles.pixiWrap}>
                     <ExpoPixi.Signature
-                        ref={signature}
+                        ref={(ref) => (signature = ref)}
                         style={styles.pixi}
                         strokeColor={"blue"}
                         strokeAlpha={1}
