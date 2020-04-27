@@ -20,7 +20,8 @@ const ScannerView = ({navigation}) => {
 
     const handleBarCodeScanned = ({type, data}) => {
         setScanned(true);
-        alert(`Bar code with type ${type} and data ${data} has been scanned!`);
+        alert(`Typ: ${type} Content: ${data}`);
+        // navigation.goBack();
     };
 
     if (hasPermission === null) {
@@ -35,16 +36,25 @@ const ScannerView = ({navigation}) => {
             style={{
                 flex: 1,
                 backgroundColor: "#000",
+                justifyContent: "center",
             }}
         >
-            <BarCodeScanner
-                onBarCodeScanned={(scan) => alert(scan.data)}
-                style={[StyleSheet.absoluteFill, styles.container]}
-            >
-                <BarcodeMask edgeColor={"#62B1F6"} showAnimatedLine={true} />
-            </BarCodeScanner>
-
-            {scanned && <Button title={"Tap to Scan Again"} onPress={() => setScanned(false)} />}
+            {!scanned && (
+                <BarCodeScanner
+                    // onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
+                    onBarCodeScanned={handleBarCodeScanned}
+                    style={[StyleSheet.absoluteFill, styles.container]}
+                >
+                    <BarcodeMask edgeColor={"#62B1F6"} showAnimatedLine={true} />
+                </BarCodeScanner>
+            )}
+            {scanned && (
+                <View>
+                    <Button title={"Erneut scannen"} onPress={() => setScanned(false)} />
+                    <Text> </Text>
+                    <Button title={"Zurück"} onPress={() => navigation.goBack()} />
+                </View>
+            )}
         </View>
     );
 };
