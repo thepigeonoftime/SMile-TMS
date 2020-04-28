@@ -9,7 +9,6 @@ export const RegisterController = ({children}) => {
         AsyncStorage.getItem("registered")
             .then((registerString) => {
                 if (registerString) {
-                    console.log(registerString);
                     register();
                 } else {
                     unregister();

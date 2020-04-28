@@ -1,6 +1,7 @@
 import React, {useState, useEffect} from "react";
 import {AsyncStorage} from "react-native";
 import Axios from "axios";
+import {initQueue, db, createTable, addJob, getJobs} from "./OfflineQueue";
 
 type registerType = {} | null;
 
@@ -11,7 +12,8 @@ export const RegisterContext = React.createContext<{
     dataGebiet: any;
     dataZeiten: any;
     showRegModal: boolean;
-    register: () => any;
+    registerRequest: () => any;
+    register: () => void;
     unregister: () => void;
     storeDataPerson: (data) => void;
     storeDataFahrzeug: (data) => void;
@@ -25,6 +27,7 @@ export const RegisterContext = React.createContext<{
     dataGebiet: null,
     dataZeiten: null,
     showRegModal: false,
+    registerRequest: () => {},
     register: () => {},
     unregister: () => {},
     storeDataPerson: (data) => {},
@@ -43,6 +46,8 @@ export const RegisterProvider: React.FC<RegisterProviderProps> = ({children}) =>
     const [dataZeiten, setDataZeiten] = useState<registerType>(null);
     const [showRegModal, setShowRegModal] = useState<boolean>(false);
 
+    initQueue();
+
     return (
         <RegisterContext.Provider
             value={{
@@ -52,38 +57,28 @@ export const RegisterProvider: React.FC<RegisterProviderProps> = ({children}) =>
                 dataGebiet,
                 dataZeiten,
                 showRegModal,
-                register: () => {
+                registerRequest: () => {
                     return new Promise((resolve, reject) => {
                         Axios.post("http://127.0.0.1:3001/registerData", dataPerson)
                             .then((response) => {
                                 console.log(response.status);
+                                resolve("succesful");
                                 setRegistered("smile");
                                 AsyncStorage.setItem("registered", "true");
-                                console.log("registered");
-                                resolve("registered");
                             })
                             .catch((error) => {
-                                if (!error.status) {
-                                    // network error
-                                    console.log("network error");
-                                } else if (error.request) {
-                                    // no response
-                                    console.log(error.request);
-                                } else if (error.response) {
-                                    // non 200
-                                    console.log(error.response.data);
-                                    console.log(error.response.status);
-                                    console.log(error.response.headers);
-                                } else {
-                                    // request error
-                                    console.log("Error", error.message);
-                                }
-                                reject("reg error");
+                                addJob("register", "register", "register");
+                                reject(error);
                             });
                     });
                 },
+                register: () => {
+                    setRegistered("smile");
+                    AsyncStorage.setItem("registered", "true");
+                },
                 unregister: () => {
                     setRegistered(null);
+                    AsyncStorage.removeItem("registered");
                     // AsyncStorage.removeItem("registered");
                     // AsyncStorage.removeItem("dataPerson");
                     // AsyncStorage.removeItem("dataFahrzeug");

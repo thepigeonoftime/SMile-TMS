@@ -7,21 +7,19 @@ import {useAnimation} from "react-native-animation-hooks";
 import IconClose from "~/assets/svg/menu-icn_close.svg";
 
 export const RegisterModal = ({navigation}) => {
-    const {register, showRegModal, toggleRegModal} = useContext(RegisterContext);
+    const {register, registerRequest, showRegModal, toggleRegModal} = useContext(RegisterContext);
     const [showError, setShowError] = useState(false);
 
     const onSubmit = () => {
-        register()
+        setShowError(false);
+        registerRequest()
             .then((response) => {
                 console.log(response);
                 toggleRegModal();
                 navigation.navigate("TourStarten");
             })
-            .catch((error) => {
-                if (error) {
-                    // push to queue
-                    console.log(error);
-                }
+            .catch((error: {message: string}) => {
+                console.log(error.message);
                 setShowError(true);
             });
     };
