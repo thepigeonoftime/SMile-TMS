@@ -7,9 +7,9 @@ type tourType = any;
 export const TourContext = React.createContext<{
     tour: tourType;
     error: null | string;
-    setTour: (tour) => void;
-    removeTour: (tour) => void;
-    setError: (tour) => void;
+    setTour: (tour: any) => void;
+    removeTour: (tour: any) => void;
+    setError: (error: string) => void;
     showNavigation: boolean;
     toggleNavigation: () => void;
     showTourListe: boolean;
@@ -17,7 +17,7 @@ export const TourContext = React.createContext<{
     showPaketGeben: boolean;
     togglePaketGeben: () => void;
     signatureURI: null | string;
-    saveSignature: (uri) => void;
+    saveSignature: (uri: string) => void;
 }>({
     tour: null,
     error: null,
