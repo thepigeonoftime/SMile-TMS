@@ -2,22 +2,25 @@ import React, {useEffect} from "react";
 import * as SQLite from "expo-sqlite";
 // import * as SecureStore from "expo-secure-store";
 
-const db = SQLite.openDatabase("offline.db");
-export const OfflineQueue = () => {
-    useEffect(() => {
-        db.transaction((tx) => {
-            tx.executeSql("DROP TABLE IF EXISTS Tasks", []);
-            tx.executeSql(
-                `CREATE TABLE IF NOT EXISTS Tasks (
-                    id INTEGER NOT NULL PRIMARY KEY,
-                    name VARCHAR(30) NOT NULL,
-                    type VARCHAR(30) NOT NULL,
-                    payload VARCHAR(30)
-                    )`,
-                []
-            );
-        });
-    }, []);
+export const db = SQLite.openDatabase("offline.db");
+
+export const initQueue = () => {
+    useEffect(createTable);
+};
+
+export const createTable = () => {
+    db.transaction((tx) => {
+        tx.executeSql("DROP TABLE IF EXISTS Tasks", []);
+        tx.executeSql(
+            `CREATE TABLE IF NOT EXISTS Tasks (
+                id INTEGER NOT NULL PRIMARY KEY,
+                name VARCHAR(30) NOT NULL,
+                type VARCHAR(30) NOT NULL,
+                payload VARCHAR(30)
+                )`,
+            []
+        );
+    });
 };
 
 export const addJob = (name, type, payload) => {
