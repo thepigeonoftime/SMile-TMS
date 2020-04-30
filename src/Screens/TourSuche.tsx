@@ -8,6 +8,7 @@ import {RegisterContext} from "../RegisterProvider";
 import {TourContext} from "../TourProvider";
 import {useAnimation} from "react-native-animation-hooks";
 import IconClose from "~/assets/svg/menu-icn_close.svg";
+import {fetchTour} from "../Requests";
 
 export const TourSuche = ({navigation}) => {
     const {unregister} = useContext(RegisterContext);
@@ -16,24 +17,22 @@ export const TourSuche = ({navigation}) => {
     const [sucheDisabled, setSucheDisabled] = useState(false);
     const [showError, setShowError] = useState(false);
 
-    const fetchTour = () => {
-        Axios.get("https://unsafe.run/getTours")
-            .then((response) => {
-                setTour(response.data);
-                setSucheDisabled(false);
-                navigation.navigate("TourStart");
-            })
-            .catch((error) => {
-                setShowError(true);
-                setSucheDisabled(false);
-                setError(error);
-            });
-    };
-
     const getTour = () => {
         setShowError(false);
         setSucheDisabled(true);
-        setTimeout(fetchTour, 1000);
+        setTimeout(() => {
+            fetchTour()
+                .then((response) => {
+                    setTour(response.data);
+                    setSucheDisabled(false);
+                    navigation.navigate("TourStart");
+                })
+                .catch((error) => {
+                    setShowError(true);
+                    setSucheDisabled(false);
+                    setError(error);
+                });
+        }, 1000);
     };
 
     const aHeight = useAnimation({

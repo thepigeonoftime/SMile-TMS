@@ -1,7 +1,6 @@
 import React, {useState, useEffect} from "react";
 import {AsyncStorage} from "react-native";
-import Axios from "axios";
-import {initQueue, db, createTable, addJob, getJobs} from "./OfflineQueue";
+import {registerRequest} from "./Requests";
 
 type registerType = {} | null;
 
@@ -12,9 +11,9 @@ export const RegisterContext = React.createContext<{
     dataGebiet: any;
     dataZeiten: any;
     showRegModal: boolean;
-    registerRequest: () => any;
     register: () => void;
     unregister: () => void;
+    registration: () => any;
     storeDataPerson: (data) => void;
     storeDataFahrzeug: (data) => void;
     storeDataGebiet: (data) => void;
@@ -27,9 +26,9 @@ export const RegisterContext = React.createContext<{
     dataGebiet: null,
     dataZeiten: null,
     showRegModal: false,
-    registerRequest: () => {},
     register: () => {},
     unregister: () => {},
+    registration: () => {},
     storeDataPerson: (data) => {},
     storeDataFahrzeug: (data) => {},
     storeDataGebiet: (data) => {},
@@ -46,8 +45,6 @@ export const RegisterProvider: React.FC<RegisterProviderProps> = ({children}) =>
     const [dataZeiten, setDataZeiten] = useState<registerType>(null);
     const [showRegModal, setShowRegModal] = useState<boolean>(false);
 
-    initQueue();
-
     return (
         <RegisterContext.Provider
             value={{
@@ -57,19 +54,15 @@ export const RegisterProvider: React.FC<RegisterProviderProps> = ({children}) =>
                 dataGebiet,
                 dataZeiten,
                 showRegModal,
-                registerRequest: () => {
+                registration: () => {
                     return new Promise((resolve, reject) => {
-                        Axios.post("http://127.0.0.1:3001/registerData", dataPerson)
-                            .then((response) => {
-                                console.log(response.status);
-                                resolve("succesful");
+                        registerRequest("data")
+                            .then(() => {
                                 setRegistered("smile");
                                 AsyncStorage.setItem("registered", "true");
+                                resolve();
                             })
-                            .catch((error) => {
-                                addJob("register", "register", "register");
-                                reject(error);
-                            });
+                            .catch(() => reject);
                     });
                 },
                 register: () => {

@@ -7,12 +7,12 @@ import {useAnimation} from "react-native-animation-hooks";
 import IconClose from "~/assets/svg/menu-icn_close.svg";
 
 export const RegisterModal = ({navigation}) => {
-    const {register, registerRequest, showRegModal, toggleRegModal} = useContext(RegisterContext);
+    const {registration, showRegModal, toggleRegModal} = useContext(RegisterContext);
     const [showError, setShowError] = useState(false);
 
     const onSubmit = () => {
         setShowError(false);
-        registerRequest()
+        registration()
             .then((response) => {
                 console.log(response);
                 toggleRegModal();
