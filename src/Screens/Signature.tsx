@@ -1,4 +1,4 @@
-import React, {useState, useRef, useContext} from "react";
+import React, {useState, useRef, useContext, useEffect} from "react";
 import {createStackNavigator} from "@react-navigation/stack";
 import {SignatureProps} from "../Types";
 import {Text, TouchableOpacity, View, StyleSheet} from "react-native";
@@ -7,15 +7,34 @@ import {captureRef} from "react-native-view-shot";
 import {Header} from "../Header";
 import {TourContext} from "../TourProvider";
 import {Button} from "react-native-elements";
+import {ScreenOrientation} from "expo";
 
 const Stack = createStackNavigator<SignatureProps>();
 
 export const Signature = ({navigation}) => {
     const {tour, saveSignature, tourNav} = useContext(TourContext);
+    const [styles, setStyles] = useState<any>(portrait);
     let signature = useRef(null);
     tourNav.setOptions({
         tabBarVisible: false,
     });
+    useEffect(() => {
+        ScreenOrientation.unlockAsync();
+    });
+
+    const detectOrientation = async () => {
+        const {orientation} = await ScreenOrientation.getOrientationAsync();
+        console.log(orientation);
+        if (orientation === "PORTRAIT" || orientation === "PORTRAIT_UP") {
+            setStyles(portrait);
+            console.log("portrait styles");
+        } else {
+            setStyles(landscape);
+        }
+    };
+
+    ScreenOrientation.addOrientationChangeListener(detectOrientation);
+
     const onSubmit = async () => {
         const uri = await captureRef(signature, {format: "jpg", quality: 0.4});
         saveSignature(uri);
@@ -79,7 +98,9 @@ export const Signature = ({navigation}) => {
     );
 };
 
-const styles = StyleSheet.create({
+// tslint:disable:no-unused-styles
+
+const portrait = StyleSheet.create({
     container: {
         flex: 1,
         justifyContent: "flex-start",
@@ -118,6 +139,7 @@ const styles = StyleSheet.create({
     text: {
         color: "#333",
         fontSize: 17,
+        fontWeight: "500",
     },
     pixiWrap: {
         flex: 1,
@@ -173,5 +195,105 @@ const styles = StyleSheet.create({
     },
     bottom: {
         flex: 0.4,
+    },
+});
+
+const landscape = StyleSheet.create({
+    container: {
+        flex: 1,
+        justifyContent: "flex-start",
+    },
+    header: {
+        display: "none",
+        flex: 0,
+        paddingLeft: "10%",
+        // marginTop: 35,
+        alignItems: "flex-start",
+        justifyContent: "center",
+        // marginBottom: 20,
+        backgroundColor: "#F2F2F2",
+    },
+    headerText: {
+        // paddingTop: "2%",
+    },
+    content: {
+        flex: 10,
+        margin: 0,
+        // paddingHorizontal: 25,
+        // paddingTop: 35,
+        borderRadius: 35,
+        backgroundColor: "#FFF",
+        shadowColor: "#000",
+        shadowOffset: {width: 0, height: -1},
+        shadowOpacity: 0.1,
+        shadowRadius: 1.0,
+        elevation: 2,
+        // marginTop: -50,
+    },
+    textWrap: {
+        paddingTop: 20,
+        paddingLeft: 40,
+        // paddingBottom: 30,
+    },
+    text: {
+        color: "#333",
+        fontSize: 17,
+        fontWeight: "500",
+    },
+    pixiWrap: {
+        flex: 2,
+        backgroundColor: "#FFF",
+    },
+    pixi: {
+        flex: 2,
+        // backgroundColor: "#FFF",
+        borderWidth: 0,
+        borderColor: "#FFF",
+        borderBottomWidth: 1,
+        borderBottomColor: "#999",
+        borderRadius: 35,
+    },
+    buttonWrap: {
+        flexDirection: "row",
+        paddingTop: 20,
+        paddingHorizontal: 40,
+    },
+    buttonBlue: {
+        backgroundColor: "#3FA9F5",
+        height: 50,
+        width: "80%",
+        borderRadius: 30,
+        alignItems: "center",
+        justifyContent: "center",
+        marginBottom: 20,
+    },
+    buttonBlueTitle: {
+        color: "#FFF",
+        fontSize: 22,
+        fontWeight: "600",
+    },
+    buttonGrey: {
+        backgroundColor: "transparent",
+        height: 50,
+        width: "80%",
+        borderRadius: 30,
+        alignItems: "center",
+        justifyContent: "center",
+        marginBottom: 20,
+        borderColor: "#d7d0c8",
+        borderWidth: 2,
+    },
+    buttonGreyTitle: {
+        color: "#d7d0c8",
+        fontSize: 22,
+        fontWeight: "600",
+    },
+    buttonDisabled: {
+        backgroundColor: "transparent",
+        borderWidth: 2,
+        borderColor: "#ccc",
+    },
+    bottom: {
+        flex: 0.2,
     },
 });
