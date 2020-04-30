@@ -2,9 +2,9 @@ import React from "react";
 import {TourProvider} from "./TourProvider";
 import {TourStack} from "./TourStack";
 
-export const TourContainer: React.FC<{}> = ({}) => {
+export const TourContainer = ({navigation}) => {
     return (
-        <TourProvider>
+        <TourProvider navigation={navigation}>
             <TourStack />
         </TourProvider>
     );

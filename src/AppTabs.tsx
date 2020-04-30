@@ -7,6 +7,7 @@ import {RegisterStack} from "./RegisterStack";
 import {Test} from "./Screens/Test";
 import {TourContainer} from "./TourContainer";
 import {AppTabsProps} from "./Types";
+import {TourProvider} from "./TourProvider";
 
 const Tabs = createBottomTabNavigator<AppTabsProps>();
 

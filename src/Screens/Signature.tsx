@@ -11,8 +11,11 @@ import {Button} from "react-native-elements";
 const Stack = createStackNavigator<SignatureProps>();
 
 export const Signature = ({navigation}) => {
-    const {tour, saveSignature} = useContext(TourContext);
+    const {tour, saveSignature, tourNav} = useContext(TourContext);
     let signature = useRef(null);
+    tourNav.setOptions({
+        tabBarVisible: false,
+    });
     const onSubmit = async () => {
         const uri = await captureRef(signature, {format: "jpg", quality: 0.4});
         saveSignature(uri);
