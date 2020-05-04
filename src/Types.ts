@@ -63,3 +63,11 @@ export type TourStackProps = {
     CodeScanner: undefined;
     Signature: undefined;
 };
+
+export type RegisterStackProps = {
+    Register: undefined;
+    RegisterPerson: undefined;
+    RegisterFahrzeug: undefined;
+    RegisterGebietPreis: undefined;
+    RegisterZeiten: undefined;
+};
