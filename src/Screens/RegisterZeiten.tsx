@@ -17,7 +17,7 @@ import * as Yup from "yup";
 import {Header} from "../Header";
 import {RegisterContext} from "../RegisterProvider";
 
-export const RegisterArbeitsZeiten = ({navigation}) => {
+export const RegisterZeiten = ({navigation}) => {
     const {storeDataZeiten} = useContext(RegisterContext);
 
     const timeSchema = Yup.string().test("is-time", "Keine gültige Zeit", function (value) {

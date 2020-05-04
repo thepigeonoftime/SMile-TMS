@@ -138,9 +138,7 @@ export const Register = ({navigation}) => {
                         ) : (
                             <Text style={styles.statusIncomplete}>Unvollständig</Text>
                         )}
-                        <TouchableOpacity
-                            onPress={() => navigation.navigate("RegisterArbeitszeiten")}
-                        >
+                        <TouchableOpacity onPress={() => navigation.navigate("RegisterZeiten")}>
                             <Text style={[styles.navLink]}>Arbeitszeiten</Text>
                         </TouchableOpacity>
                         {dataZeiten ? (
