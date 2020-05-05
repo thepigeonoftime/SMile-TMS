@@ -13,8 +13,8 @@ export const RegisterModal = ({navigation}) => {
     const onSubmit = () => {
         setShowError(false);
         registration()
-            .then((response) => {
-                console.log(response);
+            .then((result) => {
+                console.log(result);
                 toggleRegModal();
                 navigation.navigate("TourStarten");
             })

@@ -2,7 +2,7 @@ import React, {useState, useEffect} from "react";
 import {AsyncStorage} from "react-native";
 import gql from "graphql-tag";
 import {useMutation} from "@apollo/react-hooks";
-import {CREATE_DELIVERER} from "./Requests";
+import {structureRegData, CREATE_DELIVERER} from "./Requests";
 
 type registerType = {} | null;
 
@@ -106,13 +106,15 @@ export const RegisterProvider: React.FC<RegisterProviderProps> = ({children}) =>
                 showRegModal,
                 registration: () => {
                     return new Promise((resolve, reject) => {
-                        createDeliverer()
-                            .then(() => {
+                        createDeliverer(
+                            structureRegData(dataPerson, dataFahrzeug, dataGebiet, dataZeiten)
+                        )
+                            .then((result) => {
                                 setRegistered("smile");
                                 AsyncStorage.setItem("registered", "true");
-                                resolve();
+                                resolve(result);
                             })
-                            .catch(() => reject);
+                            .catch((err) => reject(err));
                     });
                 },
                 register: () => {
