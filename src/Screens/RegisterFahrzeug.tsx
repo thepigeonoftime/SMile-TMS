@@ -51,7 +51,7 @@ export const RegisterFahrzeug = ({navigation}) => {
     });
 
     const onSubmit = (data) => {
-        storeDataFahrzeug(JSON.stringify(data));
+        storeDataFahrzeug(data);
         navigation.goBack();
     };
     return (

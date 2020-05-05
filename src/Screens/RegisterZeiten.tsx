@@ -82,7 +82,7 @@ export const RegisterZeiten = ({navigation}) => {
     });
 
     const onSubmit = (data) => {
-        storeDataZeiten(JSON.stringify(data));
+        storeDataZeiten(data);
         navigation.goBack();
     };
 

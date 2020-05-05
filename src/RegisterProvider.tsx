@@ -48,6 +48,53 @@ export const RegisterProvider: React.FC<RegisterProviderProps> = ({children}) =>
     const [showRegModal, setShowRegModal] = useState<boolean>(false);
     const [createDeliverer] = useMutation(CREATE_DELIVERER);
 
+    useEffect(() => {
+        if (dataPerson === null) {
+            AsyncStorage.getItem("dataPerson")
+                .then((data) => {
+                    if (data) {
+                        setDataPerson(JSON.parse(data));
+                    }
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
+        }
+        if (dataFahrzeug === null) {
+            AsyncStorage.getItem("dataFahrzeug")
+                .then((data) => {
+                    if (data) {
+                        setDataFahrzeug(JSON.parse(data));
+                    }
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
+        }
+        if (dataGebiet === null) {
+            AsyncStorage.getItem("dataGebiet")
+                .then((data) => {
+                    if (data) {
+                        setDataGebiet(JSON.parse(data));
+                    }
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
+        }
+        if (dataZeiten === null) {
+            AsyncStorage.getItem("dataZeiten")
+                .then((data) => {
+                    if (data) {
+                        setDataZeiten(JSON.parse(data));
+                    }
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
+        }
+    });
+
     return (
         <RegisterContext.Provider
             value={{
@@ -85,25 +132,25 @@ export const RegisterProvider: React.FC<RegisterProviderProps> = ({children}) =>
                 storeDataPerson: (data) => {
                     if (data) {
                         setDataPerson(data);
-                        AsyncStorage.setItem("dataPerson", data);
+                        AsyncStorage.setItem("dataPerson", JSON.stringify(data));
                     }
                 },
                 storeDataFahrzeug: (data) => {
                     if (data) {
                         setDataFahrzeug(data);
-                        AsyncStorage.setItem("dataFahrzeug", data);
+                        AsyncStorage.setItem("dataFahrzeug", JSON.stringify(data));
                     }
                 },
                 storeDataGebiet: (data) => {
                     if (data) {
                         setDataGebiet(data);
-                        AsyncStorage.setItem("dataGebiet", data);
+                        AsyncStorage.setItem("dataGebiet", JSON.stringify(data));
                     }
                 },
                 storeDataZeiten: (data) => {
                     if (data) {
                         setDataZeiten(data);
-                        AsyncStorage.setItem("dataZeiten", data);
+                        AsyncStorage.setItem("dataZeiten", JSON.stringify(data));
                     }
                 },
                 toggleRegModal: () => {

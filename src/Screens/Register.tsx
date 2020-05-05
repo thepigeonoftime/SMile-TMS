@@ -22,45 +22,6 @@ export const Register = ({navigation}) => {
         toggleRegModal,
     } = useContext(RegisterContext);
 
-    useEffect(() => {
-        AsyncStorage.getItem("dataPerson")
-            .then((data) => {
-                if (data) {
-                    storeDataPerson(data);
-                }
-            })
-            .catch((err) => {
-                console.log(err);
-            });
-        AsyncStorage.getItem("dataFahrzeug")
-            .then((data) => {
-                if (data) {
-                    storeDataFahrzeug(data);
-                }
-            })
-            .catch((err) => {
-                console.log(err);
-            });
-        AsyncStorage.getItem("dataGebiet")
-            .then((data) => {
-                if (data) {
-                    storeDataGebiet(data);
-                }
-            })
-            .catch((err) => {
-                console.log(err);
-            });
-        AsyncStorage.getItem("dataZeiten")
-            .then((data) => {
-                if (data) {
-                    storeDataZeiten(data);
-                }
-            })
-            .catch((err) => {
-                console.log(err);
-            });
-    });
-
     const onSubmit = () => {
         if (registered) {
             // send data update request
