@@ -20,26 +20,36 @@ export const postDelivery = (id) => {
 };
 
 export const CREATE_DELIVERER = gql(`
-mutation createDeliverer($costsPerHour: Int!){
+mutation createDeliverer($costsPerStop: Int!
+  $delivererLastName: String!
+  $vehicleType: String!
+  $tmsCarrierId: String!
+  $deliveryCapacityWeight: Float!
+  $delivererFirstName: String!
+  $deliveryCapacityVolume: Float!
+  $costsPerKm: Int!
+  $costsPerHour: Int!
+  $maxStopsPerTour: Int
+  $cutOffTimes: [TimeInWeekInput!]
+  $wishTimeframes: [WishTimeframeInput!]
+  $maxPacketnumberPerTour: Int
+  $deliveryAreas: [String!]){
   createDeliverer(
     deliverer: {
       costsPerHour: $costsPerHour
-      costsPerKm: 1
-      costsPerStop: 1
-      cutOffTimes: { day: MONDAY, minute: 1, hour: 1}
-      delivererFirstName: "Peter"
-      delivererLastName: "Wurst"
-      deliveryAreas: "berlin"
-      deliveryCapacityVolume: 1
-      deliveryCapacityWeight: 1
-      maxPacketnumberPerTour: 1
-      maxStopsPerTour: 1
-      tmsCarrierId: "0"
-      vehicleType: "typ"
-      wishTimeframes: [
-                        {day: MONDAY, startTime: 1},
-                        {day: TUESDAY, startTime: 12},
-                    ],
+      costsPerKm: $costsPerKm
+      costsPerStop: $costsPerStop
+      cutOffTimes: $cutOffTimes
+      delivererFirstName: $delivererFirstName
+      delivererLastName: $delivererLastName
+      deliveryAreas: $deliveryAreas
+      deliveryCapacityVolume: $deliveryCapacityVolume
+      deliveryCapacityWeight: $deliveryCapacityWeight
+      maxPacketnumberPerTour: $maxPacketnumberPerTour
+      maxStopsPerTour: $maxStopsPerTour
+      tmsCarrierId: $tmsCarrierId
+      vehicleType: $vehicleType
+      wishTimeframes: $wishTimeframes
     }
   ) {
     costsPerHour
@@ -59,7 +69,9 @@ mutation createDeliverer($costsPerHour: Int!){
     vehicleType
     wishTimeframes {
       day
+      startTime
     }
+    id
   }
 }`);
 
@@ -77,7 +89,7 @@ export const structureRegData = (dataPerson, dataFahrzeug, dataGebiet, dataZeite
                 delivererFirstName: dataPerson.vorname,
                 delivererLastName: dataPerson.nachname,
                 deliveryAreas: dataPerson.ort,
-                deliveryCapacityVolume: dataFahrzeug.ladevolumen,
+                deliveryCapacityVolume: parseInt(dataFahrzeug.ladevolumen),
                 deliveryCapacityWeight: 1,
                 maxPacketnumberPerTour: 1,
                 maxStopsPerTour: 1,
