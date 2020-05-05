@@ -82,6 +82,10 @@ export const RegisterZeiten = ({navigation}) => {
     });
 
     const onSubmit = (data) => {
+        data = Object.keys(data).filter(function (key) {
+            return data[key];
+        });
+        console.log(data);
         storeDataZeiten(data);
         navigation.goBack();
     };
@@ -122,11 +126,17 @@ export const RegisterZeiten = ({navigation}) => {
                                     size={25}
                                     color="#ccc"
                                 />
-                                <Switch
+                                <Controller
+                                    as={<Switch />}
+                                    control={control}
+                                    name="MONDAY"
                                     trackColor={{false: "#e6e6e6", true: "#e6e6e6"}}
                                     thumbColor={isEnabled.montag ? "#729628" : "#f4f3f4"}
                                     ios_backgroundColor="#e6e6e6"
-                                    onValueChange={() => toggleSwitch("montag")}
+                                    onValueChange={(value) => {
+                                        toggleSwitch("montag");
+                                        setValue("MONDAY", value);
+                                    }}
                                     value={isEnabled.montag}
                                     style={styles.switch}
                                 />
@@ -185,11 +195,17 @@ export const RegisterZeiten = ({navigation}) => {
                                         size={25}
                                         color="#ccc"
                                     />
-                                    <Switch
+                                    <Controller
+                                        as={<Switch />}
+                                        control={control}
+                                        name="TUESDAY"
                                         trackColor={{false: "#e6e6e6", true: "#e6e6e6"}}
                                         thumbColor={isEnabled.dienstag ? "#729628" : "#f4f3f4"}
                                         ios_backgroundColor="#e6e6e6"
-                                        onValueChange={() => toggleSwitch("dienstag")}
+                                        onValueChange={(value) => {
+                                            toggleSwitch("dienstag");
+                                            setValue("TUESDAY", value);
+                                        }}
                                         value={isEnabled.dienstag}
                                         style={styles.switch}
                                     />
@@ -249,11 +265,17 @@ export const RegisterZeiten = ({navigation}) => {
                                         size={25}
                                         color="#ccc"
                                     />
-                                    <Switch
+                                    <Controller
+                                        as={<Switch />}
+                                        control={control}
+                                        name="WEDNESDAY"
                                         trackColor={{false: "#e6e6e6", true: "#e6e6e6"}}
                                         thumbColor={isEnabled.mittwoch ? "#729628" : "#f4f3f4"}
                                         ios_backgroundColor="#e6e6e6"
-                                        onValueChange={() => toggleSwitch("mittwoch")}
+                                        onValueChange={(value) => {
+                                            toggleSwitch("mittwoch");
+                                            setValue("WEDNESDAY", value);
+                                        }}
                                         value={isEnabled.mittwoch}
                                         style={styles.switch}
                                     />
@@ -313,11 +335,17 @@ export const RegisterZeiten = ({navigation}) => {
                                         size={25}
                                         color="#ccc"
                                     />
-                                    <Switch
+                                    <Controller
+                                        as={<Switch />}
+                                        control={control}
+                                        name="THURSDAY"
                                         trackColor={{false: "#e6e6e6", true: "#e6e6e6"}}
                                         thumbColor={isEnabled.donnerstag ? "#729628" : "#f4f3f4"}
                                         ios_backgroundColor="#e6e6e6"
-                                        onValueChange={() => toggleSwitch("donnerstag")}
+                                        onValueChange={(value) => {
+                                            toggleSwitch("donnerstag");
+                                            setValue("TUESDAY", value);
+                                        }}
                                         value={isEnabled.donnerstag}
                                         style={styles.switch}
                                     />
@@ -377,11 +405,17 @@ export const RegisterZeiten = ({navigation}) => {
                                         size={25}
                                         color="#ccc"
                                     />
-                                    <Switch
+                                    <Controller
+                                        as={<Switch />}
+                                        control={control}
+                                        name="FRIDAY"
                                         trackColor={{false: "#e6e6e6", true: "#e6e6e6"}}
                                         thumbColor={isEnabled.freitag ? "#729628" : "#f4f3f4"}
                                         ios_backgroundColor="#e6e6e6"
-                                        onValueChange={() => toggleSwitch("freitag")}
+                                        onValueChange={(value) => {
+                                            toggleSwitch("freitag");
+                                            setValue("TUESDAY", value);
+                                        }}
                                         value={isEnabled.freitag}
                                         style={styles.switch}
                                     />
@@ -441,11 +475,17 @@ export const RegisterZeiten = ({navigation}) => {
                                         size={25}
                                         color="#ccc"
                                     />
-                                    <Switch
+                                    <Controller
+                                        as={<Switch />}
+                                        control={control}
+                                        name="SATURDAY"
                                         trackColor={{false: "#e6e6e6", true: "#e6e6e6"}}
                                         thumbColor={isEnabled.samstag ? "#729628" : "#f4f3f4"}
                                         ios_backgroundColor="#e6e6e6"
-                                        onValueChange={() => toggleSwitch("samstag")}
+                                        onValueChange={(value) => {
+                                            toggleSwitch("samstag");
+                                            setValue("SATURDAY", value);
+                                        }}
                                         value={isEnabled.samstag}
                                         style={styles.switch}
                                     />
