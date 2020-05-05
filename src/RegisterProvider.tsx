@@ -3,25 +3,11 @@ import {AsyncStorage} from "react-native";
 import gql from "graphql-tag";
 import {useMutation} from "@apollo/react-hooks";
 import {structureRegData, CREATE_DELIVERER} from "./Requests";
+import {RegisterContextProps} from "./Types";
 
 type registerType = {} | null;
 
-export const RegisterContext = React.createContext<{
-    registered: null | string;
-    dataPerson: any;
-    dataFahrzeug: any;
-    dataGebiet: any;
-    dataZeiten: any;
-    showRegModal: boolean;
-    register: () => void;
-    unregister: () => void;
-    registration: () => any;
-    storeDataPerson: (data) => void;
-    storeDataFahrzeug: (data) => void;
-    storeDataGebiet: (data) => void;
-    storeDataZeiten: (data) => void;
-    toggleRegModal: () => void;
-}>({
+export const RegisterContext = React.createContext<RegisterContextProps>({
     registered: null,
     dataPerson: null,
     dataFahrzeug: null,

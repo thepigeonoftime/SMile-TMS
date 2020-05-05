@@ -1,3 +1,4 @@
+import {RegisterContextProps} from "./Types";
 import {RouteProp} from "@react-navigation/native";
 import {StackNavigationProp} from "@react-navigation/stack";
 
@@ -70,4 +71,21 @@ export type RegisterStackProps = {
     RegisterFahrzeug: undefined;
     RegisterGebietPreis: undefined;
     RegisterZeiten: undefined;
+};
+
+export type RegisterContextProps = {
+    registered: null | string;
+    dataPerson: any;
+    dataFahrzeug: any;
+    dataGebiet: any;
+    dataZeiten: any;
+    showRegModal: boolean;
+    register: () => void;
+    unregister: () => void;
+    registration: () => any;
+    storeDataPerson: (data) => void;
+    storeDataFahrzeug: (data) => void;
+    storeDataGebiet: (data) => void;
+    storeDataZeiten: (data) => void;
+    toggleRegModal: () => void;
 };
