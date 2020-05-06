@@ -1,9 +1,10 @@
 import React, {useContext} from "react";
-import {StyleSheet, Text, View, TouchableOpacity} from "react-native";
+import {StyleSheet, Text, View, TouchableOpacity, ScrollView} from "react-native";
 import {Button} from "react-native-elements";
 import {TourContext} from "../TourProvider";
 import Modal from "react-native-modal";
 import IconClose from "~/assets/svg/menu-icn_close.svg";
+import {ZielProps} from "../Types";
 
 export const TourListe = (props) => {
     const {tour, showTourListe, toggleTourListe} = useContext(TourContext);
@@ -15,21 +16,36 @@ export const TourListe = (props) => {
                         <IconClose height={20} width={20} fill="#f89e3b" />
                     </TouchableOpacity>
                 </View>
-                <View style={styles.content}>
-                    <View style={{flex: 1, paddingLeft: "10%", paddingTop: "10%"}}>
-                        <View>
-                            <Text style={[styles.zielText, {fontWeight: "bold"}]}>
-                                {tour.tours[0].stops[1].streetName}
-                            </Text>
-                            <Text style={[styles.zielText]}>
-                                Nummer: {tour.tours[0].stops[1].streetNumber}
-                            </Text>
-                            <Text style={[styles.zielText]}>
-                                {tour.tours[0].stops[1].zip + " " + tour.tours[0].stops[1].city}
-                            </Text>
+                <ScrollView>
+                    <View style={styles.content}>
+                        <View style={{flex: 1}}>
+                            <Text style={styles.headerText}>Tourliste</Text>
+                            <View style={styles.zielListe}>
+                                {tour.tours[0].stops.map((stop: ZielProps) => {
+                                    return (
+                                        stop.stopType === "Receiver" && (
+                                            <View key={stop.id} style={styles.ziel}>
+                                                <Text style={styles.zielText}>
+                                                    {stop.firstName +
+                                                        " " +
+                                                        stop.lastName +
+                                                        "; " +
+                                                        stop.streetName +
+                                                        " " +
+                                                        stop.streetNumber +
+                                                        "; " +
+                                                        stop.zip +
+                                                        " " +
+                                                        stop.city}
+                                                </Text>
+                                            </View>
+                                        )
+                                    );
+                                })}
+                            </View>
                         </View>
                     </View>
-                </View>
+                </ScrollView>
             </View>
         </Modal>
     );
@@ -86,7 +102,20 @@ const styles = StyleSheet.create({
         elevation: 5,
     },
     content: {
-        alignItems: "center",
+        flex: 1,
+        // alignItems: "center",
+    },
+    headerText: {
+        fontSize: 19,
+        color: "#6a6e7e",
+        fontWeight: "bold",
+    },
+    zielListe: {
+        paddingTop: "10%",
+    },
+    ziel: {
+        flex: 1,
+        paddingVertical: 10,
     },
     zielText: {
         color: "#666",
