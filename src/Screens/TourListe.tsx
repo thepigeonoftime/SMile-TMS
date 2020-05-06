@@ -7,7 +7,7 @@ import IconClose from "~/assets/svg/menu-icn_close.svg";
 import {ZielProps} from "../Types";
 
 export const TourListe = (props) => {
-    const {tour, showTourListe, toggleTourListe} = useContext(TourContext);
+    const {tour, currentStop, showTourListe, toggleTourListe} = useContext(TourContext);
     return (
         <Modal isVisible={showTourListe} style={styles.modal} backdropOpacity={0.05}>
             <View style={styles.container}>
@@ -21,11 +21,18 @@ export const TourListe = (props) => {
                         <View style={{flex: 1}}>
                             <Text style={styles.headerText}>Tourliste</Text>
                             <View style={styles.zielListe}>
-                                {tour.stops.map((stop: ZielProps) => {
+                                {tour.stops.map((stop: ZielProps, index: number) => {
                                     return (
                                         stop.stopType === "Receiver" && (
                                             <View key={stop.id} style={styles.ziel}>
-                                                <Text style={styles.zielText}>
+                                                <Text
+                                                    style={[
+                                                        styles.zielText,
+                                                        index == currentStop && {
+                                                            fontWeight: "bold",
+                                                        },
+                                                    ]}
+                                                >
                                                     {stop.firstName +
                                                         " " +
                                                         stop.lastName +
