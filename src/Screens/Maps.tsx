@@ -2,6 +2,7 @@ import {AntDesign} from "@expo/vector-icons";
 import React from "react";
 import {StyleSheet, Text, TouchableOpacity, View} from "react-native";
 import {Header} from "../Header";
+import MapView from "react-native-maps";
 
 export const Maps = ({navigation}) => {
     return (
@@ -28,7 +29,16 @@ export const Maps = ({navigation}) => {
                     </TouchableOpacity>
                 </View>
                 <View style={styles.mapsContainer}>
-                    <Text>[Maps]</Text>
+                    <MapView
+                        style={StyleSheet.absoluteFillObject}
+                        provider="google"
+                        region={{
+                            latitude: 40.76727216,
+                            longitude: -73.99392888,
+                            latitudeDelta: 0.0922,
+                            longitudeDelta: 0.0421,
+                        }}
+                    />
                 </View>
             </View>
         </View>
@@ -50,8 +60,9 @@ const styles = StyleSheet.create({
     closeButtonContainer: {
         alignItems: "flex-end",
         padding: 5,
-        marginTop: -20,
+        marginBottom: -25,
         marginRight: 20,
+        zIndex: 10,
     },
     closeButton: {
         borderWidth: 0,
