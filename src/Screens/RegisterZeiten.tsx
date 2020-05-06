@@ -82,11 +82,22 @@ export const RegisterZeiten = ({navigation}) => {
     });
 
     const onSubmit = (data) => {
-        data = Object.keys(data).filter(function (key) {
-            return data[key];
-        });
-        console.log(data);
-        storeDataZeiten(data);
+        let result = [];
+        const makeResult = (obj) => {
+            if (!Object.values(obj).includes(undefined)) {
+                result.push(obj);
+            }
+        };
+
+        makeResult({day: data.MONDAY && "MONDAY", start: data.moVon, end: data.moBis});
+        makeResult({day: data.TUESDAY && "TUESDAY", start: data.diVon, end: data.diBis});
+        makeResult({day: data.WEDNESDAY && "WEDNESDAY", start: data.miVon, end: data.miBis});
+        makeResult({day: data.THURSDAY && "THURSDAY", start: data.doVon, end: data.doBis});
+        makeResult({day: data.FRIDAY && "FRIDAY", start: data.frVon, end: data.frBis});
+        makeResult({day: data.SATURDAY && "SATURDAY", start: data.saVon, end: data.saBis});
+
+        console.log(result);
+        storeDataZeiten(result);
         navigation.goBack();
     };
 
