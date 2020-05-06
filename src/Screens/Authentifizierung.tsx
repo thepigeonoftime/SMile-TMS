@@ -8,7 +8,9 @@ import {TourListe} from "./TourListe";
 import {PaketGeben} from "./PaketGeben";
 
 export const Authentifizierung = ({navigation}) => {
-    const {tour, toggleTourListe, toggleNavigation, togglePaketGeben} = useContext(TourContext);
+    const {tour, currentStop, toggleTourListe, toggleNavigation, togglePaketGeben} = useContext(
+        TourContext
+    );
     return (
         <View style={styles.container}>
             <Header text="Authentifizierung" color="#729628" containerStyle={styles.header} />
@@ -16,14 +18,16 @@ export const Authentifizierung = ({navigation}) => {
                 {/* <View style={{flex: 1, paddingLeft: "10%", paddingTop: "10%"}}> */}
                 <View style={{flex: 1, paddingHorizontal: 20, paddingTop: 30}}>
                     <Text style={[styles.zielText, {fontWeight: "bold"}]}>
-                        {tour.tours[0].stops[1].firstName} {tour.tours[0].stops[1].lastName}
+                        {tour.stops[currentStop].firstName} {tour.stops[currentStop].lastName}
                     </Text>
                     <Text style={[styles.zielText, {paddingTop: 5}]}>
-                        {tour.tours[0].stops[1].streetName}
+                        {tour.stops[currentStop].streetName}
                     </Text>
-                    <Text style={[styles.zielText]}>Nr. {tour.tours[0].stops[1].streetNumber}</Text>
                     <Text style={[styles.zielText]}>
-                        {tour.tours[0].stops[1].zip + " " + tour.tours[0].stops[1].city}
+                        Nr. {tour.stops[currentStop].streetNumber}
+                    </Text>
+                    <Text style={[styles.zielText]}>
+                        {tour.stops[currentStop].zip + " " + tour.stops[currentStop].city}
                     </Text>
                     {/* </View> */}
                 </View>

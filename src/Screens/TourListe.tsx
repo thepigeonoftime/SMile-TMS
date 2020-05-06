@@ -21,7 +21,7 @@ export const TourListe = (props) => {
                         <View style={{flex: 1}}>
                             <Text style={styles.headerText}>Tourliste</Text>
                             <View style={styles.zielListe}>
-                                {tour.tours[0].stops.map((stop: ZielProps) => {
+                                {tour.stops.map((stop: ZielProps) => {
                                     return (
                                         stop.stopType === "Receiver" && (
                                             <View key={stop.id} style={styles.ziel}>

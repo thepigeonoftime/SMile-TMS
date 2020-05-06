@@ -41,14 +41,12 @@ export const TourStart: React.FC<IRoute> = ({navigation}) => {
                         <View style={{flex: 10}}>
                             <View>
                                 <Text style={[styles.depotHeader]}>Zentraldepot:</Text>
+                                <Text style={[styles.depotText]}>{tour.stops[0].streetName}</Text>
                                 <Text style={[styles.depotText]}>
-                                    {tour.tours[0].stops[0].streetName}
+                                    Nummer: {tour.stops[0].streetNumber}
                                 </Text>
                                 <Text style={[styles.depotText]}>
-                                    Nummer: {tour.tours[0].stops[0].streetNumber}
-                                </Text>
-                                <Text style={[styles.depotText]}>
-                                    {tour.tours[0].stops[0].zip + " " + tour.tours[0].stops[0].city}
+                                    {tour.stops[0].zip + " " + tour.stops[0].city}
                                 </Text>
                             </View>
                             <View style={styles.tourLinkWrap}>
@@ -99,7 +97,7 @@ export const TourStart: React.FC<IRoute> = ({navigation}) => {
                                             style={{marginLeft: -30, marginRight: 20}}
                                         />
                                         <Text style={[styles.mFont, styles.green]}>
-                                            {Object.keys(tour.tours[0].packets).length} Pakete
+                                            {Object.keys(tour.packets).length} Pakete
                                         </Text>
                                     </View>
                                     <View
@@ -130,7 +128,7 @@ export const TourStart: React.FC<IRoute> = ({navigation}) => {
                                             style={{marginLeft: -30, marginRight: 20}}
                                         />
                                         <Text style={[styles.mFont, styles.green]}>
-                                            {Object.keys(tour.tours[0].stops).length} Stops
+                                            {Object.keys(tour.stops).length} Stops
                                         </Text>
                                     </View>
                                     <View

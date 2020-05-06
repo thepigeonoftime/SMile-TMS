@@ -1,6 +1,4 @@
 import React, {useState} from "react";
-import {AsyncStorage} from "react-native";
-import {TourStack} from "./TourStack";
 
 type tourType = any;
 
@@ -19,6 +17,9 @@ export const TourContext = React.createContext<{
     signatureURI: null | string;
     saveSignature: (uri: string) => void;
     tourNav: any;
+    currentStop: number;
+    nextStop: () => void;
+    resetStops: () => void;
 }>({
     tour: null,
     error: null,
@@ -34,11 +35,15 @@ export const TourContext = React.createContext<{
     signatureURI: null,
     saveSignature: () => {},
     tourNav: null,
+    currentStop: 1,
+    nextStop: () => {},
+    resetStops: () => {},
 });
 
 export const TourProvider = ({navigation, children}) => {
     const [tour, setTour] = useState(null);
     const [error, setError] = useState(null);
+    const [currentStop, setCurrentStop] = useState(1);
     const [showTourListe, setShowTourListe] = useState(false);
     const [showNavigation, setShowNavigation] = useState(false);
     const [showPaketGeben, setShowPaketGeben] = useState(false);
@@ -55,8 +60,9 @@ export const TourProvider = ({navigation, children}) => {
                 showPaketGeben,
                 signatureURI,
                 tourNav,
+                currentStop,
                 setTour: (tour) => {
-                    setTour(tour);
+                    setTour(tour.tours[0]);
                     // AsyncStorage.setItem("tour", tour);
                 },
                 removeTour: (tour) => {
@@ -77,6 +83,12 @@ export const TourProvider = ({navigation, children}) => {
                 },
                 saveSignature: (uri) => {
                     setSignatureURI(uri);
+                },
+                nextStop: () => {
+                    setCurrentStop(currentStop + 1);
+                },
+                resetStops: () => {
+                    setCurrentStop(1);
                 },
             }}
         >

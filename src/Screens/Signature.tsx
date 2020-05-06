@@ -1,7 +1,7 @@
 import React, {useState, useRef, useContext, useEffect} from "react";
 import {createStackNavigator} from "@react-navigation/stack";
 import {SignatureProps} from "../Types";
-import {Text, TouchableOpacity, View, StyleSheet} from "react-native";
+import {Text, TouchableOpacity, View, StyleSheet, SafeAreaView} from "react-native";
 import ExpoPixi from "expo-pixi";
 import {captureRef} from "react-native-view-shot";
 import {Header} from "../Header";
@@ -9,10 +9,10 @@ import {TourContext} from "../TourProvider";
 import {Button} from "react-native-elements";
 import {ScreenOrientation} from "expo";
 
-const Stack = createStackNavigator<SignatureProps>();
-
 export const Signature = ({navigation}) => {
-    const {tour, saveSignature, tourNav} = useContext(TourContext);
+    const {tour, currentStop, nextStop, resetStops, saveSignature, tourNav} = useContext(
+        TourContext
+    );
     const [dynStyles, setDynStyles] = useState<any>(portrait);
     let signature = useRef(null);
     tourNav.setOptions({
@@ -37,10 +37,16 @@ export const Signature = ({navigation}) => {
         const uri = await captureRef(signature, {format: "jpg", quality: 0.4});
         saveSignature(uri);
         console.log(uri);
-        navigation.goBack();
+        if (currentStop < tour.stops.length - 1) {
+            nextStop();
+            navigation.navigate("Ziel");
+        } else {
+            resetStops();
+            navigation.navigate("TourSuche");
+        }
     };
     return (
-        <View style={styles.container}>
+        <SafeAreaView style={styles.container}>
             <Header
                 text="Unterschrift"
                 color="#729628"
@@ -58,7 +64,7 @@ export const Signature = ({navigation}) => {
             <View style={styles.content}>
                 <View style={styles.textWrap}>
                     <Text style={styles.text}>
-                        {tour.tours[0].stops[1].firstName} {tour.tours[0].stops[1].lastName}
+                        {tour.stops[currentStop].firstName} {tour.stops[currentStop].lastName}
                     </Text>
                 </View>
                 <View style={styles.pixiWrap}>
@@ -92,7 +98,7 @@ export const Signature = ({navigation}) => {
                 </View>
                 <View style={dynStyles.bottom} />
             </View>
-        </View>
+        </SafeAreaView>
     );
 };
 

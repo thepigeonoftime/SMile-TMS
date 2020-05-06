@@ -6,7 +6,7 @@ import Modal from "react-native-modal";
 import IconClose from "~/assets/svg/menu-icn_close.svg";
 
 export const PaketGeben = ({navigation}) => {
-    const {tour, showPaketGeben, togglePaketGeben} = useContext(TourContext);
+    const {tour, currentStop, showPaketGeben, togglePaketGeben} = useContext(TourContext);
     return (
         <Modal isVisible={showPaketGeben} style={styles.modal} backdropOpacity={0.4}>
             <View style={styles.container}>
@@ -14,12 +14,12 @@ export const PaketGeben = ({navigation}) => {
                     <View style={styles.textWrap}>
                         <Text style={styles.headerText}>Paket übergeben an:</Text>
                         <Text style={styles.text}>
-                            {tour.tours[0].stops[1].firstName} {tour.tours[0].stops[1].lastName}
+                            {tour.stops[currentStop].firstName} {tour.stops[currentStop].lastName}
                             {"; "}
-                            {tour.tours[0].stops[1].streetName}{" "}
-                            {tour.tours[0].stops[1].streetNumber}
+                            {tour.stops[currentStop].streetName}{" "}
+                            {tour.stops[currentStop].streetNumber}
                             {"; "}
-                            {tour.tours[0].stops[1].zip + " " + tour.tours[0].stops[1].city}
+                            {tour.stops[currentStop].zip + " " + tour.stops[currentStop].city}
                         </Text>
                     </View>
                     <View style={styles.buttonWrap}>
