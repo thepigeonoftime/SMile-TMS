@@ -4,6 +4,7 @@ import {ScannerProps} from "../Types";
 import {Text, View, StyleSheet, Button} from "react-native";
 import {BarCodeScanner} from "expo-barcode-scanner";
 import BarcodeMask from "react-native-barcode-mask";
+import {TouchableOpacity} from "react-native-gesture-handler";
 
 const Stack = createStackNavigator<ScannerProps>();
 
@@ -36,25 +37,48 @@ const ScannerView = ({navigation}) => {
             style={{
                 flex: 1,
                 backgroundColor: "#000",
-                justifyContent: "center",
+                justifyContent: "flex-start",
             }}
         >
-            {!scanned && (
-                <BarCodeScanner
-                    // onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
-                    onBarCodeScanned={handleBarCodeScanned}
-                    style={[StyleSheet.absoluteFill, styles.container]}
+            <View
+                style={{
+                    flex: 0.5,
+                    backgroundColor: "#000",
+                    justifyContent: "flex-start",
+                }}
+            >
+                <TouchableOpacity
+                    onPress={() => {
+                        navigation.goBack();
+                    }}
                 >
-                    <BarcodeMask edgeColor={"#62B1F6"} showAnimatedLine={true} />
-                </BarCodeScanner>
-            )}
-            {scanned && (
-                <View>
-                    <Button title={"Erneut scannen"} onPress={() => setScanned(false)} />
-                    <Text> </Text>
-                    <Button title={"Zurück"} onPress={() => navigation.goBack()} />
-                </View>
-            )}
+                    <Text style={{color: "#FFF", marginTop: 20}}>Zurück</Text>
+                </TouchableOpacity>
+            </View>
+            <View
+                style={{
+                    // flex: 1,
+                    backgroundColor: "#000",
+                    justifyContent: "flex-start",
+                }}
+            >
+                {!scanned && (
+                    <BarCodeScanner
+                        // onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
+                        onBarCodeScanned={handleBarCodeScanned}
+                        style={[StyleSheet.absoluteFill, styles.container]}
+                    >
+                        <BarcodeMask edgeColor={"#62B1F6"} showAnimatedLine={true} />
+                    </BarCodeScanner>
+                )}
+                {scanned && (
+                    <View>
+                        <Button title={"Erneut scannen"} onPress={() => setScanned(false)} />
+                        <Text> </Text>
+                        <Button title={"Zurück"} onPress={() => navigation.goBack()} />
+                    </View>
+                )}
+            </View>
         </View>
     );
 };
