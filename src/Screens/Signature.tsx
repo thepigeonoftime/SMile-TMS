@@ -10,6 +10,7 @@ import {Button} from "react-native-elements";
 import {ScreenOrientation} from "expo";
 
 export const Signature = ({navigation}) => {
+    console.disableYellowBox = true;
     const {tour, currentStop, nextStop, resetStops, saveSignature, tourNav} = useContext(
         TourContext
     );
