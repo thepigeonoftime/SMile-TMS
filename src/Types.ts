@@ -1,4 +1,3 @@
-import {RegisterContextProps} from "./Types";
 import {RouteProp} from "@react-navigation/native";
 import {StackNavigationProp} from "@react-navigation/stack";
 
@@ -88,4 +87,21 @@ export type RegisterContextProps = {
     storeDataGebiet: (data) => void;
     storeDataZeiten: (data) => void;
     toggleRegModal: () => void;
+};
+
+export type ZielProps = {
+    stopType: "Depot" | "Receiver";
+    streetName: string;
+    streetNumber: string;
+    firstName: string;
+    lastName: string;
+    city: string;
+    id: string;
+    startTime: string;
+    endTime: string;
+    plannedTimeframeStart: string;
+    organization: string | null;
+    zip: string;
+    receiverLevel?: string | null;
+    receiverRemark?: string;
 };
