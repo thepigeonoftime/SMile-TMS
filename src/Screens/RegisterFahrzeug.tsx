@@ -90,7 +90,7 @@ export const RegisterFahrzeug = ({navigation}) => {
                             <View style={styles.pickerWrap}>
                                 <Controller
                                     as={
-                                        // eslint-disable-next-line prettier/prettier
+                                        // tslint:disable-next-line jsx-wrap-multiline
                                         <RNPickerSelect
                                             onValueChange={(value) => {
                                                 setValue("fahrzeugArt", value);
