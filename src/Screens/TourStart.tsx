@@ -128,7 +128,7 @@ export const TourStart: React.FC<IRoute> = ({navigation}) => {
                                             style={{marginLeft: -30, marginRight: 20}}
                                         />
                                         <Text style={[styles.mFont, styles.green]}>
-                                            {Object.keys(tour.stops).length} Stops
+                                            {Object.keys(tour.stops).length - 1} Stops
                                         </Text>
                                     </View>
                                     <View
