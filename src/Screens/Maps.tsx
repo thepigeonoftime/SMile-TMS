@@ -1,10 +1,21 @@
 import {AntDesign} from "@expo/vector-icons";
-import React from "react";
+import React, {useState, useEffect} from "react";
 import {StyleSheet, Text, TouchableOpacity, View} from "react-native";
 import {Header} from "../Header";
-import MapView from "react-native-maps";
+import MapView, {PROVIDER_GOOGLE} from "react-native-maps";
+import MapViewDirections from "react-native-maps-directions";
 
 export const Maps = ({navigation}) => {
+    const [showMap, setShowMap] = useState(false);
+    useEffect(() => {
+        setTimeout(() => {
+            setShowMap(true);
+        }, 290);
+    });
+    const origin = {latitude: 52.5, longitude: 13.405};
+    const destination = {latitude: 52.55, longitude: 13.405};
+    const GOOGLE_MAPS_APIKEY = "AIzaSyDzgQenA9LdgC7sIXpng2GgV9lvasHUFOo ";
+
     return (
         <View style={{flex: 1}}>
             <Header
@@ -29,16 +40,28 @@ export const Maps = ({navigation}) => {
                     </TouchableOpacity>
                 </View>
                 <View style={styles.mapsContainer}>
-                    <MapView
-                        style={StyleSheet.absoluteFillObject}
-                        provider="google"
-                        region={{
-                            latitude: 40.76727216,
-                            longitude: -73.99392888,
-                            latitudeDelta: 0.0922,
-                            longitudeDelta: 0.0421,
-                        }}
-                    />
+                    {showMap && (
+                        <MapView
+                            style={[StyleSheet.absoluteFillObject, {borderRadius: 25}]}
+                            provider={PROVIDER_GOOGLE}
+                            initialRegion={{
+                                latitude: 52.52,
+                                longitude: 13.405,
+                                latitudeDelta: 0.1,
+                                longitudeDelta: 0.05,
+                            }}
+                            minZoomLevel={10}
+                        >
+                            <MapViewDirections
+                                origin={origin}
+                                destination={destination}
+                                apikey={GOOGLE_MAPS_APIKEY}
+                                strokeWidth={3}
+                                strokeColor="#669df6"
+                                optimizeWaypoints={true}
+                            />
+                        </MapView>
+                    )}
                 </View>
             </View>
         </View>
@@ -60,6 +83,7 @@ const styles = StyleSheet.create({
     closeButtonContainer: {
         alignItems: "flex-end",
         padding: 5,
+        marginTop: -23,
         marginBottom: -25,
         marginRight: 20,
         zIndex: 10,

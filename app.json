@@ -19,9 +19,9 @@
         "assetBundlePatterns": ["**/*"],
         "ios": {
             "supportsTablet": true,
+            "bundleIdentifier": "de.goodstag.smile",
             "config": {
-                "bundleIdentifier": "de.goodstag.smile",
-                "googleMapsApiKey": "AIzaSyArGAQxwof3tpnUNx0jjyHx-nOHLU-XD6k"
+                "googleMapsApiKey": "AIzaSyD7UM0HbxP0fGmEbTsRDayKJMJF3ivswP0"
             }
         },
         "android": {
