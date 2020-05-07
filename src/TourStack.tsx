@@ -14,7 +14,7 @@ const Stack = createStackNavigator<TourStackProps>();
 
 export const TourStack = () => {
     return (
-        <Stack.Navigator mode="modal" headerMode="none">
+        <Stack.Navigator mode="card" headerMode="none">
             <Stack.Screen name="TourSuche" component={TourSuche} options={{}} />
             <Stack.Screen name="TourStart" component={TourStart} options={{}} />
             <Stack.Screen name="Maps" component={Maps} options={{}} />
