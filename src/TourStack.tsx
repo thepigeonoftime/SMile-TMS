@@ -1,5 +1,5 @@
 import {createStackNavigator} from "@react-navigation/stack";
-import React from "react";
+import React, {useEffect} from "react";
 import {TourStart} from "./Screens/TourStart";
 import {TourSuche} from "./Screens/TourSuche";
 import {TourStackProps} from "./Types";
@@ -12,7 +12,14 @@ import {Signature} from "./Screens/Signature";
 
 const Stack = createStackNavigator<TourStackProps>();
 
-export const TourStack = () => {
+export const TourStack = ({navigation, route}) => {
+    useEffect(() => {
+        const routeName = route.state ? route.state.routes[route.state.index].name : "";
+        const hideTabScreens = ["Signature", "CodeScanner"];
+        navigation.setOptions({
+            tabBarVisible: hideTabScreens.includes(routeName) ? false : true,
+        });
+    });
     return (
         <Stack.Navigator mode="card" headerMode="none">
             <Stack.Screen name="TourSuche" component={TourSuche} options={{}} />

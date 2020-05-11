@@ -15,7 +15,6 @@ export const TourContext = React.createContext<{
     toggleTourListe: () => void;
     showPaketGeben: boolean;
     togglePaketGeben: () => void;
-    tourNav: any;
     currentStop: number;
     nextStop: () => void;
     resetStops: () => void;
@@ -32,21 +31,19 @@ export const TourContext = React.createContext<{
     toggleTourListe: () => {},
     showPaketGeben: false,
     togglePaketGeben: () => {},
-    tourNav: null,
     currentStop: 1,
     nextStop: () => {},
     resetStops: () => {},
     saveSignature: () => {},
 });
 
-export const TourProvider = ({navigation, children}) => {
+export const TourProvider = ({children}) => {
     const [tour, setTour] = useState(null);
     const [error, setError] = useState(null);
     const [currentStop, setCurrentStop] = useState(1);
     const [showTourListe, setShowTourListe] = useState(false);
     const [showNavigation, setShowNavigation] = useState(false);
     const [showPaketGeben, setShowPaketGeben] = useState(false);
-    const tourNav = navigation;
 
     return (
         <TourContext.Provider
@@ -56,7 +53,6 @@ export const TourProvider = ({navigation, children}) => {
                 showNavigation,
                 showTourListe,
                 showPaketGeben,
-                tourNav,
                 currentStop,
                 setTour: (tour) => {
                     setTour(tour.tours[0]);

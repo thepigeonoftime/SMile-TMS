@@ -11,14 +11,9 @@ import {ScreenOrientation} from "expo";
 
 export const Signature = ({navigation}) => {
     console.disableYellowBox = true;
-    const {tour, currentStop, nextStop, resetStops, saveSignature, tourNav} = useContext(
-        TourContext
-    );
+    const {tour, currentStop, nextStop, resetStops, saveSignature} = useContext(TourContext);
     const [dynStyles, setDynStyles] = useState<any>(portrait);
     let signature = useRef(null);
-    tourNav.setOptions({
-        tabBarVisible: false,
-    });
     useEffect(() => {
         ScreenOrientation.unlockAsync();
     });
