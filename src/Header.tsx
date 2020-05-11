@@ -1,6 +1,7 @@
 import React from "react";
 import {StyleSheet, Text, View} from "react-native";
 import {useFonts} from "@use-expo/font";
+import {KonnectFont} from "./KonnectFont";
 
 interface HeaderProps {
     text: string;
@@ -33,15 +34,9 @@ export const Header: React.SFC<HeaderProps> = (props) => {
         >
             <View style={styles.spacer} />
             <View style={styles.textWrapper}>
-                <Text
-                    style={[
-                        color(props.color),
-                        fontsLoaded && {fontFamily: "KonnectBlack"},
-                        [styles.textDefault, props.textStyle],
-                    ]}
-                >
+                <KonnectFont style={[color(props.color), [styles.textDefault, props.textStyle]]}>
                     {props.text}
-                </Text>
+                </KonnectFont>
                 <Text
                     style={[
                         color(props.color),
