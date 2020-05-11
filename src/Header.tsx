@@ -23,44 +23,36 @@ export const Header: React.SFC<HeaderProps> = (props) => {
         return propbgColor ? {backgroundColor: propbgColor} : {backgroundColor: "#F2F2F2"};
     };
 
-    if (!fontsLoaded) {
-        return (
-            <View>
-                <Text>loading</Text>
+    return (
+        <View
+            style={[
+                [props.containerStyle ? props.containerStyle : styles.containerDefault],
+                [bgColor(props.bgColor)],
+                // {height: 210},
+            ]}
+        >
+            <View style={styles.spacer} />
+            <View style={styles.textWrapper}>
+                <Text
+                    style={[
+                        color(props.color),
+                        fontsLoaded && {fontFamily: "KonnectBlack"},
+                        [styles.textDefault, props.textStyle],
+                    ]}
+                >
+                    {props.text}
+                </Text>
+                <Text
+                    style={[
+                        color(props.color),
+                        [props.subTextStyle ? props.subTextStyle : styles.subTextDefault],
+                    ]}
+                >
+                    {props.subText}
+                </Text>
             </View>
-        );
-    } else {
-        return (
-            <View
-                style={[
-                    [props.containerStyle ? props.containerStyle : styles.containerDefault],
-                    [bgColor(props.bgColor)],
-                    // {height: 210},
-                ]}
-            >
-                <View style={styles.spacer} />
-                <View style={styles.textWrapper}>
-                    <Text
-                        style={[
-                            color(props.color),
-                            {fontFamily: "KonnectBlack"},
-                            [styles.textDefault, props.textStyle],
-                        ]}
-                    >
-                        {props.text}
-                    </Text>
-                    <Text
-                        style={[
-                            color(props.color),
-                            [props.subTextStyle ? props.subTextStyle : styles.subTextDefault],
-                        ]}
-                    >
-                        {props.subText}
-                    </Text>
-                </View>
-            </View>
-        );
-    }
+        </View>
+    );
 };
 
 const styles = StyleSheet.create({
