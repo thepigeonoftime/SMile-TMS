@@ -1,6 +1,6 @@
 import {AntDesign} from "@expo/vector-icons";
 import moment from "moment";
-import React, {useState, useContext} from "react";
+import React, {useState, useContext, useEffect} from "react";
 import {Controller, useForm} from "react-hook-form";
 import {
     Alert,
@@ -16,9 +16,19 @@ import {Switch, Text} from "react-native-paper";
 import * as Yup from "yup";
 import {Header} from "../Header";
 import {RegisterContext} from "../RegisterProvider";
+import {resultProps} from "../Types";
 
 export const RegisterZeiten = ({navigation}) => {
-    const {storeDataZeiten} = useContext(RegisterContext);
+    const {dataZeiten, storeDataZeiten} = useContext(RegisterContext);
+
+    const [isEnabled, setIsEnabled] = useState({
+        monday: false,
+        tuesday: false,
+        wednesday: false,
+        thursday: false,
+        friday: false,
+        saturday: false,
+    });
 
     const timeSchema = Yup.string().test("is-time", "Keine gültige Zeit", function (value) {
         if (value) {
@@ -29,32 +39,25 @@ export const RegisterZeiten = ({navigation}) => {
     });
 
     const validationSchema = Yup.object().shape({
-        moVon: timeSchema,
-        moBis: timeSchema,
-        diVon: timeSchema,
-        diBis: timeSchema,
-        miVon: timeSchema,
-        miBis: timeSchema,
-        doVon: timeSchema,
-        doBis: timeSchema,
-        frVon: timeSchema,
-        frBis: timeSchema,
-        saVon: timeSchema,
-        saBis: timeSchema,
-    });
-
-    const [isEnabled, setIsEnabled] = useState({
-        montag: false,
-        dienstag: false,
-        mittwoch: false,
-        donnerstag: false,
-        freitag: false,
-        samstag: false,
+        monStart: timeSchema,
+        monEnd: timeSchema,
+        tueStart: timeSchema,
+        tueEnd: timeSchema,
+        wedStart: timeSchema,
+        wedEnd: timeSchema,
+        thuStart: timeSchema,
+        thuEnd: timeSchema,
+        friStart: timeSchema,
+        friEnd: timeSchema,
+        satStart: timeSchema,
+        satEnd: timeSchema,
     });
 
     const toggleSwitch = (key) => {
         setIsEnabled({...isEnabled, [key]: !isEnabled[key]});
     };
+
+    let lastKey = "";
 
     const formatTime = (time) => {
         time.length > 2 &&
@@ -63,8 +66,6 @@ export const RegisterZeiten = ({navigation}) => {
             (time = time.slice(0, 2) + ":" + time.slice(2));
         return time;
     };
-
-    let lastKey = "";
 
     const {
         register,
@@ -82,20 +83,44 @@ export const RegisterZeiten = ({navigation}) => {
     });
 
     const onSubmit = (data) => {
-        let result = [];
-        const makeResult = (obj) => {
+        console.log(isEnabled.monday);
+        let result: resultProps = {};
+        const makeResult = (key, obj) => {
             if (!Object.values(obj).includes(undefined)) {
-                result.push(obj);
+                result[key] = obj;
             }
         };
 
-        makeResult({day: data.MONDAY && "MONDAY", start: data.moVon, end: data.moBis});
-        makeResult({day: data.TUESDAY && "TUESDAY", start: data.diVon, end: data.diBis});
-        makeResult({day: data.WEDNESDAY && "WEDNESDAY", start: data.miVon, end: data.miBis});
-        makeResult({day: data.THURSDAY && "THURSDAY", start: data.doVon, end: data.doBis});
-        makeResult({day: data.FRIDAY && "FRIDAY", start: data.frVon, end: data.frBis});
-        makeResult({day: data.SATURDAY && "SATURDAY", start: data.saVon, end: data.saBis});
-
+        makeResult("monday", {
+            day: isEnabled.monday && "MONDAY",
+            start: data.monStart,
+            end: data.monEnd,
+        });
+        makeResult("tuesday", {
+            day: isEnabled.tuesday && "TUESDAY",
+            start: data.tueStart,
+            end: data.tueEnd,
+        });
+        makeResult("wednesday", {
+            day: isEnabled.wednesday && "WEDNESDAY",
+            start: data.wedStart,
+            end: data.wedEnd,
+        });
+        makeResult("thursday", {
+            day: isEnabled.thursday && "THURSDAY",
+            start: data.thuStart,
+            end: data.thuEnd,
+        });
+        makeResult("friday", {
+            day: isEnabled.friday && "FRIDAY",
+            start: data.friStart,
+            end: data.friEnd,
+        });
+        makeResult("saturday", {
+            day: isEnabled.saturday && "SATURDAY",
+            start: data.satStart,
+            end: data.satEnd,
+        });
         console.log(result);
         storeDataZeiten(result);
         navigation.goBack();
@@ -137,59 +162,70 @@ export const RegisterZeiten = ({navigation}) => {
                                     size={25}
                                     color="#ccc"
                                 />
-                                <Controller
-                                    as={<Switch />}
-                                    control={control}
-                                    name="MONDAY"
+
+                                <Switch
                                     trackColor={{false: "#e6e6e6", true: "#e6e6e6"}}
-                                    thumbColor={isEnabled.montag ? "#729628" : "#f4f3f4"}
+                                    thumbColor={isEnabled.monday ? "#729628" : "#f4f3f4"}
                                     ios_backgroundColor="#e6e6e6"
                                     onValueChange={(value) => {
-                                        toggleSwitch("montag");
-                                        setValue("MONDAY", value);
+                                        toggleSwitch("monday");
                                     }}
-                                    value={isEnabled.montag}
+                                    value={isEnabled.monday}
                                     style={styles.switch}
                                 />
                                 <View style={styles.inputWrap}>
                                     <Controller
                                         as={<Input />}
                                         control={control}
-                                        name="moVon"
+                                        name="monStart"
                                         lastkey="none"
                                         onKeyPress={({nativeEvent}) => {
                                             lastKey = nativeEvent.key;
                                         }}
                                         onChangeText={(time) => {
-                                            setValue("moVon", formatTime(time));
-                                            errors.moVon && triggerValidation("moVon");
+                                            setValue("monStart", formatTime(time));
+                                            errors.monStart && triggerValidation("monStart");
                                         }}
                                         maxLength={5}
-                                        errorMessage={errors.moVon ? errors.moVon.message : " "}
+                                        placeholder={
+                                            dataZeiten &&
+                                            dataZeiten.monday &&
+                                            dataZeiten.monday.start
+                                                ? dataZeiten.monday.start
+                                                : ""
+                                        }
+                                        errorMessage={
+                                            errors.monStart ? errors.monStart.message : " "
+                                        }
                                         containerStyle={styles.input}
                                         inputStyle={styles.inputText}
                                         keyboardType={"numeric"}
-                                        inputContainerStyle={errors.moVon && styles.inputError}
+                                        inputContainerStyle={errors.monStart && styles.inputError}
                                         errorStyle={styles.error}
                                     />
                                     <Controller
                                         as={<Input />}
                                         control={control}
-                                        name="moBis"
+                                        name="monEnd"
                                         lastkey="none"
                                         onKeyPress={({nativeEvent}) => {
                                             lastKey = nativeEvent.key;
                                         }}
                                         onChangeText={(time) => {
-                                            setValue("moBis", formatTime(time));
-                                            errors.moBis && triggerValidation("moBis");
+                                            setValue("monEnd", formatTime(time));
+                                            errors.monEnd && triggerValidation("monEnd");
                                         }}
                                         maxLength={5}
-                                        errorMessage={errors.moBis ? errors.moBis.message : " "}
+                                        placeholder={
+                                            dataZeiten && dataZeiten.monday && dataZeiten.monday.end
+                                                ? dataZeiten.monday.end
+                                                : ""
+                                        }
+                                        errorMessage={errors.monEnd ? errors.monEnd.message : " "}
                                         containerStyle={styles.input}
                                         inputStyle={styles.inputText}
                                         keyboardType={"numeric"}
-                                        inputContainerStyle={errors.moBis && styles.inputError}
+                                        inputContainerStyle={errors.monEnd && styles.inputError}
                                         errorStyle={styles.error}
                                     />
                                 </View>
@@ -206,59 +242,75 @@ export const RegisterZeiten = ({navigation}) => {
                                         size={25}
                                         color="#ccc"
                                     />
-                                    <Controller
-                                        as={<Switch />}
-                                        control={control}
-                                        name="TUESDAY"
+                                    <Switch
                                         trackColor={{false: "#e6e6e6", true: "#e6e6e6"}}
-                                        thumbColor={isEnabled.dienstag ? "#729628" : "#f4f3f4"}
+                                        thumbColor={isEnabled.tuesday ? "#729628" : "#f4f3f4"}
                                         ios_backgroundColor="#e6e6e6"
                                         onValueChange={(value) => {
-                                            toggleSwitch("dienstag");
-                                            setValue("TUESDAY", value);
+                                            toggleSwitch("tuesday");
                                         }}
-                                        value={isEnabled.dienstag}
+                                        value={isEnabled.tuesday}
                                         style={styles.switch}
                                     />
                                     <View style={styles.inputWrap}>
                                         <Controller
                                             as={<Input />}
                                             control={control}
-                                            name="diVon"
+                                            name="tueStart"
                                             lastkey="none"
                                             onKeyPress={({nativeEvent}) => {
                                                 lastKey = nativeEvent.key;
                                             }}
                                             onChangeText={(time) => {
-                                                setValue("diVon", formatTime(time));
-                                                errors.diVon && triggerValidation("diVon");
+                                                setValue("tueStart", formatTime(time));
+                                                errors.tueStart && triggerValidation("tueStart");
                                             }}
                                             maxLength={5}
-                                            errorMessage={errors.diVon ? errors.diVon.message : " "}
+                                            placeholder={
+                                                dataZeiten &&
+                                                dataZeiten.tuesday &&
+                                                dataZeiten.tuesday.start
+                                                    ? dataZeiten.tuesday.start
+                                                    : ""
+                                            }
+                                            errorMessage={
+                                                errors.tueStart ? errors.tueStart.message : " "
+                                            }
                                             containerStyle={styles.input}
                                             inputStyle={styles.inputText}
                                             keyboardType={"numeric"}
-                                            inputContainerStyle={errors.diVon && styles.inputError}
+                                            inputContainerStyle={
+                                                errors.tueStart && styles.inputError
+                                            }
                                             errorStyle={styles.error}
                                         />
                                         <Controller
                                             as={<Input />}
                                             control={control}
-                                            name="diBis"
+                                            name="tueEnd"
                                             lastkey="none"
                                             onKeyPress={({nativeEvent}) => {
                                                 lastKey = nativeEvent.key;
                                             }}
                                             onChangeText={(time) => {
-                                                setValue("diBis", formatTime(time));
-                                                errors.diBis && triggerValidation("diBis");
+                                                setValue("tueEnd", formatTime(time));
+                                                errors.tueEnd && triggerValidation("tueEnd");
                                             }}
                                             maxLength={5}
-                                            errorMessage={errors.diBis ? errors.diBis.message : " "}
+                                            placeholder={
+                                                dataZeiten &&
+                                                dataZeiten.tuesday &&
+                                                dataZeiten.tuesday.end
+                                                    ? dataZeiten.tuesday.end
+                                                    : ""
+                                            }
+                                            errorMessage={
+                                                errors.tueEnd ? errors.tueEnd.message : " "
+                                            }
                                             containerStyle={styles.input}
                                             inputStyle={styles.inputText}
                                             keyboardType={"numeric"}
-                                            inputContainerStyle={errors.diBis && styles.inputError}
+                                            inputContainerStyle={errors.tueEnd && styles.inputError}
                                             errorStyle={styles.error}
                                         />
                                     </View>
@@ -276,59 +328,75 @@ export const RegisterZeiten = ({navigation}) => {
                                         size={25}
                                         color="#ccc"
                                     />
-                                    <Controller
-                                        as={<Switch />}
-                                        control={control}
-                                        name="WEDNESDAY"
+                                    <Switch
                                         trackColor={{false: "#e6e6e6", true: "#e6e6e6"}}
-                                        thumbColor={isEnabled.mittwoch ? "#729628" : "#f4f3f4"}
+                                        thumbColor={isEnabled.wednesday ? "#729628" : "#f4f3f4"}
                                         ios_backgroundColor="#e6e6e6"
                                         onValueChange={(value) => {
-                                            toggleSwitch("mittwoch");
-                                            setValue("WEDNESDAY", value);
+                                            toggleSwitch("wednesday");
                                         }}
-                                        value={isEnabled.mittwoch}
+                                        value={isEnabled.wednesday}
                                         style={styles.switch}
                                     />
                                     <View style={styles.inputWrap}>
                                         <Controller
                                             as={<Input />}
                                             control={control}
-                                            name="miVon"
+                                            name="wedStart"
                                             lastkey="none"
                                             onKeyPress={({nativeEvent}) => {
                                                 lastKey = nativeEvent.key;
                                             }}
                                             onChangeText={(time) => {
-                                                setValue("miVon", formatTime(time));
-                                                errors.miVon && triggerValidation("miVon");
+                                                setValue("wedStart", formatTime(time));
+                                                errors.wedStart && triggerValidation("wedStart");
                                             }}
                                             maxLength={5}
-                                            errorMessage={errors.miVon ? errors.miVon.message : " "}
+                                            placeholder={
+                                                dataZeiten &&
+                                                dataZeiten.wednesday &&
+                                                dataZeiten.wednesday.start
+                                                    ? dataZeiten.wednesday.start
+                                                    : ""
+                                            }
+                                            errorMessage={
+                                                errors.wedStart ? errors.wedStart.message : " "
+                                            }
                                             containerStyle={styles.input}
                                             inputStyle={styles.inputText}
                                             keyboardType={"numeric"}
-                                            inputContainerStyle={errors.miVon && styles.inputError}
+                                            inputContainerStyle={
+                                                errors.wedStart && styles.inputError
+                                            }
                                             errorStyle={styles.error}
                                         />
                                         <Controller
                                             as={<Input />}
                                             control={control}
-                                            name="miBis"
+                                            name="wedEnd"
                                             lastkey="none"
                                             onKeyPress={({nativeEvent}) => {
                                                 lastKey = nativeEvent.key;
                                             }}
                                             onChangeText={(time) => {
-                                                setValue("miBis", formatTime(time));
-                                                errors.miBis && triggerValidation("miBis");
+                                                setValue("wedEnd", formatTime(time));
+                                                errors.wedEnd && triggerValidation("wedEnd");
                                             }}
                                             maxLength={5}
-                                            errorMessage={errors.miBis ? errors.miBis.message : " "}
+                                            placeholder={
+                                                dataZeiten &&
+                                                dataZeiten.wednesday &&
+                                                dataZeiten.wednesday.end
+                                                    ? dataZeiten.wednesday.end
+                                                    : ""
+                                            }
+                                            errorMessage={
+                                                errors.wedEnd ? errors.wedEnd.message : " "
+                                            }
                                             containerStyle={styles.input}
                                             inputStyle={styles.inputText}
                                             keyboardType={"numeric"}
-                                            inputContainerStyle={errors.miBis && styles.inputError}
+                                            inputContainerStyle={errors.wedEnd && styles.inputError}
                                             errorStyle={styles.error}
                                         />
                                     </View>
@@ -346,59 +414,75 @@ export const RegisterZeiten = ({navigation}) => {
                                         size={25}
                                         color="#ccc"
                                     />
-                                    <Controller
-                                        as={<Switch />}
-                                        control={control}
-                                        name="THURSDAY"
+                                    <Switch
                                         trackColor={{false: "#e6e6e6", true: "#e6e6e6"}}
-                                        thumbColor={isEnabled.donnerstag ? "#729628" : "#f4f3f4"}
+                                        thumbColor={isEnabled.thursday ? "#729628" : "#f4f3f4"}
                                         ios_backgroundColor="#e6e6e6"
                                         onValueChange={(value) => {
-                                            toggleSwitch("donnerstag");
-                                            setValue("TUESDAY", value);
+                                            toggleSwitch("thursday");
                                         }}
-                                        value={isEnabled.donnerstag}
+                                        value={isEnabled.thursday}
                                         style={styles.switch}
                                     />
                                     <View style={styles.inputWrap}>
                                         <Controller
                                             as={<Input />}
                                             control={control}
-                                            name="doVon"
+                                            name="thuStart"
                                             lastkey="none"
                                             onKeyPress={({nativeEvent}) => {
                                                 lastKey = nativeEvent.key;
                                             }}
                                             onChangeText={(time) => {
-                                                setValue("doVon", formatTime(time));
-                                                errors.doVon && triggerValidation("doVon");
+                                                setValue("thuStart", formatTime(time));
+                                                errors.thuStart && triggerValidation("thuStart");
                                             }}
                                             maxLength={5}
-                                            errorMessage={errors.doVon ? errors.doVon.message : " "}
+                                            placeholder={
+                                                dataZeiten &&
+                                                dataZeiten.thursday &&
+                                                dataZeiten.thursday.start
+                                                    ? dataZeiten.thursday.start
+                                                    : ""
+                                            }
+                                            errorMessage={
+                                                errors.thuStart ? errors.thuStart.message : " "
+                                            }
                                             containerStyle={styles.input}
                                             inputStyle={styles.inputText}
                                             keyboardType={"numeric"}
-                                            inputContainerStyle={errors.doVon && styles.inputError}
+                                            inputContainerStyle={
+                                                errors.thuStart && styles.inputError
+                                            }
                                             errorStyle={styles.error}
                                         />
                                         <Controller
                                             as={<Input />}
                                             control={control}
-                                            name="doBis"
+                                            name="thuEnd"
                                             lastkey="none"
                                             onKeyPress={({nativeEvent}) => {
                                                 lastKey = nativeEvent.key;
                                             }}
                                             onChangeText={(time) => {
-                                                setValue("doBis", formatTime(time));
-                                                errors.doBis && triggerValidation("doBis");
+                                                setValue("thuEnd", formatTime(time));
+                                                errors.thuEnd && triggerValidation("thuEnd");
                                             }}
                                             maxLength={5}
-                                            errorMessage={errors.doBis ? errors.doBis.message : " "}
+                                            placeholder={
+                                                dataZeiten &&
+                                                dataZeiten.thursday &&
+                                                dataZeiten.thursday.end
+                                                    ? dataZeiten.thursday.end
+                                                    : ""
+                                            }
+                                            errorMessage={
+                                                errors.thuEnd ? errors.thuEnd.message : " "
+                                            }
                                             containerStyle={styles.input}
                                             inputStyle={styles.inputText}
                                             keyboardType={"numeric"}
-                                            inputContainerStyle={errors.doBis && styles.inputError}
+                                            inputContainerStyle={errors.thuEnd && styles.inputError}
                                             errorStyle={styles.error}
                                         />
                                     </View>
@@ -416,59 +500,75 @@ export const RegisterZeiten = ({navigation}) => {
                                         size={25}
                                         color="#ccc"
                                     />
-                                    <Controller
-                                        as={<Switch />}
-                                        control={control}
-                                        name="FRIDAY"
+                                    <Switch
                                         trackColor={{false: "#e6e6e6", true: "#e6e6e6"}}
-                                        thumbColor={isEnabled.freitag ? "#729628" : "#f4f3f4"}
+                                        thumbColor={isEnabled.friday ? "#729628" : "#f4f3f4"}
                                         ios_backgroundColor="#e6e6e6"
                                         onValueChange={(value) => {
-                                            toggleSwitch("freitag");
-                                            setValue("TUESDAY", value);
+                                            toggleSwitch("friday");
                                         }}
-                                        value={isEnabled.freitag}
+                                        value={isEnabled.friday}
                                         style={styles.switch}
                                     />
                                     <View style={styles.inputWrap}>
                                         <Controller
                                             as={<Input />}
                                             control={control}
-                                            name="frVon"
+                                            name="friStart"
                                             lastkey="none"
                                             onKeyPress={({nativeEvent}) => {
                                                 lastKey = nativeEvent.key;
                                             }}
                                             onChangeText={(time) => {
-                                                setValue("frVon", formatTime(time));
-                                                errors.frVon && triggerValidation("frVon");
+                                                setValue("friStart", formatTime(time));
+                                                errors.friStart && triggerValidation("friStart");
                                             }}
                                             maxLength={5}
-                                            errorMessage={errors.frVon ? errors.frVon.message : " "}
+                                            placeholder={
+                                                dataZeiten &&
+                                                dataZeiten.friday &&
+                                                dataZeiten.friday.start
+                                                    ? dataZeiten.friday.start
+                                                    : ""
+                                            }
+                                            errorMessage={
+                                                errors.friStart ? errors.friStart.message : " "
+                                            }
                                             containerStyle={styles.input}
                                             inputStyle={styles.inputText}
                                             keyboardType={"numeric"}
-                                            inputContainerStyle={errors.frVon && styles.inputError}
+                                            inputContainerStyle={
+                                                errors.friStart && styles.inputError
+                                            }
                                             errorStyle={styles.error}
                                         />
                                         <Controller
                                             as={<Input />}
                                             control={control}
-                                            name="frBis"
+                                            name="friEnd"
                                             lastkey="none"
                                             onKeyPress={({nativeEvent}) => {
                                                 lastKey = nativeEvent.key;
                                             }}
                                             onChangeText={(time) => {
-                                                setValue("frBis", formatTime(time));
-                                                errors.frBis && triggerValidation("frBis");
+                                                setValue("friEnd", formatTime(time));
+                                                errors.friEnd && triggerValidation("friEnd");
                                             }}
                                             maxLength={5}
-                                            errorMessage={errors.frBis ? errors.frBis.message : " "}
+                                            placeholder={
+                                                dataZeiten &&
+                                                dataZeiten.friday &&
+                                                dataZeiten.friday.end
+                                                    ? dataZeiten.friday.end
+                                                    : ""
+                                            }
+                                            errorMessage={
+                                                errors.friEnd ? errors.friEnd.message : " "
+                                            }
                                             containerStyle={styles.input}
                                             inputStyle={styles.inputText}
                                             keyboardType={"numeric"}
-                                            inputContainerStyle={errors.frBis && styles.inputError}
+                                            inputContainerStyle={errors.friEnd && styles.inputError}
                                             errorStyle={styles.error}
                                         />
                                     </View>
@@ -486,59 +586,75 @@ export const RegisterZeiten = ({navigation}) => {
                                         size={25}
                                         color="#ccc"
                                     />
-                                    <Controller
-                                        as={<Switch />}
-                                        control={control}
-                                        name="SATURDAY"
+                                    <Switch
                                         trackColor={{false: "#e6e6e6", true: "#e6e6e6"}}
-                                        thumbColor={isEnabled.samstag ? "#729628" : "#f4f3f4"}
+                                        thumbColor={isEnabled.saturday ? "#729628" : "#f4f3f4"}
                                         ios_backgroundColor="#e6e6e6"
                                         onValueChange={(value) => {
-                                            toggleSwitch("samstag");
-                                            setValue("SATURDAY", value);
+                                            toggleSwitch("saturday");
                                         }}
-                                        value={isEnabled.samstag}
+                                        value={isEnabled.saturday}
                                         style={styles.switch}
                                     />
                                     <View style={styles.inputWrap}>
                                         <Controller
                                             as={<Input />}
                                             control={control}
-                                            name="saVon"
+                                            name="satStart"
                                             lastkey="none"
                                             onKeyPress={({nativeEvent}) => {
                                                 lastKey = nativeEvent.key;
                                             }}
                                             onChangeText={(time) => {
-                                                setValue("saVon", formatTime(time));
-                                                errors.saVon && triggerValidation("saVon");
+                                                setValue("satStart", formatTime(time));
+                                                errors.satStart && triggerValidation("satStart");
                                             }}
                                             maxLength={5}
-                                            errorMessage={errors.saVon ? errors.saVon.message : " "}
+                                            placeholder={
+                                                dataZeiten &&
+                                                dataZeiten.saturday &&
+                                                dataZeiten.saturday.start
+                                                    ? dataZeiten.saturday.start
+                                                    : ""
+                                            }
+                                            errorMessage={
+                                                errors.satStart ? errors.satStart.message : " "
+                                            }
                                             containerStyle={styles.input}
                                             inputStyle={styles.inputText}
                                             keyboardType={"numeric"}
-                                            inputContainerStyle={errors.saVon && styles.inputError}
+                                            inputContainerStyle={
+                                                errors.satStart && styles.inputError
+                                            }
                                             errorStyle={styles.error}
                                         />
                                         <Controller
                                             as={<Input />}
                                             control={control}
-                                            name="saBis"
+                                            name="satEnd"
                                             lastkey="none"
                                             onKeyPress={({nativeEvent}) => {
                                                 lastKey = nativeEvent.key;
                                             }}
                                             onChangeText={(time) => {
-                                                setValue("saBis", formatTime(time));
-                                                errors.saBis && triggerValidation("saBis");
+                                                setValue("satEnd", formatTime(time));
+                                                errors.satEnd && triggerValidation("satEnd");
                                             }}
                                             maxLength={5}
-                                            errorMessage={errors.saBis ? errors.saBis.message : " "}
+                                            placeholder={
+                                                dataZeiten &&
+                                                dataZeiten.saturday &&
+                                                dataZeiten.saturday.end
+                                                    ? dataZeiten.saturday.end
+                                                    : ""
+                                            }
+                                            errorMessage={
+                                                errors.satEnd ? errors.satEnd.message : " "
+                                            }
                                             containerStyle={styles.input}
                                             inputStyle={styles.inputText}
                                             keyboardType={"numeric"}
-                                            inputContainerStyle={errors.saBis && styles.inputError}
+                                            inputContainerStyle={errors.satEnd && styles.inputError}
                                             errorStyle={styles.error}
                                         />
                                     </View>

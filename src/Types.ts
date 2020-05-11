@@ -89,6 +89,15 @@ export type RegisterContextProps = {
     toggleRegModal: () => void;
 };
 
+export type resultProps = {
+    monday?: {};
+    tuesday?: {};
+    wednesday?: {};
+    thursday?: {};
+    friday?: {};
+    saturday?: {};
+};
+
 export type ZielProps = {
     stopType: "Depot" | "Receiver";
     streetName: string;

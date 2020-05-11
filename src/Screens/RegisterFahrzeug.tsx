@@ -17,7 +17,7 @@ import {Header} from "../Header";
 import {RegisterContext} from "../RegisterProvider";
 
 export const RegisterFahrzeug = ({navigation}) => {
-    const {storeDataFahrzeug} = useContext(RegisterContext);
+    const {dataFahrzeug, storeDataFahrzeug} = useContext(RegisterContext);
 
     const registerSchema = Yup.object().shape({
         fahrzeugArt: Yup.string().nullable().required("Benötigt"),
@@ -104,14 +104,27 @@ export const RegisterFahrzeug = ({navigation}) => {
                                                 {label: "Golf", value: "Golf"},
                                                 {label: "Bugatti", value: "Bugatti"},
                                             ]}
-                                            placeholder={{
-                                                label: "Fahrzeug wählen",
-                                                value: null,
-                                                style: {color: "#999", fontSize: 20},
-                                            }}
+                                            placeholder={
+                                                dataFahrzeug && dataFahrzeug.fahrzeugArt
+                                                    ? {}
+                                                    : {
+                                                          label: "Fahrzeug wählen",
+                                                          value: null,
+                                                          style: {color: "#999", fontSize: 20},
+                                                      }
+                                            }
+                                            value={dataFahrzeug && dataFahrzeug.fahrzeugArt}
                                             useNativeAndroidPickerStyle={false}
                                             style={{
                                                 placeholder: {
+                                                    fontSize: 18,
+                                                },
+                                                inputIOS: {
+                                                    color: "#999",
+                                                    fontSize: 18,
+                                                },
+                                                inputAndroid: {
+                                                    color: "#999",
                                                     fontSize: 18,
                                                 },
                                             }}
@@ -151,9 +164,14 @@ export const RegisterFahrzeug = ({navigation}) => {
                                     errors.ladevolumen && triggerValidation("ladevolumen");
                                 }}
                                 label="Ladevolumen"
-                                placeholder="Volumen in qm² eingeben"
+                                placeholder={
+                                    dataFahrzeug && dataFahrzeug.ladevolumen
+                                        ? dataFahrzeug.ladevolumen
+                                        : "Volumen in qm² eingeben"
+                                }
                                 errorMessage={errors.ladevolumen ? errors.ladevolumen.message : " "}
-                                containerStyle={styles.input}
+                                inputStyle={styles.input}
+                                containerStyle={styles.inputContainer}
                                 inputWrapStyle={errors.ladevolumen && styles.inputError}
                                 errorStyle={styles.error}
                             />
@@ -175,9 +193,14 @@ export const RegisterFahrzeug = ({navigation}) => {
                                     errors.laenge && triggerValidation("laenge");
                                 }}
                                 label="Länge der Sendung"
-                                placeholder="max. Länge in cm eingeben"
+                                placeholder={
+                                    dataFahrzeug && dataFahrzeug.laenge
+                                        ? dataFahrzeug.laenge
+                                        : "max. Länge in cm eingeben"
+                                }
                                 errorMessage={errors.laenge ? errors.laenge.message : " "}
-                                containerStyle={styles.input}
+                                inputStyle={styles.input}
+                                containerStyle={styles.inputContainer}
                                 inputWrapStyle={errors.laenge && styles.inputError}
                                 errorStyle={styles.error}
                             />
@@ -198,9 +221,14 @@ export const RegisterFahrzeug = ({navigation}) => {
                                     errors.breite && triggerValidation("breite");
                                 }}
                                 label="Breite der Sendung"
-                                placeholder="max. Breite in cm eingeben"
+                                placeholder={
+                                    dataFahrzeug && dataFahrzeug.breite
+                                        ? dataFahrzeug.breite
+                                        : "max. Breite in cm eingeben"
+                                }
                                 errorMessage={errors.breite ? errors.breite.message : " "}
-                                containerStyle={styles.input}
+                                inputStyle={styles.input}
+                                containerStyle={styles.inputContainer}
                                 inputWrapStyle={errors.breite && styles.inputError}
                                 errorStyle={styles.error}
                             />
@@ -221,9 +249,14 @@ export const RegisterFahrzeug = ({navigation}) => {
                                     errors.hoehe && triggerValidation("hoehe");
                                 }}
                                 label="Höhe der Sendung"
-                                placeholder="max. Höhe in cm eingeben"
+                                placeholder={
+                                    dataFahrzeug && dataFahrzeug.hoehe
+                                        ? dataFahrzeug.hoehe
+                                        : "max. Höhe in cm eingeben"
+                                }
                                 errorMessage={errors.hoehe ? errors.hoehe.message : " "}
-                                containerStyle={styles.input}
+                                inputStyle={styles.input}
+                                containerStyle={styles.inputContainer}
                                 inputWrapStyle={errors.hoehe && styles.inputError}
                                 errorStyle={styles.error}
                             />
@@ -299,10 +332,14 @@ export const styles = StyleSheet.create({
         flex: 1.5,
         marginTop: 10,
     },
-    input: {
+    inputContainer: {
         backgroundColor: "#FFF",
         paddingRight: "5%",
         flex: 12,
+    },
+    input: {
+        fontSize: 16.5,
+        color: "#555",
     },
     pickerContainer: {
         flex: 40,

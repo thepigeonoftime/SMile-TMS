@@ -15,7 +15,7 @@ import {Header} from "../Header";
 import {RegisterContext} from "../RegisterProvider";
 
 export const RegisterPerson = ({navigation}) => {
-    const {storeDataPerson} = useContext(RegisterContext);
+    const {dataPerson, storeDataPerson} = useContext(RegisterContext);
 
     const validationSchema = Yup.object().shape({
         vorname: Yup.string()
@@ -100,7 +100,11 @@ export const RegisterPerson = ({navigation}) => {
                                 name={"vorname"}
                                 control={control}
                                 label="Vorname"
-                                placeholder="Vornamen eingeben"
+                                placeholder={
+                                    dataPerson && dataPerson.vorname
+                                        ? dataPerson.vorname
+                                        : "Vornamen eingeben"
+                                }
                                 onChangeText={(text) => {
                                     setValue("vorname", text);
                                 }}
@@ -112,6 +116,7 @@ export const RegisterPerson = ({navigation}) => {
                                     },
                                 }}
                                 errorMessage={errors.vorname ? errors.vorname.message + " " : " "}
+                                inputStyle={styles.input}
                                 containerStyle={styles.inputContainer}
                                 inputContainerStyle={errors.vorname && styles.inputError}
                                 errorStyle={styles.error}
@@ -124,9 +129,14 @@ export const RegisterPerson = ({navigation}) => {
                                 name={"nachname"}
                                 control={control}
                                 label="Nachname"
-                                placeholder="Nachnamen eingeben"
+                                placeholder={
+                                    dataPerson && dataPerson.nachname
+                                        ? dataPerson.nachname
+                                        : "Nachnamen eingeben"
+                                }
                                 onChangeText={(text) => setValue("nachname", text)}
                                 errorMessage={errors.nachname ? errors.nachname.message : " "}
+                                inputStyle={styles.input}
                                 containerStyle={styles.inputContainer}
                                 inputContainerStyle={errors.nachname && styles.inputError}
                                 errorStyle={styles.error}
@@ -139,9 +149,14 @@ export const RegisterPerson = ({navigation}) => {
                                 name={"firma"}
                                 control={control}
                                 label="Firma"
-                                placeholder="Firmenname eingeben"
+                                placeholder={
+                                    dataPerson && dataPerson.firma
+                                        ? dataPerson.firma
+                                        : "Firmenname eingeben"
+                                }
                                 onChangeText={(text) => setValue("firma", text)}
                                 errorMessage={errors.firma ? errors.firma.message : " "}
+                                inputStyle={styles.input}
                                 containerStyle={styles.inputContainer}
                                 inputContainerStyle={errors.firma && styles.inputError}
                                 errorStyle={styles.error}
@@ -154,9 +169,14 @@ export const RegisterPerson = ({navigation}) => {
                                 name={"strasse"}
                                 control={control}
                                 label="Straße / Hausnummer"
-                                placeholder="Straße eingeben"
+                                placeholder={
+                                    dataPerson && dataPerson.strasse
+                                        ? dataPerson.strasse
+                                        : "Straße eingeben"
+                                }
                                 onChangeText={(text) => setValue("strasse", text)}
                                 errorMessage={errors.strasse ? errors.strasse.message : " "}
+                                inputStyle={styles.input}
                                 containerStyle={styles.strasseInputContainer}
                                 inputContainerStyle={errors.strasse && styles.inputError}
                                 errorStyle={styles.error}
@@ -166,12 +186,17 @@ export const RegisterPerson = ({navigation}) => {
                                 name={"hausnummer"}
                                 control={control}
                                 label=" "
-                                placeholder="Nr."
+                                placeholder={
+                                    dataPerson && dataPerson.hausnummer
+                                        ? dataPerson.hausnummer
+                                        : "Nr."
+                                }
                                 onChangeText={(text) => {
                                     setValue("hausnummer", text);
                                     errors.hausnummer && triggerValidation("hausnummer");
                                 }}
                                 errorMessage={errors.hausnummer ? errors.hausnummer.message : " "}
+                                inputStyle={styles.input}
                                 containerStyle={styles.nrInputContainer}
                                 inputContainerStyle={errors.hausnummer && styles.inputError}
                                 errorStyle={styles.error}
@@ -184,7 +209,9 @@ export const RegisterPerson = ({navigation}) => {
                                 name={"plz"}
                                 control={control}
                                 label="Postleitzahl"
-                                placeholder="Postleitzahl"
+                                placeholder={
+                                    dataPerson && dataPerson.plz ? dataPerson.plz : "Postleitzahl"
+                                }
                                 onChangeText={(text) => {
                                     setValue("plz", text);
                                     errors.plz && triggerValidation("plz");
@@ -200,9 +227,10 @@ export const RegisterPerson = ({navigation}) => {
                                 name={"ort"}
                                 control={control}
                                 label="Ort"
-                                placeholder="Ort"
+                                placeholder={dataPerson && dataPerson.ort ? dataPerson.ort : "Ort"}
                                 onChangeText={(text) => setValue("ort", text)}
                                 errorMessage={errors.ort ? errors.ort.message : " "}
+                                inputStyle={styles.input}
                                 containerStyle={styles.halfInputContainer}
                                 inputContainerStyle={errors.ort && styles.inputError}
                                 errorStyle={styles.error}
@@ -215,12 +243,17 @@ export const RegisterPerson = ({navigation}) => {
                                 name={"telefon"}
                                 control={control}
                                 label="Mobiltelefon"
-                                placeholder="Mobiltelefon"
+                                placeholder={
+                                    dataPerson && dataPerson.telefon
+                                        ? dataPerson.telefon
+                                        : "Mobiltelefon"
+                                }
                                 onChangeText={(text) => {
                                     setValue("telefon", text);
                                     errors.telefon && triggerValidation("telefon");
                                 }}
                                 errorMessage={errors.telefon ? errors.telefon.message : " "}
+                                inputStyle={styles.input}
                                 containerStyle={styles.inputContainer}
                                 inputContainerStyle={errors.telefon && styles.inputError}
                                 errorStyle={styles.error}
@@ -293,6 +326,7 @@ export const styles = StyleSheet.create({
         alignItems: "center",
     },
     input: {
+        fontSize: 16.5,
         color: "#555",
     },
     inputContainer: {

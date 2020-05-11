@@ -15,7 +15,7 @@ import {Header} from "../Header";
 import {RegisterContext} from "../RegisterProvider";
 
 export const RegisterGebietPreis = ({navigation}) => {
-    const {storeDataGebiet} = useContext(RegisterContext);
+    const {dataGebiet, storeDataGebiet} = useContext(RegisterContext);
 
     const registerSchema = Yup.object().shape({
         zustellGebietPLZ: Yup.string()
@@ -101,11 +101,16 @@ export const RegisterGebietPreis = ({navigation}) => {
                                         triggerValidation("zustellGebietPLZ");
                                 }}
                                 label="Postleitzahl Zustellgebiet"
-                                placeholder="PLZ eingeben"
+                                placeholder={
+                                    dataGebiet && dataGebiet.zustellGebietPLZ
+                                        ? dataGebiet.zustellGebietPLZ
+                                        : "PLZ eingeben"
+                                }
                                 errorMessage={
                                     errors.zustellGebietPLZ ? errors.zustellGebietPLZ.message : " "
                                 }
-                                containerStyle={styles.input}
+                                inputStyle={styles.input}
+                                containerStyle={styles.inputContainer}
                                 inputContainerStyle={errors.zustellGebietPLZ && styles.inputError}
                                 errorStyle={styles.error}
                             />
@@ -121,11 +126,16 @@ export const RegisterGebietPreis = ({navigation}) => {
                                     errors.entfernungTour && triggerValidation("entfernungTour");
                                 }}
                                 label="Entfernung je Tour"
-                                placeholder="Entfernung in km eingeben"
+                                placeholder={
+                                    dataGebiet && dataGebiet.entfernungTour
+                                        ? dataGebiet.entfernungTour
+                                        : "Entfernung in km eingeben"
+                                }
                                 errorMessage={
                                     errors.entfernungTour ? errors.entfernungTour.message : " "
                                 }
-                                containerStyle={styles.input}
+                                inputStyle={styles.input}
+                                containerStyle={styles.inputContainer}
                                 inputContainerStyle={errors.entfernungTour && styles.inputError}
                                 errorStyle={styles.error}
                             />
@@ -141,9 +151,14 @@ export const RegisterGebietPreis = ({navigation}) => {
                                     errors.vorlaufZeit && triggerValidation("vorlaufZeit");
                                 }}
                                 label="Vorlaufzeit bis Tour-Start"
-                                placeholder="Vorlaufzeit in Minuten angeben"
+                                placeholder={
+                                    dataGebiet && dataGebiet.vorlaufZeit
+                                        ? dataGebiet.vorlaufZeit
+                                        : "Vorlaufzeit in Minuten eingeben"
+                                }
                                 errorMessage={errors.vorlaufZeit ? errors.vorlaufZeit.message : " "}
-                                containerStyle={styles.input}
+                                inputStyle={styles.input}
+                                containerStyle={styles.inputContainer}
                                 inputContainerStyle={errors.vorlaufZeit && styles.inputError}
                                 errorStyle={styles.error}
                             />
@@ -159,9 +174,14 @@ export const RegisterGebietPreis = ({navigation}) => {
                                     errors.grundpreis && triggerValidation("grundpreis");
                                 }}
                                 label="Grundpreis pro Tour"
-                                placeholder="Grundpreis in EUR eingeben"
+                                placeholder={
+                                    dataGebiet && dataGebiet.grundpreis
+                                        ? dataGebiet.grundpreis
+                                        : "Grundpreis in EUR"
+                                }
                                 errorMessage={errors.grundpreis ? errors.grundpreis.message : " "}
-                                containerStyle={styles.input}
+                                inputStyle={styles.input}
+                                containerStyle={styles.inputContainer}
                                 inputContainerStyle={errors.grundpreis && styles.inputError}
                                 errorStyle={styles.error}
                             />
@@ -177,9 +197,14 @@ export const RegisterGebietPreis = ({navigation}) => {
                                     errors.preisProKm && triggerValidation("preisProKm");
                                 }}
                                 label="Preis pro km"
-                                placeholder="Kilometerpreis in EUR eingeben"
+                                placeholder={
+                                    dataGebiet && dataGebiet.preisProKm
+                                        ? dataGebiet.preisProKm
+                                        : "Kilometerpreis in EUR"
+                                }
                                 errorMessage={errors.preisProKm ? errors.preisProKm.message : " "}
-                                containerStyle={styles.input}
+                                inputStyle={styles.input}
+                                containerStyle={styles.inputContainer}
                                 inputContainerStyle={errors.preisProKm && styles.inputError}
                                 errorStyle={styles.error}
                             />
@@ -195,11 +220,16 @@ export const RegisterGebietPreis = ({navigation}) => {
                                     errors.preisProStop && triggerValidation("preisProStop");
                                 }}
                                 label="Preis pro Stop"
-                                placeholder="Preis pro Stop in EUR eingeben"
+                                placeholder={
+                                    dataGebiet && dataGebiet.preisProStop
+                                        ? dataGebiet.preisProStop
+                                        : "Preis pro Stop in EUR"
+                                }
                                 errorMessage={
                                     errors.preisProStop ? errors.preisProStop.message : " "
                                 }
-                                containerStyle={styles.input}
+                                inputStyle={styles.input}
+                                containerStyle={styles.inputContainer}
                                 inputContainerStyle={errors.preisProStop && styles.inputError}
                                 errorStyle={styles.error}
                             />
@@ -242,16 +272,20 @@ export const styles = StyleSheet.create({
         // height: "100%",
         // paddingBottom: "0%",
     },
-    input: {
-        backgroundColor: "#FFF",
-        width: "90%",
-        paddingRight: "5%",
-    },
     inputWrap: {
         flexDirection: "row",
         justifyContent: "space-around",
         alignItems: "center",
         // paddingVertical: 10,
+    },
+    inputContainer: {
+        backgroundColor: "#FFF",
+        width: "90%",
+        paddingRight: "5%",
+    },
+    input: {
+        color: "#555",
+        fontSize: 16.5,
     },
     closeButtonContainer: {
         alignItems: "flex-end",
