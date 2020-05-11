@@ -13,7 +13,7 @@ import {
 } from "react-native";
 import {Button, Input} from "react-native-elements";
 import {Switch, Text} from "react-native-paper";
-import * as Yup from "yup";
+import * as yup from "yup";
 import {Header} from "../Header";
 import {RegisterContext} from "../RegisterProvider";
 import {resultProps} from "../Types";
@@ -30,7 +30,7 @@ export const RegisterZeiten = ({navigation}) => {
         saturday: false,
     });
 
-    const timeSchema = Yup.string().test("is-time", "Keine gültige Zeit", function (value) {
+    const timeSchema = yup.string().test("is-time", "Keine gültige Zeit", function (value) {
         if (value) {
             return moment(value, "HH:mm", true).isValid();
         } else {
@@ -38,7 +38,15 @@ export const RegisterZeiten = ({navigation}) => {
         }
     });
 
-    const validationSchema = Yup.object().shape({
+    const isGreater = yup.object({
+        start: yup.string(),
+        end: yup.string().test("is-greater", "end time should be greater", function (value) {
+            const {start} = this.parent;
+            return moment(value, "HH:mm").isSameOrAfter(moment(start, "HH:mm"));
+        }),
+    });
+
+    const validationSchema = yup.object().shape({
         monStart: timeSchema,
         monEnd: timeSchema,
         tueStart: timeSchema,
@@ -83,7 +91,6 @@ export const RegisterZeiten = ({navigation}) => {
     });
 
     const onSubmit = (data) => {
-        console.log(isEnabled.monday);
         let result: resultProps = {};
         const makeResult = (key, obj) => {
             if (!Object.values(obj).includes(undefined)) {
