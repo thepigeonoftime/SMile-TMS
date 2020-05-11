@@ -1,4 +1,5 @@
 import React, {useState} from "react";
+import {AsyncStorage} from "react-native";
 
 type tourType = any;
 
@@ -14,12 +15,11 @@ export const TourContext = React.createContext<{
     toggleTourListe: () => void;
     showPaketGeben: boolean;
     togglePaketGeben: () => void;
-    signatureURI: null | string;
-    saveSignature: (uri: string) => void;
     tourNav: any;
     currentStop: number;
     nextStop: () => void;
     resetStops: () => void;
+    saveSignature: (sig: string) => void;
 }>({
     tour: null,
     error: null,
@@ -32,12 +32,11 @@ export const TourContext = React.createContext<{
     toggleTourListe: () => {},
     showPaketGeben: false,
     togglePaketGeben: () => {},
-    signatureURI: null,
-    saveSignature: () => {},
     tourNav: null,
     currentStop: 1,
     nextStop: () => {},
     resetStops: () => {},
+    saveSignature: () => {},
 });
 
 export const TourProvider = ({navigation, children}) => {
@@ -47,7 +46,6 @@ export const TourProvider = ({navigation, children}) => {
     const [showTourListe, setShowTourListe] = useState(false);
     const [showNavigation, setShowNavigation] = useState(false);
     const [showPaketGeben, setShowPaketGeben] = useState(false);
-    const [signatureURI, setSignatureURI] = useState(null);
     const tourNav = navigation;
 
     return (
@@ -58,7 +56,6 @@ export const TourProvider = ({navigation, children}) => {
                 showNavigation,
                 showTourListe,
                 showPaketGeben,
-                signatureURI,
                 tourNav,
                 currentStop,
                 setTour: (tour) => {
@@ -81,14 +78,24 @@ export const TourProvider = ({navigation, children}) => {
                 togglePaketGeben: () => {
                     setShowPaketGeben(!showPaketGeben);
                 },
-                saveSignature: (uri) => {
-                    setSignatureURI(uri);
-                },
                 nextStop: () => {
                     setCurrentStop(currentStop + 1);
                 },
                 resetStops: () => {
                     setCurrentStop(1);
+                },
+                saveSignature: (sig) => {
+                    AsyncStorage.getItem("signatures")
+                        .then((current) => {
+                            let sigs = current ? JSON.parse(current) : [];
+                            sigs.push(sig);
+                            // console.log(sigs);
+                            // console.log(sigs.length);
+                            AsyncStorage.setItem("signatures", JSON.stringify(sigs));
+                        })
+                        .catch((err) => {
+                            console.log(err);
+                        });
                 },
             }}
         >

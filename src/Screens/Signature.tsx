@@ -35,9 +35,10 @@ export const Signature = ({navigation}) => {
     ScreenOrientation.addOrientationChangeListener(detectOrientation);
 
     const onSubmit = async () => {
-        const uri = await captureRef(signature, {format: "jpg", quality: 0.4});
-        saveSignature(uri);
-        console.log(uri);
+        const sig = await captureRef(signature, {
+            result: "base64",
+        });
+        saveSignature(sig);
         if (currentStop < tour.stops.length - 1) {
             nextStop();
             navigation.navigate("Ziel");
