@@ -3,7 +3,7 @@ import Constants from "expo-constants";
 import React, {useContext, useEffect, useRef, useState} from "react";
 import {Dimensions, StyleSheet, TouchableOpacity, View} from "react-native";
 import Geocoder from "react-native-geocoding";
-import MapView, {PROVIDER_GOOGLE} from "react-native-maps";
+import MapView, {Marker, PROVIDER_GOOGLE} from "react-native-maps";
 import MapViewDirections from "react-native-maps-directions";
 import {Header} from "../Header";
 import {TourContext} from "../TourProvider";
@@ -17,9 +17,9 @@ export const Maps = ({navigation}) => {
         latitudeDelta: 0.1,
         longitudeDelta: 0.1,
     });
-    const [origin, setOrigin] = useState("Französische Straße 12 10117 Berlin");
+    const [origin, setOrigin] = useState(null);
     const [waypoints, setWaypoints] = useState([]);
-    const [destination, setDestination] = useState("Französische Straße 12 10117 Berlin");
+    const [destination, setDestination] = useState(null);
     const {width, height} = Dimensions.get("window");
     // const ASPECT_RATIO = width / height;
     const DIRECTIONS_APIKEY = Constants.manifest.extra.credentials.directionsApiKey;
@@ -28,52 +28,40 @@ export const Maps = ({navigation}) => {
 
     const mapRef = useRef(null);
 
-    const getWaypoints = (tourStops) => {
-        return new Promise((resolve, reject) => {
-            try {
-                let result = [];
-                tourStops.forEach((stop) => {
-                    result.push(
-                        stop.streetName + " " + stop.streetNumber + " " + stop.zip + " " + stop.city
-                    );
-                });
-                resolve({
-                    center: result[Math.floor(result.length / 2)],
-                    start: result.shift(),
-                    end: result.pop(),
-                    stops: result,
-                });
-            } catch (err) {
-                reject(err);
-            }
-        });
-    };
-
-    const getGeocode = async (origin) => {
-        try {
-            const geocode = await Geocoder.from(origin);
-            return {
-                latitude: geocode.results[0].geometry.location.lat,
-                longitude: geocode.results[0].geometry.location.lng,
-            };
-        } catch (err) {
-            console.log(err);
-        }
+    const getGeocodes = async (tourStops) => {
+        const result: any[] = await Promise.all(
+            tourStops.map((stop) => {
+                return Geocoder.from(
+                    stop.streetName + " " + stop.streetNumber + " " + stop.zip + " " + stop.city
+                )
+                    .then((json) => {
+                        return {
+                            latitude: json.results[0].geometry.location.lat,
+                            longitude: json.results[0].geometry.location.lng,
+                        };
+                    })
+                    .catch((err) => {
+                        return err;
+                    });
+            })
+        );
+        return {
+            center: result[Math.floor(result.length / 2)],
+            start: result[0],
+            end: result[result.length - 1],
+            stops: result,
+        };
     };
 
     useEffect(() => {
-        getWaypoints(tour.stops).then(({center, start, end, stops}) => {
+        getGeocodes(tour.stops).then(({center, start, end, stops}) => {
             setOrigin(start);
             setDestination(end);
             setWaypoints(stops);
-            getGeocode(center)
-                .then((coords) => {
-                    setRegion({...coords, latitudeDelta: 0.1, longitudeDelta: 0.1});
-                    setTimeout(() => {
-                        setShowMap(true);
-                    }, 300);
-                })
-                .catch((err) => console.log(err));
+            setRegion({...center, latitudeDelta: 0.1, longitudeDelta: 0.1});
+            setTimeout(() => {
+                setShowMap(true);
+            }, 300);
         });
     }, []);
 
@@ -115,6 +103,9 @@ export const Maps = ({navigation}) => {
                             initialRegion={region}
                             minZoomLevel={10}
                         >
+                            {waypoints.map((coordinate, index) => (
+                                <Marker key={`coordinate_${index}`} coordinate={coordinate} />
+                            ))}
                             <MapViewDirections
                                 language="de"
                                 origin={origin}
