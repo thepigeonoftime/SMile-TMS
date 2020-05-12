@@ -1,20 +1,81 @@
 import {AntDesign} from "@expo/vector-icons";
-import React, {useState, useEffect} from "react";
-import {StyleSheet, Text, TouchableOpacity, View} from "react-native";
-import {Header} from "../Header";
+import Constants from "expo-constants";
+import React, {useContext, useEffect, useRef, useState} from "react";
+import {Dimensions, StyleSheet, TouchableOpacity, View} from "react-native";
+import Geocoder from "react-native-geocoding";
 import MapView, {PROVIDER_GOOGLE} from "react-native-maps";
 import MapViewDirections from "react-native-maps-directions";
+import {Header} from "../Header";
+import {TourContext} from "../TourProvider";
 
 export const Maps = ({navigation}) => {
+    const {tour} = useContext(TourContext);
     const [showMap, setShowMap] = useState(false);
-    useEffect(() => {
-        setTimeout(() => {
-            setShowMap(true);
-        }, 290);
+    const [region, setRegion] = useState({
+        latitude: 42.55,
+        longitude: 23.405,
+        latitudeDelta: 0.1,
+        longitudeDelta: 0.1,
     });
-    const origin = {latitude: 52.5, longitude: 13.405};
-    const destination = {latitude: 52.55, longitude: 13.405};
-    const GOOGLE_MAPS_APIKEY = "AIzaSyDzgQenA9LdgC7sIXpng2GgV9lvasHUFOo ";
+    const [origin, setOrigin] = useState("Französische Straße 12 10117 Berlin");
+    const [waypoints, setWaypoints] = useState([]);
+    const [destination, setDestination] = useState("Französische Straße 12 10117 Berlin");
+    const {width, height} = Dimensions.get("window");
+    // const ASPECT_RATIO = width / height;
+    const DIRECTIONS_APIKEY = Constants.manifest.extra.credentials.directionsApiKey;
+    const GEOCODING_APIKEY = Constants.manifest.extra.credentials.geocodingApiKey;
+    Geocoder.init(GEOCODING_APIKEY, {language: "de"});
+
+    const mapRef = useRef(null);
+
+    const getWaypoints = (tourStops) => {
+        return new Promise((resolve, reject) => {
+            try {
+                let result = [];
+                tourStops.forEach((stop) => {
+                    result.push(
+                        stop.streetName + " " + stop.streetNumber + " " + stop.zip + " " + stop.city
+                    );
+                });
+                resolve({
+                    center: result[Math.floor(result.length / 2)],
+                    start: result.shift(),
+                    end: result.pop(),
+                    stops: result,
+                });
+            } catch (err) {
+                reject(err);
+            }
+        });
+    };
+
+    const getGeocode = async (origin) => {
+        try {
+            const geocode = await Geocoder.from(origin);
+            return {
+                latitude: geocode.results[0].geometry.location.lat,
+                longitude: geocode.results[0].geometry.location.lng,
+            };
+        } catch (err) {
+            console.log(err);
+        }
+    };
+
+    useEffect(() => {
+        getWaypoints(tour.stops).then(({center, start, end, stops}) => {
+            setOrigin(start);
+            setDestination(end);
+            setWaypoints(stops);
+            getGeocode(center)
+                .then((coords) => {
+                    setRegion({...coords, latitudeDelta: 0.1, longitudeDelta: 0.1});
+                    setTimeout(() => {
+                        setShowMap(true);
+                    }, 300);
+                })
+                .catch((err) => console.log(err));
+        });
+    }, []);
 
     return (
         <View style={{flex: 1}}>
@@ -40,25 +101,39 @@ export const Maps = ({navigation}) => {
                     </TouchableOpacity>
                 </View>
                 <View style={styles.mapsContainer}>
-                    {showMap && (
+                    {region && origin && destination && showMap && (
                         <MapView
+                            ref={(ref) => {
+                                mapRef.current = ref;
+                            }}
+                            // onMapReady={() => {
+                            //     // mapRef.current.fitToSuppliedMarkers(waypoints);
+                            // }}
                             style={[StyleSheet.absoluteFillObject, {borderRadius: 25}]}
                             provider={PROVIDER_GOOGLE}
-                            initialRegion={{
-                                latitude: 52.52,
-                                longitude: 13.405,
-                                latitudeDelta: 0.1,
-                                longitudeDelta: 0.05,
-                            }}
+                            region={region}
+                            initialRegion={region}
                             minZoomLevel={10}
                         >
                             <MapViewDirections
+                                language="de"
                                 origin={origin}
                                 destination={destination}
-                                apikey={GOOGLE_MAPS_APIKEY}
-                                strokeWidth={3}
-                                strokeColor="#669df6"
+                                waypoints={waypoints}
+                                apikey={DIRECTIONS_APIKEY}
+                                strokeWidth={4}
+                                strokeColor="#ff009c"
                                 optimizeWaypoints={true}
+                                onReady={(result) => {
+                                    mapRef.current.fitToCoordinates(result.coordinates, {
+                                        edgePadding: {
+                                            right: width / 20,
+                                            bottom: height / 20,
+                                            left: width / 20,
+                                            top: height / 20,
+                                        },
+                                    });
+                                }}
                             />
                         </MapView>
                     )}

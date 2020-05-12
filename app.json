@@ -30,7 +30,13 @@
         },
         "packagerOpts": {
             "config": "metro.config.js",
-            "sourceExts": ["js", "jsx", "svg", "ts", "tsx"]
+            "sourceExts": ["ts", "tsx", "**js**", "svg"]
+        },
+        "extra": {
+            "credentials": {
+                "directionsApiKey": "AIzaSyDzgQenA9LdgC7sIXpng2GgV9lvasHUFOo",
+                "geocodingApiKey": "AIzaSyCFJ1veGSb5p8Xvwk1eO47u2oHHSdl3krw"
+            }
         }
     }
 }

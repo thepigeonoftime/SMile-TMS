@@ -39,6 +39,7 @@
         "react-native-custom-qr-codes": "^2.0.0",
         "react-native-custom-qr-codes-expo": "^2.2.0",
         "react-native-elements": "^1.2.7",
+        "react-native-geocoding": "^0.4.0",
         "react-native-gesture-handler": "^1.5.6",
         "react-native-keyboard-aware-scroll-view": "^0.9.1",
         "react-native-maps": "0.26.1",
