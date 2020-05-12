@@ -104,7 +104,15 @@ export const Maps = ({navigation}) => {
                             minZoomLevel={10}
                         >
                             {waypoints.map((coordinate, index) => (
-                                <Marker key={`coordinate_${index}`} coordinate={coordinate} />
+                                <Marker
+                                    key={`coordinate_${index}`}
+                                    pinColor={
+                                        (index === 0 && "#074dff") ||
+                                        (index === waypoints.length - 1 && "#17a403") ||
+                                        null
+                                    }
+                                    coordinate={coordinate}
+                                />
                             ))}
                             <MapViewDirections
                                 language="de"
