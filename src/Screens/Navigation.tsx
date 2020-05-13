@@ -1,18 +1,76 @@
-import React, {useContext, useState, useEffect} from "react";
-import {StyleSheet, Text, View, TouchableOpacity} from "react-native";
-import {Button} from "react-native-elements";
-import {TourContext} from "../TourProvider";
-import Modal from "react-native-modal";
-import IconClose from "~/assets/svg/menu-icn_close.svg";
-import MapView, {PROVIDER_GOOGLE} from "react-native-maps";
+import {AntDesign} from "@expo/vector-icons";
+import Constants from "expo-constants";
+import React, {useContext, useEffect, useRef, useState} from "react";
+import {Dimensions, StyleSheet, TouchableOpacity, View} from "react-native";
+import Geocoder from "react-native-geocoding";
+import MapView, {Marker, PROVIDER_GOOGLE} from "react-native-maps";
 import MapViewDirections from "react-native-maps-directions";
+import Modal from "react-native-modal";
+import {TourContext} from "../TourProvider";
 
 export const Navigation = (props) => {
-    const {showNavigation, toggleNavigation} = useContext(TourContext);
+    const {tour, currentStop, showNavigation, toggleNavigation} = useContext(TourContext);
     const [showMap, setShowMap] = useState(false);
-    const origin = {latitude: 52.52, longitude: 13.405};
-    const destination = {latitude: 52.52, longitude: 13.405};
-    const GOOGLE_MAPS_APIKEY = "AIzaSyDzgQenA9LdgC7sIXpng2GgV9lvasHUFOo";
+    const [region, setRegion] = useState({
+        latitude: 42.55,
+        longitude: 23.405,
+        latitudeDelta: 0.1,
+        longitudeDelta: 0.1,
+    });
+    const [origin, setOrigin] = useState(null);
+    const [waypoints, setWaypoints] = useState([]);
+    const [destination, setDestination] = useState(null);
+    const {width, height} = Dimensions.get("window");
+    // const ASPECT_RATIO = width / height;
+    const DIRECTIONS_APIKEY = Constants.manifest.extra.credentials.directionsApiKey;
+    const GEOCODING_APIKEY = Constants.manifest.extra.credentials.geocodingApiKey;
+    Geocoder.init(GEOCODING_APIKEY, {language: "de"});
+
+    const mapRef = useRef(null);
+
+    const getGeocodes = async (tourStops) => {
+        const result: any[] = await Promise.all(
+            tourStops.map((stop) => {
+                return Geocoder.from(
+                    stop.streetName + " " + stop.streetNumber + " " + stop.zip + " " + stop.city
+                )
+                    .then((json) => {
+                        return {
+                            latitude: json.results[0].geometry.location.lat,
+                            longitude: json.results[0].geometry.location.lng,
+                        };
+                    })
+                    .catch((err) => {
+                        return err;
+                    });
+            })
+        );
+        return {
+            // center: result[Math.floor(result.length / 2)],
+            start: result[0],
+            end: result[1],
+            stops: result,
+        };
+    };
+
+    useEffect(() => {
+        const nextStops = [tour.stops[currentStop], tour.stops[currentStop + 1]];
+        getGeocodes(nextStops).then(({start, end, stops}) => {
+            setOrigin(start);
+            setDestination(end);
+            setWaypoints(stops);
+            setRegion({...start, latitudeDelta: 0.1, longitudeDelta: 0.1});
+            setTimeout(() => {
+                setShowMap(true);
+            }, 500);
+            // mapRef.current.animateCamera({
+            //     center: start,
+            //     pitch: 1000,
+            //     zoom: 15,
+            // });
+        });
+    }, [currentStop]);
+
     return (
         <Modal
             isVisible={showNavigation}
@@ -33,30 +91,62 @@ export const Navigation = (props) => {
                         }}
                         style={styles.closeButton}
                     >
-                        <IconClose height={20} width={20} fill="#f89e3b" />
+                        <AntDesign name={"close"} size={20} color="#f89e3b" />
                     </TouchableOpacity>
                 </View>
-                {showMap && (
-                    <View style={styles.mapsContainer}>
+                <View style={styles.mapsContainer}>
+                    {region && origin && destination && showMap && (
                         <MapView
+                            ref={(ref) => {
+                                mapRef.current = ref;
+                            }}
+                            onMapReady={() => {
+                                mapRef.current.setCamera({
+                                    center: origin,
+                                    pitch: 1000,
+                                    zoom: 15,
+                                });
+                            }}
                             style={[StyleSheet.absoluteFillObject, {borderRadius: 25}]}
                             provider={PROVIDER_GOOGLE}
-                            initialRegion={{
-                                latitude: 52.52,
-                                longitude: 13.405,
-                                latitudeDelta: 0.1,
-                                longitudeDelta: 0.05,
-                            }}
-                            minZoomLevel={10}
+                            region={region}
+                            initialRegion={region}
+                            showsTraffic={true}
+                            // minZoomLevel={10}
                         >
+                            {waypoints.map((coordinate, index) => (
+                                <Marker
+                                    key={`coordinate_${index}`}
+                                    pinColor={
+                                        (index === 0 && "#074dff") ||
+                                        (index === waypoints.length - 1 && "#17a403") ||
+                                        null
+                                    }
+                                    coordinate={coordinate}
+                                />
+                            ))}
                             <MapViewDirections
+                                language="de"
                                 origin={origin}
                                 destination={destination}
-                                apikey={GOOGLE_MAPS_APIKEY}
+                                apikey={DIRECTIONS_APIKEY}
+                                strokeWidth={4}
+                                strokeColor="#ff009c"
+                                optimizeWaypoints={true}
+                                onReady={(result) => {
+                                    mapRef.current.fitToCoordinates(result.coordinates, {
+                                        edgePadding: {
+                                            right: width / 20,
+                                            bottom: height / 20,
+                                            left: width / 20,
+                                            top: height / 20,
+                                        },
+                                    });
+                                }}
                             />
                         </MapView>
-                    </View>
-                )}
+                    )}
+                </View>
             </View>
         </Modal>
     );
@@ -115,6 +205,7 @@ const styles = StyleSheet.create({
     },
     mapsContainer: {
         flex: 1,
+        width: "100%",
         // alignItems: "center",
     },
 });
