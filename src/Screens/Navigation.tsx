@@ -24,6 +24,7 @@ export const Navigation = (props) => {
     // const ASPECT_RATIO = width / height;
     const DIRECTIONS_APIKEY = Constants.manifest.extra.credentials.directionsApiKey;
     const GEOCODING_APIKEY = Constants.manifest.extra.credentials.geocodingApiKey;
+    // @ts-ignore
     Geocoder.init(GEOCODING_APIKEY, {language: "de"});
 
     const mapRef = useRef(null);
@@ -31,6 +32,7 @@ export const Navigation = (props) => {
     const getGeocodes = async (tourStops) => {
         const result: any[] = await Promise.all(
             tourStops.map((stop) => {
+                // @ts-ignore
                 return Geocoder.from(
                     stop.streetName + " " + stop.streetNumber + " " + stop.zip + " " + stop.city
                 )

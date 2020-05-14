@@ -24,13 +24,16 @@ export const Maps = ({navigation}) => {
     // const ASPECT_RATIO = width / height;
     const DIRECTIONS_APIKEY = Constants.manifest.extra.credentials.directionsApiKey;
     const GEOCODING_APIKEY = Constants.manifest.extra.credentials.geocodingApiKey;
-    Geocoder.init(GEOCODING_APIKEY, {language: "de"});
+
+    // @ts-ignore
+    Geocode.init(GEOCODING_APIKEY, {language: "de"});
 
     const mapRef = useRef(null);
 
     const getGeocodes = async (tourStops) => {
         const result: any[] = await Promise.all(
             tourStops.map((stop) => {
+                // @ts-ignore
                 return Geocoder.from(
                     stop.streetName + " " + stop.streetNumber + " " + stop.zip + " " + stop.city
                 )
