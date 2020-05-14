@@ -26,7 +26,7 @@ export const Maps = ({navigation}) => {
     const GEOCODING_APIKEY = Constants.manifest.extra.credentials.geocodingApiKey;
 
     // @ts-ignore
-    Geocode.init(GEOCODING_APIKEY, {language: "de"});
+    Geocoder.init(GEOCODING_APIKEY, {language: "de"});
 
     const mapRef = useRef(null);
 

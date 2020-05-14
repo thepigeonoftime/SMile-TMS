@@ -1,28 +1,25 @@
 import {createStackNavigator} from "@react-navigation/stack";
-import React, {useEffect, useContext} from "react";
-import {TourStart} from "./Screens/TourStart";
-import {TourSuche} from "./Screens/TourSuche";
-import {TourStackProps} from "./Types";
-import {Maps} from "./Screens/Maps";
-import {PaketeLaden} from "./Screens/PaketeLaden";
-import {Ziel} from "./Screens/Ziel";
+import React, {useEffect} from "react";
 import {Authentifizierung} from "./Screens/Authentifizierung";
 import {CodeScanner} from "./Screens/CodeScanner";
+import {Maps} from "./Screens/Maps";
+import {PaketeLaden} from "./Screens/PaketeLaden";
 import {Signature} from "./Screens/Signature";
-import {TourContext} from "./TourProvider";
+import {TourStart} from "./Screens/TourStart";
+import {TourSuche} from "./Screens/TourSuche";
+import {Ziel} from "./Screens/Ziel";
+import {TourStackProps} from "./Types";
 
 const Stack = createStackNavigator<TourStackProps>();
 
 export const TourStack = ({navigation, route}) => {
-    const {tour} = useContext(TourContext);
-    const routeName = route.state ? route.state.routes[route.state.index].name : "";
     useEffect(() => {
+        const routeName = route.state ? route.state.routes[route.state.index].name : "";
         const hideTabScreens = ["Signature", "CodeScanner"];
         navigation.setOptions({
             tabBarVisible: hideTabScreens.includes(routeName) ? false : true,
         });
     });
-    console.log(route);
     return (
         <Stack.Navigator mode="card" headerMode="none">
             <Stack.Screen name="TourSuche" component={TourSuche} options={{}} />
