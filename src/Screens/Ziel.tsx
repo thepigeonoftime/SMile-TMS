@@ -12,84 +12,85 @@ export const Ziel = ({navigation}) => {
         TourContext
     );
     return (
-        <ScrollView>
-            <View>
-                <Header text="Nächstes Ziel" color="#729628" containerStyle={styles.header} />
-                <View style={styles.content}>
-                    <View style={{flex: 1, paddingLeft: "10%", paddingTop: "10%"}}>
-                        <View>
-                            <Text style={[styles.zielText, {fontWeight: "bold"}]}>
-                                {tour.stops[currentStop].firstName}{" "}
-                                {tour.stops[currentStop].lastName}
-                            </Text>
-                            <Text style={[styles.zielText, {fontWeight: "bold"}]}>
-                                {tour.stops[currentStop].streetName}
-                            </Text>
-                            <Text style={[styles.zielText]}>
-                                Nummer: {tour.stops[currentStop].streetNumber}
-                            </Text>
-                            <Text style={[styles.zielText]}>
-                                {tour.stops[currentStop].zip + " " + tour.stops[1].city}
-                            </Text>
-                        </View>
-                    </View>
-                    <View
-                        style={{
-                            flex: 4,
-                            alignSelf: "center",
-                            width: "80%",
-                        }}
-                    >
-                        <Button
-                            buttonStyle={styles.buttonWhite}
-                            titleStyle={styles.buttonWhiteTitle}
-                            disabledStyle={styles.buttonDisabled}
-                            disabled={false}
-                            title="Tourliste"
-                            onPress={toggleTourListe}
-                        />
-                        <Button
-                            buttonStyle={styles.buttonWhite}
-                            titleStyle={styles.buttonWhiteTitle}
-                            disabledStyle={styles.buttonDisabled}
-                            disabled={false}
-                            title="Navigation"
-                            onPress={toggleNavigation}
-                        />
-                        <Button
-                            buttonStyle={styles.buttonBlue}
-                            titleStyle={styles.buttonBlueTitle}
-                            disabledStyle={styles.buttonDisabled}
-                            disabled={false}
-                            title="Paket übergeben"
-                            onPress={togglePaketGeben}
-                        />
-                    </View>
-                    <TourListe />
-                    <Navigation />
-                    <PaketGeben navigation={navigation} />
+        <View style={{flex: 1}}>
+            <Header
+                text="Nächstes Ziel"
+                color="#729628"
+                containerStyle={styles.header}
+                textStyle={{top: 30}}
+            />
+            <View style={styles.content}>
+                <View style={{flex: 1, paddingLeft: "10%", paddingTop: "10%"}}>
+                    <Text style={[styles.zielText, {fontWeight: "bold"}]}>
+                        {tour.stops[currentStop].firstName} {tour.stops[currentStop].lastName}
+                    </Text>
+                    <Text style={[styles.zielText, {fontWeight: "bold"}]}>
+                        {tour.stops[currentStop].streetName}
+                    </Text>
+                    <Text style={[styles.zielText]}>
+                        Nummer: {tour.stops[currentStop].streetNumber}
+                    </Text>
+                    <Text style={[styles.zielText]}>
+                        {tour.stops[currentStop].zip + " " + tour.stops[1].city}
+                    </Text>
                 </View>
+                <View
+                    style={{
+                        flex: 2,
+                        justifyContent: "flex-start",
+                        alignSelf: "center",
+                        width: "80%",
+                    }}
+                >
+                    <Button
+                        buttonStyle={styles.buttonWhite}
+                        titleStyle={styles.buttonWhiteTitle}
+                        disabledStyle={styles.buttonDisabled}
+                        disabled={false}
+                        title="Tourliste"
+                        onPress={toggleTourListe}
+                    />
+                    <Button
+                        buttonStyle={styles.buttonWhite}
+                        titleStyle={styles.buttonWhiteTitle}
+                        disabledStyle={styles.buttonDisabled}
+                        disabled={false}
+                        title="Navigation"
+                        onPress={toggleNavigation}
+                    />
+                    <Button
+                        buttonStyle={styles.buttonBlue}
+                        titleStyle={styles.buttonBlueTitle}
+                        disabledStyle={styles.buttonDisabled}
+                        disabled={false}
+                        title="Paket übergeben"
+                        onPress={togglePaketGeben}
+                    />
+                </View>
+                <TourListe />
+                <Navigation />
+                <PaketGeben navigation={navigation} />
             </View>
-        </ScrollView>
+        </View>
     );
 };
 
 const styles = StyleSheet.create({
     header: {
+        flex: 2,
         paddingLeft: "10%",
-        paddingTop: "13%",
         alignItems: "flex-start",
-        paddingBottom: "1%",
         backgroundColor: "#F2F2F2",
     },
     content: {
+        flex: 10,
         justifyContent: "center",
         alignItems: "flex-start",
         // paddingTop: "7%",
-        marginBottom: "40%",
+        // marginBottom: "40%",
         borderRadius: 25,
         backgroundColor: "#FFF",
-        height: "100%",
+        // height: "100%",
         shadowColor: "#000",
         shadowOffset: {width: 0, height: -1},
         shadowOpacity: 0.05,
