@@ -1,7 +1,7 @@
 import {AntDesign} from "@expo/vector-icons";
 import Constants from "expo-constants";
 import React, {useContext, useEffect, useRef, useState} from "react";
-import {Dimensions, StyleSheet, TouchableOpacity, View} from "react-native";
+import {Dimensions, StyleSheet, TouchableOpacity, View, Platform} from "react-native";
 import Geocoder from "react-native-geocoding";
 import MapView, {Marker, PROVIDER_GOOGLE} from "react-native-maps";
 import MapViewDirections from "react-native-maps-directions";
@@ -101,11 +101,12 @@ export const Navigation = (props) => {
                                 mapRef.current = ref;
                             }}
                             onMapReady={() => {
-                                mapRef.current.setCamera({
-                                    center: origin,
-                                    pitch: 1000,
-                                    zoom: 15,
-                                });
+                                // mapRef.current.setCamera({
+                                //     center: origin,
+                                //     pitch: 1000,
+                                //     zoom: 15,
+                                //     tilt: 100,
+                                // });
                             }}
                             style={[StyleSheet.absoluteFillObject, {borderRadius: 25}]}
                             provider={PROVIDER_GOOGLE}
@@ -136,10 +137,14 @@ export const Navigation = (props) => {
                                 onReady={(result) => {
                                     mapRef.current.fitToCoordinates(result.coordinates, {
                                         edgePadding: {
-                                            right: width / 20,
-                                            bottom: height / 20,
-                                            left: width / 20,
-                                            top: height / 20,
+                                            // right: width / 20,
+                                            // bottom: height / 2,
+                                            // left: width / 20,
+                                            // top: height / 7,
+                                            right: 100,
+                                            bottom: Platform.OS === "ios" ? 100 : 200,
+                                            left: 100,
+                                            top: Platform.OS === "ios" ? 50 : 100,
                                         },
                                     });
                                 }}
