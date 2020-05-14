@@ -1,21 +1,15 @@
 import React, {useContext} from "react";
-import {ScrollView, StyleSheet, Text, View} from "react-native";
+import {StyleSheet, Text, View} from "react-native";
 import {Button} from "react-native-elements";
 import {Header} from "../Header";
 import {TourContext} from "../TourProvider";
-import {Navigation} from "./Navigation";
-import {TourListe} from "./TourListe";
-import {PaketGeben} from "./PaketGeben";
 
 export const Authentifizierung = ({navigation}) => {
-    const {tour, currentStop, toggleTourListe, toggleNavigation, togglePaketGeben} = useContext(
-        TourContext
-    );
+    const {tour, currentStop, nextStop, resetStops} = useContext(TourContext);
     return (
         <View style={styles.container}>
             <Header text="Authentifizierung" color="#729628" containerStyle={styles.header} />
             <View style={styles.content}>
-                {/* <View style={{flex: 1, paddingLeft: "10%", paddingTop: "10%"}}> */}
                 <View style={{flex: 1, paddingHorizontal: 20, paddingTop: 30}}>
                     <Text style={[styles.zielText, {fontWeight: "bold"}]}>
                         {tour.stops[currentStop].firstName} {tour.stops[currentStop].lastName}
@@ -29,17 +23,8 @@ export const Authentifizierung = ({navigation}) => {
                     <Text style={[styles.zielText]}>
                         {tour.stops[currentStop].zip + " " + tour.stops[currentStop].city}
                     </Text>
-                    {/* </View> */}
                 </View>
-                <View
-                    style={{
-                        flex: 4,
-                        alignSelf: "center",
-                        width: "80%",
-                        justifyContent: "flex-end",
-                        paddingBottom: "20%",
-                    }}
-                >
+                <View style={styles.buttonWrap}>
                     <Button
                         buttonStyle={styles.buttonWhite}
                         titleStyle={styles.buttonWhiteTitle}
@@ -57,6 +42,22 @@ export const Authentifizierung = ({navigation}) => {
                         disabled={false}
                         title="Unterschreiben"
                         onPress={() => navigation.navigate("Signature")}
+                    />
+                    <Button
+                        buttonStyle={styles.buttonGrey}
+                        titleStyle={styles.buttonGreyTitle}
+                        disabledStyle={styles.buttonDisabled}
+                        disabled={false}
+                        title="Paket nicht zustellbar"
+                        onPress={() => {
+                            if (currentStop < tour.stops.length - 1) {
+                                nextStop();
+                                navigation.navigate("Ziel");
+                            } else {
+                                resetStops();
+                                navigation.navigate("TourSuche");
+                            }
+                        }}
                     />
                 </View>
             </View>
@@ -96,6 +97,13 @@ const styles = StyleSheet.create({
         shadowRadius: 1,
         // elevation: 0,
     },
+    buttonWrap: {
+        flex: 4,
+        alignSelf: "center",
+        width: "80%",
+        justifyContent: "flex-end",
+        paddingBottom: "20%",
+    },
     buttonWhite: {
         backgroundColor: "#FFF",
         height: 50,
@@ -123,6 +131,22 @@ const styles = StyleSheet.create({
     },
     buttonBlueTitle: {
         color: "#FFF",
+        fontSize: 22,
+        fontWeight: "600",
+    },
+    buttonGrey: {
+        backgroundColor: "transparent",
+        height: 50,
+        width: "100%",
+        borderRadius: 30,
+        alignItems: "center",
+        justifyContent: "center",
+        marginBottom: 20,
+        borderColor: "#aaa",
+        borderWidth: 2,
+    },
+    buttonGreyTitle: {
+        color: "#aaa",
         fontSize: 22,
         fontWeight: "600",
     },

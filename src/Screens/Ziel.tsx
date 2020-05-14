@@ -1,16 +1,22 @@
 import React, {useContext} from "react";
-import {ScrollView, StyleSheet, Text, View} from "react-native";
+import {StyleSheet, Text, View} from "react-native";
 import {Button} from "react-native-elements";
 import {Header} from "../Header";
 import {TourContext} from "../TourProvider";
 import {Navigation} from "./Navigation";
-import {TourListe} from "./TourListe";
 import {PaketGeben} from "./PaketGeben";
+import {TourListe} from "./TourListe";
 
 export const Ziel = ({navigation}) => {
-    const {tour, currentStop, toggleTourListe, toggleNavigation, togglePaketGeben} = useContext(
-        TourContext
-    );
+    const {
+        tour,
+        currentStop,
+        nextStop,
+        resetStops,
+        toggleTourListe,
+        toggleNavigation,
+        togglePaketGeben,
+    } = useContext(TourContext);
     return (
         <View style={{flex: 1}}>
             <Header
@@ -36,7 +42,7 @@ export const Ziel = ({navigation}) => {
                 </View>
                 <View
                     style={{
-                        flex: 2,
+                        flex: 2.5,
                         justifyContent: "flex-start",
                         alignSelf: "center",
                         width: "80%",
@@ -65,6 +71,22 @@ export const Ziel = ({navigation}) => {
                         disabled={false}
                         title="Paket übergeben"
                         onPress={togglePaketGeben}
+                    />
+                    <Button
+                        buttonStyle={styles.buttonGrey}
+                        titleStyle={styles.buttonGreyTitle}
+                        disabledStyle={styles.buttonDisabled}
+                        disabled={false}
+                        title="Paket nicht zustellbar"
+                        onPress={() => {
+                            if (currentStop < tour.stops.length - 1) {
+                                nextStop();
+                                navigation.navigate("Ziel");
+                            } else {
+                                resetStops();
+                                navigation.navigate("TourSuche");
+                            }
+                        }}
                     />
                 </View>
                 <TourListe />
@@ -124,6 +146,22 @@ const styles = StyleSheet.create({
     },
     buttonBlueTitle: {
         color: "#FFF",
+        fontSize: 22,
+        fontWeight: "600",
+    },
+    buttonGrey: {
+        backgroundColor: "transparent",
+        height: 50,
+        width: "100%",
+        borderRadius: 30,
+        alignItems: "center",
+        justifyContent: "center",
+        marginBottom: 20,
+        borderColor: "#aaa",
+        borderWidth: 2,
+    },
+    buttonGreyTitle: {
+        color: "#aaa",
         fontSize: 22,
         fontWeight: "600",
     },
