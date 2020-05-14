@@ -198,6 +198,6 @@ export const styles = StyleSheet.create({
         fontSize: 26,
     },
     buttonContainer: {
-        marginTop: "-10%",
+        marginTop: "-14%",
     },
 });
