@@ -26,7 +26,10 @@
         },
         "android": {
             "package": "de.goodstag.smile",
-            "versionCode": 1
+            "versionCode": 1,
+            "config": {
+                "googleMaps": {"apiKey": "AIzaSyAFHmPT3wWHLwNsbQY6ejEHTgNdXfC2R-Y"}
+            }
         },
         "packagerOpts": {
             "config": "metro.config.js",
