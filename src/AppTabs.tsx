@@ -5,17 +5,19 @@ import {StatusBar, StyleSheet, View} from "react-native";
 import {RegisterContext} from "./RegisterProvider";
 import {RegisterStack} from "./RegisterStack";
 import {Test} from "./Screens/Test";
-import {TourContainer} from "./TourContainer";
 import {AppTabsProps} from "./Types";
-import {TourProvider} from "./TourProvider";
+import {TourContext} from "./TourProvider";
+import {TourStack} from "./TourStack";
 
 const Tabs = createBottomTabNavigator<AppTabsProps>();
 
 export const AppTabs: React.FC = () => {
+    const {tour} = useContext(TourContext);
+    const {registered} = useContext(RegisterContext);
+
     // StatusBar.setBackgroundColor("rgba(0,0,0,0)");
     StatusBar.setBarStyle("dark-content");
 
-    const {registered} = useContext(RegisterContext);
     return (
         <View style={styles.tabContainer}>
             <View
@@ -53,14 +55,14 @@ export const AppTabs: React.FC = () => {
                 <Tabs.Screen
                     options={{title: "Tour Starten"}}
                     name="TourStarten"
-                    component={TourContainer}
-                    listeners={{
+                    component={TourStack}
+                    listeners={({navigation}) => ({
                         tabPress: (e) => {
-                            if (!registered) {
+                            if (!registered || (tour && navigation.isFocused())) {
                                 e.preventDefault();
                             }
                         },
-                    }}
+                    })}
                 />
                 <Tabs.Screen
                     options={{title: "Tourenlogbuch"}}
