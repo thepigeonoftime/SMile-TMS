@@ -3,9 +3,13 @@ import {AsyncStorage} from "react-native";
 import gql from "graphql-tag";
 import {useMutation} from "@apollo/react-hooks";
 import {structureRegData, CREATE_DELIVERER} from "./Requests";
-import {RegisterContextProps} from "./Types";
-
-type registerType = {} | null;
+import {
+    RegisterContextProps,
+    dataPersonProps,
+    dataFahrzeugProps,
+    dataGebietProps,
+    dataZeitenProps,
+} from "./Types";
 
 export const RegisterContext = React.createContext<RegisterContextProps>({
     registered: null,
@@ -27,10 +31,10 @@ export const RegisterContext = React.createContext<RegisterContextProps>({
 interface RegisterProviderProps {}
 export const RegisterProvider: React.FC<RegisterProviderProps> = ({children}) => {
     const [registered, setRegistered] = useState<null | string>(null);
-    const [dataPerson, setDataPerson] = useState<registerType>(null);
-    const [dataFahrzeug, setDataFahrzeug] = useState<registerType>(null);
-    const [dataGebiet, setDataGebiet] = useState<registerType>(null);
-    const [dataZeiten, setDataZeiten] = useState<registerType>(null);
+    const [dataPerson, setDataPerson] = useState<dataPersonProps | null>(null);
+    const [dataFahrzeug, setDataFahrzeug] = useState<dataFahrzeugProps | null>(null);
+    const [dataGebiet, setDataGebiet] = useState<dataGebietProps | null>(null);
+    const [dataZeiten, setDataZeiten] = useState<dataZeitenProps | null>(null);
     const [showRegModal, setShowRegModal] = useState<boolean>(false);
     const [createDeliverer] = useMutation(CREATE_DELIVERER);
 
