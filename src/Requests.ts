@@ -80,70 +80,70 @@ export const CREATE_DELIVERER = gql`
 `;
 
 export const UPDATE_PACKET = gql`
-mutation updatePacket(
-    ratingOfDepot: Int
-    width: Float
-    receiverId: UUID
-    height: Float
-    positionInTour: Int
-    carrierItemId: String
-    length: Float
-    initialSendDate: ZonedDateTime
-    pickDate: ZonedDateTime
-    depotId: UUID
-    grossWeight: Float
-    receiverSignature: String
-    dateOfArrivalInDepot: ZonedDateTime
-    acceptedByReceiver: Boolean
-    ratingOfDriver: Int
-    startOfWishTimeframe: ZonedDateTime
-    id: UUID!
-    dateOfPlannedDelivery: ZonedDateTime
-    receiveDate: ZonedDateTime
-    bizStep: String
-    plannedTimeframeStart: ZonedDateTime
-    senderId: UUID
-    delivererId: UUID
-    price: Int
-    propId: String
-    sscc: String
-    endOfWishTimeframe: ZonedDateTime
-    tourId: UUID
-){updatePacket(
-    PacketUpdateInput: {
-        ratingOfDepot : $ratingOfDepot,
-        width : $width,
-        receiverId : $receiverId,
-        height : $height,
-        positionInTour : $positionInTour,
-        carrierItemId : $carrierItemId,
-        length : $length,
-        initialSendDate : $initialSendDate,s
-        pickDate : $pickDate,
-        depotId : $depotId,
-        grossWeight : $grossWeight,
-        receiverSignature : $receiverSignature,
-        dateOfArrivalInDepot : $dateOfArrivalInDepot,
-        acceptedByReceiver : $acceptedByReceiver,
-        ratingOfDriver : $ratingOfDriver,
-        startOfWishTimeframe : $startOfWishTimeframe,
-        id : $id,
-        dateOfPlannedDelivery : $dateOfPlannedDelivery,
-        receiveDate : $receiveDate,
-        bizStep : $bizStep,
-        plannedTimeframeStart : $plannedTimeframeStart,
-        senderId : $senderId,
-        delivererId : $delivererId,
-        price : $price,
-        propId : $propId,
-        sscc : $sscc,
-        endOfWishTimeframe : $endOfWishTimeframe,
-        tourId : $tourId,
-        }
-    ){
-        id
+    mutation updatePacket(
+        $ratingOfDepot: Int
+        $width: Float
+        $receiverId: UUID
+        $height: Float
+        $positionInTour: Int
+        $carrierItemId: String
+        $length: Float
+        $initialSendDate: ZonedDateTime
+        $pickDate: ZonedDateTime
+        $depotId: UUID
+        $grossWeight: Float
+        $receiverSignature: String
+        $dateOfArrivalInDepot: ZonedDateTime
+        $acceptedByReceiver: Boolean
+        $ratingOfDriver: Int
+        $startOfWishTimeframe: ZonedDateTime
+        $id: UUID!
+        $dateOfPlannedDelivery: ZonedDateTime
+        $receiveDate: ZonedDateTime
+        $bizStep: String
+        $plannedTimeframeStart: ZonedDateTime
+        $senderId: UUID
+        $delivererId: UUID
+        $price: Int
+        $propId: String
+        $sscc: String
+        $endOfWishTimeframe: ZonedDateTime
+        $tourId: UUID
+    ) {
+        updatePacket(
+            packet: {
+                ratingOfDepot: $ratingOfDepot
+                width: $width
+                receiverId: $receiverId
+                height: $height
+                positionInTour: $positionInTour
+                carrierItemId: $carrierItemId
+                length: $length
+                initialSendDate: $initialSendDate
+                pickDate: $pickDate
+                depotId: $depotId
+                grossWeight: $grossWeight
+                receiverSignature: $receiverSignature
+                dateOfArrivalInDepot: $dateOfArrivalInDepot
+                acceptedByReceiver: $acceptedByReceiver
+                ratingOfDriver: $ratingOfDriver
+                startOfWishTimeframe: $startOfWishTimeframe
+                id: $id
+                dateOfPlannedDelivery: $dateOfPlannedDelivery
+                receiveDate: $receiveDate
+                bizStep: $bizStep
+                plannedTimeframeStart: $plannedTimeframeStart
+                senderId: $senderId
+                delivererId: $delivererId
+                price: $price
+                propId: $propId
+                sscc: $sscc
+                endOfWishTimeframe: $endOfWishTimeframe
+                tourId: $tourId
+            }
+        )
     }
-}`;
+`;
 
 export const structureRegData = (
     dataPerson: dataPersonProps,
@@ -192,18 +192,18 @@ export const structurePacketData = (currentStop, signature, sscc, tourID) => {
             positionInTour: currentStop,
             carrierItemId: "1",
             length: "20",
-            initialSendDate: "01.01.1970",
-            pickDate: "01.01.1970",
+            initialSendDate: new Date().toJSON(),
+            pickDate: new Date().toJSON(),
             depotId: "1",
             grossWeight: "20",
             receiverSignature: signature,
-            dateOfArrivalInDepot: "01.01.1970",
+            dateOfArrivalInDepot: new Date().toJSON(),
             acceptedByReceiver: "true",
             ratingOfDriver: "5",
             startOfWishTimeframe: {day: "TUESDAY", hour: 1, minute: 1},
             id: "1",
-            dateOfPlannedDelivery: "01.01.1970",
-            receiveDate: "01.01.1970",
+            dateOfPlannedDelivery: new Date().toJSON(),
+            receiveDate: new Date().toJSON(),
             bizStep: "1",
             plannedTimeframeStart: {day: "TUESDAY", hour: 1, minute: 1},
             senderId: "1",
