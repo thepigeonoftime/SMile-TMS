@@ -89,6 +89,67 @@ export type RegisterContextProps = {
     toggleRegModal: () => void;
 };
 
+export type dataPersonProps = {
+    vorname: string;
+    nachname: string;
+    firma: string;
+    strasse: string;
+    hausnummer: string;
+    plz: string;
+    ort: string;
+    telefon: string;
+};
+
+export type dataFahrzeugProps = {
+    fahrzeugArt: string;
+    ladevolumen: string;
+    laenge: string;
+    breite: string;
+    hoehe: string;
+};
+
+export type dataGebietProps = {
+    zustellGebietPLZ: string;
+    entfernungTour: string;
+    vorlaufZeit: string;
+    grundpreis: string;
+    preisProKm: string;
+    preisProStop: string;
+};
+
+export type dataZeitenProps = {
+    monday?: {
+        day: string;
+        start: string;
+        end: string;
+    };
+    tuesday?: {
+        day: string;
+        start: string;
+        end: string;
+    };
+    wednesday?: {
+        day: string;
+        start: string;
+        end: string;
+    };
+    thursday?: {
+        day: string;
+        start: string;
+        end: string;
+    };
+    friday?: {
+        day: string;
+        start: string;
+        end: string;
+    };
+    saturday?: {
+        day: string;
+        start: string;
+        end: string;
+    };
+};
+
 export type resultProps = {
     monday?: {};
     tuesday?: {};

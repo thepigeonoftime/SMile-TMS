@@ -1,3 +1,4 @@
+import {dataPersonProps, dataFahrzeugProps, dataGebietProps, dataZeitenProps} from "./Types";
 import Axios from "axios";
 import gql from "graphql-tag";
 import {addJob} from "./OfflineQueue";
@@ -75,7 +76,12 @@ mutation createDeliverer($costsPerStop: Int!
   }
 }`);
 
-export const structureRegData = (dataPerson, dataFahrzeug, dataGebiet, dataZeiten) => {
+export const structureRegData = (
+    dataPerson: dataPersonProps,
+    dataFahrzeug: dataFahrzeugProps,
+    dataGebiet: dataGebietProps,
+    dataZeiten: dataZeitenProps
+) => {
     if (dataPerson && dataFahrzeug && dataGebiet && dataZeiten) {
         console.log(dataGebiet.zustellGebietPLZ);
         return {
