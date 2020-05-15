@@ -334,9 +334,4 @@ export const styles = StyleSheet.create({
         fontSize: 22,
         fontWeight: "800",
     },
-    saveButtonDisabled: {
-        backgroundColor: "#FFF",
-        borderWidth: 2,
-        borderColor: "#ccc",
-    },
 });
