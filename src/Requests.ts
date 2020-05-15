@@ -77,6 +77,7 @@ mutation createDeliverer($costsPerStop: Int!
 
 export const structureRegData = (dataPerson, dataFahrzeug, dataGebiet, dataZeiten) => {
     if (dataPerson && dataFahrzeug && dataGebiet && dataZeiten) {
+        console.log(dataGebiet.zustellGebietPLZ);
         return {
             variables: {
                 costsPerHour: parseInt(dataGebiet.grundpreis),
@@ -88,7 +89,7 @@ export const structureRegData = (dataPerson, dataFahrzeug, dataGebiet, dataZeite
                 ],
                 delivererFirstName: dataPerson.vorname,
                 delivererLastName: dataPerson.nachname,
-                deliveryAreas: dataPerson.ort,
+                deliveryAreas: parseInt(dataGebiet.zustellGebietPLZ),
                 deliveryCapacityVolume: parseInt(dataFahrzeug.ladevolumen),
                 deliveryCapacityWeight: 1,
                 maxPacketnumberPerTour: 1,
