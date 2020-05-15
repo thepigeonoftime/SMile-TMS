@@ -1,5 +1,7 @@
 import React, {useState} from "react";
 import {AsyncStorage} from "react-native";
+import {structurePacketData, UPDATE_PACKET} from "./Requests";
+import {useMutation} from "@apollo/react-hooks";
 
 type tourType = any;
 
@@ -18,6 +20,7 @@ export const TourContext = React.createContext<{
     currentStop: number;
     nextStop: () => void;
     resetStops: () => void;
+    updatePacket: () => void;
     saveSignature: (sig: string) => void;
 }>({
     tour: null,
@@ -34,6 +37,7 @@ export const TourContext = React.createContext<{
     currentStop: 1,
     nextStop: () => {},
     resetStops: () => {},
+    updatePacket: () => {},
     saveSignature: () => {},
 });
 
@@ -44,6 +48,7 @@ export const TourProvider = ({children}) => {
     const [showTourListe, setShowTourListe] = useState(false);
     const [showNavigation, setShowNavigation] = useState(false);
     const [showPaketGeben, setShowPaketGeben] = useState(false);
+    const [updatePacket] = useMutation(UPDATE_PACKET);
 
     return (
         <TourContext.Provider
@@ -79,6 +84,9 @@ export const TourProvider = ({children}) => {
                 },
                 resetStops: () => {
                     setCurrentStop(1);
+                },
+                updatePacket: () => {
+                    structurePacketData;
                 },
                 saveSignature: (sig) => {
                     AsyncStorage.getItem("signatures")
