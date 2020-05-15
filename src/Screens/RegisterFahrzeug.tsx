@@ -167,7 +167,7 @@ export const RegisterFahrzeug = ({navigation}) => {
                                 placeholder={
                                     dataFahrzeug && dataFahrzeug.ladevolumen
                                         ? dataFahrzeug.ladevolumen
-                                        : "Volumen in qm² eingeben"
+                                        : "Anzahl Pakete eingeben"
                                 }
                                 errorMessage={errors.ladevolumen ? errors.ladevolumen.message : " "}
                                 inputStyle={styles.input}
