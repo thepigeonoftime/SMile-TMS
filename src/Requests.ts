@@ -4,19 +4,13 @@ import gql from "graphql-tag";
 import {addJob} from "./OfflineQueue";
 
 export const fetchTour = () => {
-    return Axios.get("https://unsafe.run/getTours");
+    return Axios.get("https://bpt-lab.org/smile/sphinx/getTours");
 };
 
-export const postDelivery = (id) => {
-    return new Promise((resolve, reject) => {
-        Axios.post("http://127.0.0.1:3001/reportDelivery", id)
-            .then((response) => {
-                console.log(response.status);
-                resolve("succesful");
-            })
-            .catch((error) => {
-                addJob(id, "reportDelivery", "null");
-            });
+export const postDelivery = (sscc, receiveDate) => {
+    return Axios.post("https://bpt-lab.org/smile/caz/tms/delivery-reported", {
+        sscc,
+        receiveDate,
     });
 };
 

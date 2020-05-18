@@ -6,7 +6,21 @@ import Modal from "react-native-modal";
 import IconClose from "~/assets/svg/menu-icn_close.svg";
 
 export const PaketGeben = ({navigation}) => {
-    const {tour, currentStop, showPaketGeben, togglePaketGeben} = useContext(TourContext);
+    const {
+        tour,
+        packets,
+        currentStop,
+        showPaketGeben,
+        togglePaketGeben,
+        reportDelivery,
+    } = useContext(TourContext);
+
+    const onSubmit = () => {
+        const timestamp = new Date().toJSON();
+        reportDelivery(packets[currentStop - 1].sscc, timestamp);
+        navigation.navigate("Authentifizierung");
+        togglePaketGeben();
+    };
     return (
         <Modal isVisible={showPaketGeben} style={styles.modal} backdropOpacity={0.4}>
             <View style={styles.container}>
@@ -29,10 +43,7 @@ export const PaketGeben = ({navigation}) => {
                             // disabledStyle={styles.buttonDisabled}
                             disabled={false}
                             title="Paket übergeben"
-                            onPress={() => {
-                                navigation.navigate("Authentifizierung");
-                                togglePaketGeben();
-                            }}
+                            onPress={onSubmit}
                         />
                         <Button
                             buttonStyle={styles.buttonGrey}
