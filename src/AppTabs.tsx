@@ -9,7 +9,7 @@ import {AppTabsProps} from "./Types";
 import {TourContext} from "./TourProvider";
 import {TourStack} from "./TourStack";
 import {Center} from "./Center";
-import {ActivityIndicator} from "react-native-paper";
+import {ActivityIndicator} from "react-native";
 
 const Tabs = createBottomTabNavigator<AppTabsProps>();
 
