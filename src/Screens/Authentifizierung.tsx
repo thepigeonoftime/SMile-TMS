@@ -3,66 +3,71 @@ import {StyleSheet, Text, View} from "react-native";
 import {Button} from "react-native-elements";
 import {Header} from "../Header";
 import {TourContext} from "../TourProvider";
+import {TourSuche} from "./TourSuche";
 
 export const Authentifizierung = ({navigation}) => {
-    const {tour, currentStop, nextStop, resetStops} = useContext(TourContext);
-    return (
-        <View style={styles.container}>
-            <Header text="Authentifizierung" color="#729628" containerStyle={styles.header} />
-            <View style={styles.content}>
-                <View style={{flex: 1, paddingHorizontal: 20, paddingTop: 30}}>
-                    <Text style={[styles.zielText, {fontWeight: "bold"}]}>
-                        {tour.stops[currentStop].firstName} {tour.stops[currentStop].lastName}
-                    </Text>
-                    <Text style={[styles.zielText, {paddingTop: 5}]}>
-                        {tour.stops[currentStop].streetName}
-                    </Text>
-                    <Text style={[styles.zielText]}>
-                        Nr. {tour.stops[currentStop].streetNumber}
-                    </Text>
-                    <Text style={[styles.zielText]}>
-                        {tour.stops[currentStop].zip + " " + tour.stops[currentStop].city}
-                    </Text>
-                </View>
-                <View style={styles.buttonWrap}>
-                    <Button
-                        buttonStyle={styles.buttonWhite}
-                        titleStyle={styles.buttonWhiteTitle}
-                        disabledStyle={styles.buttonDisabled}
-                        disabled={false}
-                        title="Paket Scannen"
-                        onPress={() => {
-                            navigation.navigate("CodeScanner");
-                        }}
-                    />
-                    <Button
-                        buttonStyle={styles.buttonBlue}
-                        titleStyle={styles.buttonBlueTitle}
-                        disabledStyle={styles.buttonDisabled}
-                        disabled={false}
-                        title="Unterschreiben"
-                        onPress={() => navigation.navigate("Signature")}
-                    />
-                    <Button
-                        buttonStyle={styles.buttonGrey}
-                        titleStyle={styles.buttonGreyTitle}
-                        disabledStyle={styles.buttonDisabled}
-                        disabled={false}
-                        title="Paket nicht zustellbar"
-                        onPress={() => {
-                            if (currentStop < tour.stops.length - 1) {
-                                nextStop();
-                                navigation.navigate("Ziel");
-                            } else {
-                                resetStops();
-                                navigation.navigate("TourSuche");
-                            }
-                        }}
-                    />
+    const {tour, currentStop, nextStop, resetTour} = useContext(TourContext);
+    if (!tour) {
+        return <TourSuche navigation={navigation} />;
+    } else {
+        return (
+            <View style={styles.container}>
+                <Header text="Authentifizierung" color="#729628" containerStyle={styles.header} />
+                <View style={styles.content}>
+                    <View style={{flex: 1, paddingHorizontal: 20, paddingTop: 30}}>
+                        <Text style={[styles.zielText, {fontWeight: "bold"}]}>
+                            {tour.stops[currentStop].firstName} {tour.stops[currentStop].lastName}
+                        </Text>
+                        <Text style={[styles.zielText, {paddingTop: 5}]}>
+                            {tour.stops[currentStop].streetName}
+                        </Text>
+                        <Text style={[styles.zielText]}>
+                            Nr. {tour.stops[currentStop].streetNumber}
+                        </Text>
+                        <Text style={[styles.zielText]}>
+                            {tour.stops[currentStop].zip + " " + tour.stops[currentStop].city}
+                        </Text>
+                    </View>
+                    <View style={styles.buttonWrap}>
+                        <Button
+                            buttonStyle={styles.buttonWhite}
+                            titleStyle={styles.buttonWhiteTitle}
+                            disabledStyle={styles.buttonDisabled}
+                            disabled={false}
+                            title="Paket Scannen"
+                            onPress={() => {
+                                navigation.navigate("CodeScanner");
+                            }}
+                        />
+                        <Button
+                            buttonStyle={styles.buttonBlue}
+                            titleStyle={styles.buttonBlueTitle}
+                            disabledStyle={styles.buttonDisabled}
+                            disabled={false}
+                            title="Unterschreiben"
+                            onPress={() => navigation.navigate("Signature")}
+                        />
+                        <Button
+                            buttonStyle={styles.buttonGrey}
+                            titleStyle={styles.buttonGreyTitle}
+                            disabledStyle={styles.buttonDisabled}
+                            disabled={false}
+                            title="Paket nicht zustellbar"
+                            onPress={() => {
+                                if (currentStop < tour.stops.length - 1) {
+                                    nextStop();
+                                    navigation.navigate("Ziel");
+                                } else {
+                                    resetTour(navigation);
+                                    navigation.navigate("TourSuche");
+                                }
+                            }}
+                        />
+                    </View>
                 </View>
             </View>
-        </View>
-    );
+        );
+    }
 };
 
 const styles = StyleSheet.create({

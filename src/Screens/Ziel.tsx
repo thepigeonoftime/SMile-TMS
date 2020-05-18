@@ -6,6 +6,7 @@ import {TourContext} from "../TourProvider";
 import {Navigation} from "./Navigation";
 import {PaketGeben} from "./PaketGeben";
 import {TourListe} from "./TourListe";
+import {TourSuche} from "./TourSuche";
 
 export const Ziel = ({navigation}) => {
     const {
@@ -17,84 +18,88 @@ export const Ziel = ({navigation}) => {
         toggleNavigation,
         togglePaketGeben,
     } = useContext(TourContext);
-    return (
-        <View style={{flex: 1}}>
-            <Header
-                text="Nächstes Ziel"
-                color="#729628"
-                containerStyle={styles.header}
-                textStyle={{top: 30}}
-            />
-            <View style={styles.content}>
-                <View style={{flex: 1, paddingLeft: "10%", paddingTop: "10%"}}>
-                    <Text style={[styles.zielText, {fontWeight: "bold"}]}>
-                        {tour.stops[currentStop].firstName} {tour.stops[currentStop].lastName}
-                    </Text>
-                    <Text style={[styles.zielText, {fontWeight: "bold"}]}>
-                        {tour.stops[currentStop].streetName}
-                    </Text>
-                    <Text style={[styles.zielText]}>
-                        Nummer: {tour.stops[currentStop].streetNumber}
-                    </Text>
-                    <Text style={[styles.zielText]}>
-                        {tour.stops[currentStop].zip + " " + tour.stops[1].city}
-                    </Text>
-                </View>
-                <View
-                    style={{
-                        flex: 2.5,
-                        justifyContent: "flex-start",
-                        alignSelf: "center",
-                        width: "80%",
-                    }}
-                >
-                    <Button
-                        buttonStyle={styles.buttonWhite}
-                        titleStyle={styles.buttonWhiteTitle}
-                        disabledStyle={styles.buttonDisabled}
-                        disabled={false}
-                        title="Tourliste"
-                        onPress={toggleTourListe}
-                    />
-                    <Button
-                        buttonStyle={styles.buttonWhite}
-                        titleStyle={styles.buttonWhiteTitle}
-                        disabledStyle={styles.buttonDisabled}
-                        disabled={false}
-                        title="Navigation"
-                        onPress={toggleNavigation}
-                    />
-                    <Button
-                        buttonStyle={styles.buttonBlue}
-                        titleStyle={styles.buttonBlueTitle}
-                        disabledStyle={styles.buttonDisabled}
-                        disabled={false}
-                        title="Paket übergeben"
-                        onPress={togglePaketGeben}
-                    />
-                    <Button
-                        buttonStyle={styles.buttonGrey}
-                        titleStyle={styles.buttonGreyTitle}
-                        disabledStyle={styles.buttonDisabled}
-                        disabled={false}
-                        title="Paket nicht zustellbar"
-                        onPress={() => {
-                            if (currentStop < tour.stops.length - 1) {
-                                nextStop();
-                                navigation.navigate("Ziel");
-                            } else {
-                                resetTour();
-                                navigation.navigate("TourSuche");
-                            }
+    if (!tour) {
+        return <TourSuche navigation={navigation} />;
+    } else {
+        return (
+            <View style={{flex: 1}}>
+                <Header
+                    text="Nächstes Ziel"
+                    color="#729628"
+                    containerStyle={styles.header}
+                    textStyle={{top: 30}}
+                />
+                <View style={styles.content}>
+                    <View style={{flex: 1, paddingLeft: "10%", paddingTop: "10%"}}>
+                        <Text style={[styles.zielText, {fontWeight: "bold"}]}>
+                            {tour.stops[currentStop].firstName} {tour.stops[currentStop].lastName}
+                        </Text>
+                        <Text style={[styles.zielText, {fontWeight: "bold"}]}>
+                            {tour.stops[currentStop].streetName}
+                        </Text>
+                        <Text style={[styles.zielText]}>
+                            Nummer: {tour.stops[currentStop].streetNumber}
+                        </Text>
+                        <Text style={[styles.zielText]}>
+                            {tour.stops[currentStop].zip + " " + tour.stops[1].city}
+                        </Text>
+                    </View>
+                    <View
+                        style={{
+                            flex: 2.5,
+                            justifyContent: "flex-start",
+                            alignSelf: "center",
+                            width: "80%",
                         }}
-                    />
+                    >
+                        <Button
+                            buttonStyle={styles.buttonWhite}
+                            titleStyle={styles.buttonWhiteTitle}
+                            disabledStyle={styles.buttonDisabled}
+                            disabled={false}
+                            title="Tourliste"
+                            onPress={toggleTourListe}
+                        />
+                        <Button
+                            buttonStyle={styles.buttonWhite}
+                            titleStyle={styles.buttonWhiteTitle}
+                            disabledStyle={styles.buttonDisabled}
+                            disabled={false}
+                            title="Navigation"
+                            onPress={toggleNavigation}
+                        />
+                        <Button
+                            buttonStyle={styles.buttonBlue}
+                            titleStyle={styles.buttonBlueTitle}
+                            disabledStyle={styles.buttonDisabled}
+                            disabled={false}
+                            title="Paket übergeben"
+                            onPress={togglePaketGeben}
+                        />
+                        <Button
+                            buttonStyle={styles.buttonGrey}
+                            titleStyle={styles.buttonGreyTitle}
+                            disabledStyle={styles.buttonDisabled}
+                            disabled={false}
+                            title="Paket nicht zustellbar"
+                            onPress={() => {
+                                if (currentStop < tour.stops.length - 1) {
+                                    nextStop();
+                                    navigation.navigate("Ziel");
+                                } else {
+                                    resetTour(navigation);
+                                    navigation.navigate("TourSuche");
+                                }
+                            }}
+                        />
+                    </View>
+                    <TourListe />
+                    <Navigation />
+                    <PaketGeben navigation={navigation} />
                 </View>
-                <TourListe />
-                <Navigation />
-                <PaketGeben navigation={navigation} />
             </View>
-        </View>
-    );
+        );
+    }
 };
 
 const styles = StyleSheet.create({

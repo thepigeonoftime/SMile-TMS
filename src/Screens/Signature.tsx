@@ -8,6 +8,7 @@ import {Header} from "../Header";
 import {TourContext} from "../TourProvider";
 import {Button} from "react-native-elements";
 import {ScreenOrientation} from "expo";
+import {TourSuche} from "./TourSuche";
 
 export const Signature = ({navigation}) => {
     console.disableYellowBox = true;
@@ -40,19 +41,21 @@ export const Signature = ({navigation}) => {
             nextStop();
             navigation.navigate("Ziel");
         } else {
-            resetTour();
-            navigation.navigate("TourSuche");
+            resetTour(navigation);
         }
     };
-    return (
-        <SafeAreaView style={styles.container}>
-            <Header
-                text="Unterschrift"
-                color="#729628"
-                containerStyle={dynStyles.header}
-                textStyle={dynStyles.headerText}
-            />
-            {/* <TouchableOpacity
+    if (!tour) {
+        return <TourSuche navigation={navigation} />;
+    } else {
+        return (
+            <SafeAreaView style={styles.container}>
+                <Header
+                    text="Unterschrift"
+                    color="#729628"
+                    containerStyle={dynStyles.header}
+                    textStyle={dynStyles.headerText}
+                />
+                {/* <TouchableOpacity
                 style={styles.button}
                 onPress={() => {
                     signature.current.clear();
@@ -60,45 +63,46 @@ export const Signature = ({navigation}) => {
             >
                 <Text>Reset</Text>
             </TouchableOpacity> */}
-            <View style={styles.content}>
-                <View style={styles.textWrap}>
-                    <Text style={styles.text}>
-                        {tour.stops[currentStop].firstName} {tour.stops[currentStop].lastName}
-                    </Text>
+                <View style={styles.content}>
+                    <View style={styles.textWrap}>
+                        <Text style={styles.text}>
+                            {tour.stops[currentStop].firstName} {tour.stops[currentStop].lastName}
+                        </Text>
+                    </View>
+                    <View style={styles.pixiWrap}>
+                        <ExpoPixi.Signature
+                            ref={(ref) => (signature = ref)}
+                            style={styles.pixi}
+                            strokeColor={"blue"}
+                            strokeAlpha={1}
+                            // onReady={this.onReady}
+                        />
+                    </View>
+                    <View style={dynStyles.buttonWrap}>
+                        <Button
+                            buttonStyle={[styles.buttonBlue, dynStyles.buttonBlue]}
+                            titleStyle={styles.buttonBlueTitle}
+                            disabledStyle={styles.buttonDisabled}
+                            disabled={false}
+                            title="Signatur speichern"
+                            onPress={onSubmit}
+                        />
+                        <Button
+                            buttonStyle={[styles.buttonGrey, dynStyles.buttonGrey]}
+                            titleStyle={styles.buttonGreyTitle}
+                            disabledStyle={styles.buttonDisabled}
+                            disabled={false}
+                            title="Abbrechen"
+                            onPress={() => {
+                                navigation.goBack();
+                            }}
+                        />
+                    </View>
+                    <View style={dynStyles.bottom} />
                 </View>
-                <View style={styles.pixiWrap}>
-                    <ExpoPixi.Signature
-                        ref={(ref) => (signature = ref)}
-                        style={styles.pixi}
-                        strokeColor={"blue"}
-                        strokeAlpha={1}
-                        // onReady={this.onReady}
-                    />
-                </View>
-                <View style={dynStyles.buttonWrap}>
-                    <Button
-                        buttonStyle={[styles.buttonBlue, dynStyles.buttonBlue]}
-                        titleStyle={styles.buttonBlueTitle}
-                        disabledStyle={styles.buttonDisabled}
-                        disabled={false}
-                        title="Signatur speichern"
-                        onPress={onSubmit}
-                    />
-                    <Button
-                        buttonStyle={[styles.buttonGrey, dynStyles.buttonGrey]}
-                        titleStyle={styles.buttonGreyTitle}
-                        disabledStyle={styles.buttonDisabled}
-                        disabled={false}
-                        title="Abbrechen"
-                        onPress={() => {
-                            navigation.goBack();
-                        }}
-                    />
-                </View>
-                <View style={dynStyles.bottom} />
-            </View>
-        </SafeAreaView>
-    );
+            </SafeAreaView>
+        );
+    }
 };
 
 // tslint:disable:no-unused-styles

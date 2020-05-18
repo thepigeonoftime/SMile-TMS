@@ -1,4 +1,5 @@
 import React, {useState, useEffect} from "react";
+import {CommonActions} from "@react-navigation/native";
 import {AsyncStorage} from "react-native";
 import {structurePacketData, UPDATE_PACKET, postDelivery} from "./Requests";
 import {useMutation} from "@apollo/react-hooks";
@@ -11,7 +12,7 @@ export const TourContext = React.createContext<{
     packets: null | {};
     error: null | string;
     setTour: (tour: any) => void;
-    removeTour: (tour: any) => void;
+    removeTour: () => void;
     setError: (error: string) => void;
     showNavigation: boolean;
     toggleNavigation: () => void;
@@ -22,7 +23,7 @@ export const TourContext = React.createContext<{
     currentStop: number;
     currentPacket: number;
     nextStop: () => void;
-    resetTour: () => void;
+    resetTour: (navigation) => void;
     reportDelivery: (sscc, deliveryDate) => void;
     deliverPacket: (sig, tourStop, sscc, tourID) => void;
 }>({
@@ -41,7 +42,7 @@ export const TourContext = React.createContext<{
     currentStop: 1,
     currentPacket: 0,
     nextStop: () => {},
-    resetTour: () => {},
+    resetTour: (navigation) => {},
     reportDelivery: (sscc, deliveryDate) => {},
     deliverPacket: () => {},
 });
@@ -86,7 +87,7 @@ export const TourProvider = ({children}) => {
                     setPackets(tour.tours[0].packets);
                     // AsyncStorage.setItem("tour", tour);
                 },
-                removeTour: (tour) => {
+                removeTour: () => {
                     setTour(null);
                     // AsyncStorage.removeItem("tour");
                 },
@@ -106,7 +107,14 @@ export const TourProvider = ({children}) => {
                     setCurrentStop(currentStop + 1);
                     setCurrentPacket(currentPacket + 1);
                 },
-                resetTour: () => {
+                resetTour: (navigation) => {
+                    // navigation.dispatch(
+                    //     CommonActions.reset({
+                    //         index: 0,
+                    //         routes: [],
+                    //     })
+                    // );
+                    navigation.navigate("TourSuche");
                     setCurrentStop(1);
                     setCurrentPacket(0);
                     setTour(null);

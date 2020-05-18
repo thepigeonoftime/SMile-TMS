@@ -32,19 +32,21 @@ export const Navigation = (props) => {
     const getGeocodes = async (tourStops) => {
         const result: any[] = await Promise.all(
             tourStops.map((stop) => {
-                // @ts-ignore
-                return Geocoder.from(
-                    stop.streetName + " " + stop.streetNumber + " " + stop.zip + " " + stop.city
-                )
-                    .then((json) => {
-                        return {
-                            latitude: json.results[0].geometry.location.lat,
-                            longitude: json.results[0].geometry.location.lng,
-                        };
-                    })
-                    .catch((err) => {
-                        return err;
-                    });
+                if (stop) {
+                    // @ts-ignore
+                    return Geocoder.from(
+                        stop.streetName + " " + stop.streetNumber + " " + stop.zip + " " + stop.city
+                    )
+                        .then((json) => {
+                            return {
+                                latitude: json.results[0].geometry.location.lat,
+                                longitude: json.results[0].geometry.location.lng,
+                            };
+                        })
+                        .catch((err) => {
+                            return err;
+                        });
+                }
             })
         );
         return {
@@ -56,22 +58,24 @@ export const Navigation = (props) => {
     };
 
     useEffect(() => {
-        const nextStops = [tour.stops[currentStop], tour.stops[currentStop + 1]];
-        getGeocodes(nextStops).then(({start, end, stops}) => {
-            setOrigin(start);
-            setDestination(end);
-            setWaypoints(stops);
-            setRegion({...start, latitudeDelta: 0.1, longitudeDelta: 0.1});
-            setTimeout(() => {
-                setShowMap(true);
-            }, 500);
-            // mapRef.current.animateCamera({
-            //     center: start,
-            //     pitch: 1000,
-            //     zoom: 15,
-            // });
-        });
-    }, []);
+        if (showNavigation) {
+            const nextStops = [tour.stops[currentStop - 1], tour.stops[currentStop]];
+            getGeocodes(nextStops).then(({start, end, stops}) => {
+                setOrigin(start);
+                setDestination(end);
+                setWaypoints(stops);
+                setRegion({...start, latitudeDelta: 0.1, longitudeDelta: 0.1});
+                setTimeout(() => {
+                    setShowMap(true);
+                }, 500);
+                // mapRef.current.animateCamera({
+                //     center: start,
+                //     pitch: 1000,
+                //     zoom: 15,
+                // });
+            });
+        }
+    }, [showNavigation]);
 
     return (
         <Modal
@@ -143,9 +147,9 @@ export const Navigation = (props) => {
                                             // bottom: height / 2,
                                             // left: width / 20,
                                             // top: height / 7,
-                                            right: 100,
+                                            right: 50,
                                             bottom: Platform.OS === "ios" ? 100 : 200,
-                                            left: 100,
+                                            left: 50,
                                             top: Platform.OS === "ios" ? 50 : 100,
                                         },
                                     });
