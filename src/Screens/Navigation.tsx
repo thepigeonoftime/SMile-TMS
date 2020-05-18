@@ -71,7 +71,7 @@ export const Navigation = (props) => {
             //     zoom: 15,
             // });
         });
-    }, [currentStop]);
+    }, []);
 
     return (
         <Modal
