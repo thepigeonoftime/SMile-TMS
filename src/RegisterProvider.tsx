@@ -12,6 +12,7 @@ import {
 } from "./Types";
 
 export const RegisterContext = React.createContext<RegisterContextProps>({
+    loading: true,
     registered: null,
     dataPerson: null,
     dataFahrzeug: null,
@@ -30,7 +31,8 @@ export const RegisterContext = React.createContext<RegisterContextProps>({
 
 interface RegisterProviderProps {}
 export const RegisterProvider: React.FC<RegisterProviderProps> = ({children}) => {
-    const [registered, setRegistered] = useState<string | null>("smile");
+    const [loading, setLoading] = useState(true);
+    const [registered, setRegistered] = useState<string | null>(null);
     const [dataPerson, setDataPerson] = useState<dataPersonProps | null>(null);
     const [dataFahrzeug, setDataFahrzeug] = useState<dataFahrzeugProps | null>(null);
     const [dataGebiet, setDataGebiet] = useState<dataGebietProps | null>(null);
@@ -38,9 +40,24 @@ export const RegisterProvider: React.FC<RegisterProviderProps> = ({children}) =>
     const [showRegModal, setShowRegModal] = useState<boolean>(false);
     const [createDeliverer] = useMutation(CREATE_DELIVERER);
 
+    useEffect(() => {
+        AsyncStorage.getItem("registered")
+            .then((registerString) => {
+                if (registerString) {
+                    setRegistered("smile");
+                }
+                setLoading(false);
+                console.log("registered: " + registered);
+            })
+            .catch((err) => {
+                console.log(err);
+            });
+    }, []);
+
     return (
         <RegisterContext.Provider
             value={{
+                loading,
                 registered,
                 dataPerson,
                 dataFahrzeug,
