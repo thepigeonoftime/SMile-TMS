@@ -1,22 +1,34 @@
 import {AntDesign, EvilIcons} from "@expo/vector-icons";
 import {createBottomTabNavigator} from "@react-navigation/bottom-tabs";
 import React, {useContext} from "react";
-import {StatusBar, StyleSheet, View} from "react-native";
+import {StatusBar, StyleSheet, View, Text, ImageBackground} from "react-native";
 import {RegisterContext} from "./RegisterProvider";
 import {RegisterStack} from "./RegisterStack";
 import {Test} from "./Screens/Test";
 import {AppTabsProps} from "./Types";
 import {TourContext} from "./TourProvider";
 import {TourStack} from "./TourStack";
+import {Center} from "./Center";
+import {ActivityIndicator} from "react-native-paper";
 
 const Tabs = createBottomTabNavigator<AppTabsProps>();
 
 export const AppTabs: React.FC = () => {
     const {tour} = useContext(TourContext);
-    const {registered} = useContext(RegisterContext);
+    const {loading, registered} = useContext(RegisterContext);
 
     // StatusBar.setBackgroundColor("rgba(0,0,0,0)");
     StatusBar.setBarStyle("dark-content");
+
+    if (loading) {
+        return (
+            <ImageBackground source={require("~/assets/splash.png")} style={{}}>
+                <Center>
+                    <ActivityIndicator size="small" color="#FFF" />
+                </Center>
+            </ImageBackground>
+        );
+    }
 
     return (
         <View style={styles.tabContainer}>
@@ -32,7 +44,7 @@ export const AppTabs: React.FC = () => {
                 }}
             />
             <Tabs.Navigator
-                initialRouteName="Settings"
+                initialRouteName={registered ? "TourStarten" : "Settings"}
                 screenOptions={({route}) => ({
                     tabBarIcon: ({focused, color, size}) => {
                         if (route.name === "TourStarten") {
