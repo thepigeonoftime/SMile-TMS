@@ -32,6 +32,53 @@ export const Register = ({navigation}) => {
         }
     };
 
+    useEffect(() => {
+        if (dataPerson === null) {
+            AsyncStorage.getItem("dataPerson")
+                .then((data) => {
+                    if (data) {
+                        storeDataPerson(JSON.parse(data));
+                    }
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
+        }
+        if (dataFahrzeug === null) {
+            AsyncStorage.getItem("dataFahrzeug")
+                .then((data) => {
+                    if (data) {
+                        storeDataFahrzeug(JSON.parse(data));
+                    }
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
+        }
+        if (dataGebiet === null) {
+            AsyncStorage.getItem("dataGebiet")
+                .then((data) => {
+                    if (data) {
+                        storeDataGebiet(JSON.parse(data));
+                    }
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
+        }
+        if (dataZeiten === null) {
+            AsyncStorage.getItem("dataZeiten")
+                .then((data) => {
+                    if (data) {
+                        storeDataZeiten(JSON.parse(data));
+                    }
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
+        }
+    }, []);
+
     return (
         <ScrollView style={styles.container}>
             <View
@@ -142,12 +189,6 @@ export const styles = StyleSheet.create({
     container: {
         backgroundColor: "#FFF",
         marginBottom: "-20%",
-    },
-    logout: {
-        position: "absolute",
-        top: 50,
-        right: 30,
-        zIndex: 10,
     },
     contentWrap: {
         top: "-5%",

@@ -30,60 +30,13 @@ export const RegisterContext = React.createContext<RegisterContextProps>({
 
 interface RegisterProviderProps {}
 export const RegisterProvider: React.FC<RegisterProviderProps> = ({children}) => {
-    const [registered, setRegistered] = useState<null | string>(null);
+    const [registered, setRegistered] = useState<string | null>("smile");
     const [dataPerson, setDataPerson] = useState<dataPersonProps | null>(null);
     const [dataFahrzeug, setDataFahrzeug] = useState<dataFahrzeugProps | null>(null);
     const [dataGebiet, setDataGebiet] = useState<dataGebietProps | null>(null);
     const [dataZeiten, setDataZeiten] = useState<dataZeitenProps | null>(null);
     const [showRegModal, setShowRegModal] = useState<boolean>(false);
     const [createDeliverer] = useMutation(CREATE_DELIVERER);
-
-    useEffect(() => {
-        if (dataPerson === null) {
-            AsyncStorage.getItem("dataPerson")
-                .then((data) => {
-                    if (data) {
-                        setDataPerson(JSON.parse(data));
-                    }
-                })
-                .catch((err) => {
-                    console.log(err);
-                });
-        }
-        if (dataFahrzeug === null) {
-            AsyncStorage.getItem("dataFahrzeug")
-                .then((data) => {
-                    if (data) {
-                        setDataFahrzeug(JSON.parse(data));
-                    }
-                })
-                .catch((err) => {
-                    console.log(err);
-                });
-        }
-        if (dataGebiet === null) {
-            AsyncStorage.getItem("dataGebiet")
-                .then((data) => {
-                    if (data) {
-                        setDataGebiet(JSON.parse(data));
-                    }
-                })
-                .catch((err) => {
-                    console.log(err);
-                });
-        }
-        if (dataZeiten === null) {
-            AsyncStorage.getItem("dataZeiten")
-                .then((data) => {
-                    if (data) {
-                        setDataZeiten(JSON.parse(data));
-                    }
-                })
-                .catch((err) => {
-                    console.log(err);
-                });
-        }
-    });
 
     return (
         <RegisterContext.Provider
@@ -110,6 +63,7 @@ export const RegisterProvider: React.FC<RegisterProviderProps> = ({children}) =>
                 register: () => {
                     setRegistered("smile");
                     AsyncStorage.setItem("registered", "true");
+                    console.log(registered);
                 },
                 unregister: () => {
                     setRegistered(null);
