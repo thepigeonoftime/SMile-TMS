@@ -37,7 +37,7 @@ export const Register = ({navigation}) => {
             AsyncStorage.getItem("dataPerson")
                 .then((data) => {
                     if (data) {
-                        storeDataPerson(JSON.parse(data));
+                        storeDataPerson(JSON.parse(data), false);
                     }
                 })
                 .catch((err) => {
@@ -48,7 +48,7 @@ export const Register = ({navigation}) => {
             AsyncStorage.getItem("dataFahrzeug")
                 .then((data) => {
                     if (data) {
-                        storeDataFahrzeug(JSON.parse(data));
+                        storeDataFahrzeug(JSON.parse(data), false);
                     }
                 })
                 .catch((err) => {
@@ -59,7 +59,7 @@ export const Register = ({navigation}) => {
             AsyncStorage.getItem("dataGebiet")
                 .then((data) => {
                     if (data) {
-                        storeDataGebiet(JSON.parse(data));
+                        storeDataGebiet(JSON.parse(data), false);
                     }
                 })
                 .catch((err) => {
@@ -70,7 +70,7 @@ export const Register = ({navigation}) => {
             AsyncStorage.getItem("dataZeiten")
                 .then((data) => {
                     if (data) {
-                        storeDataZeiten(JSON.parse(data));
+                        storeDataZeiten(JSON.parse(data), false);
                     }
                 })
                 .catch((err) => {

@@ -22,10 +22,10 @@ export const RegisterContext = React.createContext<RegisterContextProps>({
     register: () => {},
     unregister: () => {},
     registration: () => {},
-    storeDataPerson: (data) => {},
-    storeDataFahrzeug: (data) => {},
-    storeDataGebiet: (data) => {},
-    storeDataZeiten: (data) => {},
+    storeDataPerson: (data, toStorage) => {},
+    storeDataFahrzeug: (data, toStorage) => {},
+    storeDataGebiet: (data, toStorage) => {},
+    storeDataZeiten: (data, toStorage) => {},
     toggleRegModal: () => {},
 });
 
@@ -92,28 +92,28 @@ export const RegisterProvider: React.FC<RegisterProviderProps> = ({children}) =>
                     // AsyncStorage.removeItem("dataZeiten");
                     console.log("unregistered");
                 },
-                storeDataPerson: (data) => {
+                storeDataPerson: (data, toStorage) => {
                     if (data) {
                         setDataPerson(data);
-                        AsyncStorage.setItem("dataPerson", JSON.stringify(data));
+                        toStorage && AsyncStorage.setItem("dataPerson", JSON.stringify(data));
                     }
                 },
-                storeDataFahrzeug: (data) => {
+                storeDataFahrzeug: (data, toStorage) => {
                     if (data) {
                         setDataFahrzeug(data);
-                        AsyncStorage.setItem("dataFahrzeug", JSON.stringify(data));
+                        toStorage && AsyncStorage.setItem("dataFahrzeug", JSON.stringify(data));
                     }
                 },
-                storeDataGebiet: (data) => {
+                storeDataGebiet: (data, toStorage) => {
                     if (data) {
                         setDataGebiet(data);
-                        AsyncStorage.setItem("dataGebiet", JSON.stringify(data));
+                        toStorage && AsyncStorage.setItem("dataGebiet", JSON.stringify(data));
                     }
                 },
-                storeDataZeiten: (data) => {
+                storeDataZeiten: (data, toStorage) => {
                     if (data) {
                         setDataZeiten(data);
-                        AsyncStorage.setItem("dataZeiten", JSON.stringify(data));
+                        toStorage && AsyncStorage.setItem("dataZeiten", JSON.stringify(data));
                     }
                 },
                 toggleRegModal: () => {

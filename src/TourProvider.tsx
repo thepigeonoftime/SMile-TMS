@@ -107,9 +107,9 @@ export const TourProvider = ({children}) => {
                     setCurrentPacket(currentPacket + 1);
                 },
                 resetTour: () => {
-                    setTour(null);
                     setCurrentStop(1);
                     setCurrentPacket(0);
+                    setTour(null);
                 },
                 reportDelivery: (sscc, deliveryDate) => {
                     postDelivery(sscc, deliveryDate)

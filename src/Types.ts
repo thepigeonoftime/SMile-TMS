@@ -73,6 +73,7 @@ export type RegisterStackProps = {
 };
 
 export type RegisterContextProps = {
+    loading: boolean;
     registered: null | string;
     dataPerson: any;
     dataFahrzeug: any;
@@ -82,10 +83,10 @@ export type RegisterContextProps = {
     register: () => void;
     unregister: () => void;
     registration: () => any;
-    storeDataPerson: (data) => void;
-    storeDataFahrzeug: (data) => void;
-    storeDataGebiet: (data) => void;
-    storeDataZeiten: (data) => void;
+    storeDataPerson: (data, toStorage) => void;
+    storeDataFahrzeug: (data, toStorage) => void;
+    storeDataGebiet: (data, toStorage) => void;
+    storeDataZeiten: (data, toStorage) => void;
     toggleRegModal: () => void;
 };
 

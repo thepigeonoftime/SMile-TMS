@@ -56,7 +56,7 @@ export const RegisterPerson = ({navigation}) => {
         submitFocusError: true,
     });
     const onSubmit = (data) => {
-        storeDataPerson(data);
+        storeDataPerson(data, true);
         navigation.goBack();
     };
     return (

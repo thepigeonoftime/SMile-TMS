@@ -62,7 +62,7 @@ export const RegisterGebietPreis = ({navigation}) => {
         submitFocusError: true,
     });
     const onSubmit = (data) => {
-        storeDataGebiet(data);
+        storeDataGebiet(data, true);
         navigation.goBack();
     };
     return (

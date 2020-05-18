@@ -129,7 +129,7 @@ export const RegisterZeiten = ({navigation}) => {
             end: data.satEnd,
         });
         console.log(result);
-        storeDataZeiten(result);
+        storeDataZeiten(result, true);
         navigation.goBack();
     };
 
