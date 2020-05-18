@@ -11,7 +11,9 @@ import {ScreenOrientation} from "expo";
 
 export const Signature = ({navigation}) => {
     console.disableYellowBox = true;
-    const {tour, currentStop, nextStop, resetStops, saveSignature} = useContext(TourContext);
+    const {tour, currentStop, currentPacket, nextStop, resetTour, deliverPacket} = useContext(
+        TourContext
+    );
     const [dynStyles, setDynStyles] = useState<any>(portrait);
     let signature = useRef(null);
     useEffect(() => {
@@ -33,12 +35,12 @@ export const Signature = ({navigation}) => {
         const sig = await captureRef(signature, {
             result: "base64",
         });
-        saveSignature(sig);
+        deliverPacket(sig, currentStop, tour.packets[currentPacket].sscc, tour.tourMetaData.tourID);
         if (currentStop < tour.stops.length - 1) {
             nextStop();
             navigation.navigate("Ziel");
         } else {
-            resetStops();
+            resetTour();
             navigation.navigate("TourSuche");
         }
     };
