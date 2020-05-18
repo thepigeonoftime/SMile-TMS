@@ -1,12 +1,14 @@
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
 import {AsyncStorage} from "react-native";
-import {structurePacketData, UPDATE_PACKET} from "./Requests";
+import {structurePacketData, UPDATE_PACKET, postDelivery} from "./Requests";
 import {useMutation} from "@apollo/react-hooks";
+import NetInfo, {useNetInfo} from "@react-native-community/netinfo";
 
 type tourType = any;
 
 export const TourContext = React.createContext<{
     tour: tourType;
+    packets: null | {};
     error: null | string;
     setTour: (tour: any) => void;
     removeTour: (tour: any) => void;
@@ -18,12 +20,14 @@ export const TourContext = React.createContext<{
     showPaketGeben: boolean;
     togglePaketGeben: () => void;
     currentStop: number;
+    currentPacket: number;
     nextStop: () => void;
-    resetStops: () => void;
-    updatePacket: () => void;
-    saveSignature: (sig: string) => void;
+    resetTour: () => void;
+    reportDelivery: (sscc, deliveryDate) => void;
+    deliverPacket: (sig, tourStop, sscc, tourID) => void;
 }>({
     tour: null,
+    packets: null,
     error: null,
     setTour: () => {},
     removeTour: () => {},
@@ -35,32 +39,51 @@ export const TourContext = React.createContext<{
     showPaketGeben: false,
     togglePaketGeben: () => {},
     currentStop: 1,
+    currentPacket: 0,
     nextStop: () => {},
-    resetStops: () => {},
-    updatePacket: () => {},
-    saveSignature: () => {},
+    resetTour: () => {},
+    reportDelivery: (sscc, deliveryDate) => {},
+    deliverPacket: () => {},
 });
 
 export const TourProvider = ({children}) => {
     const [tour, setTour] = useState(null);
+    const [packets, setPackets] = useState(null);
     const [error, setError] = useState(null);
     const [currentStop, setCurrentStop] = useState(1);
+    const [currentPacket, setCurrentPacket] = useState(0);
     const [showTourListe, setShowTourListe] = useState(false);
     const [showNavigation, setShowNavigation] = useState(false);
     const [showPaketGeben, setShowPaketGeben] = useState(false);
     const [updatePacket] = useMutation(UPDATE_PACKET);
 
+    const queuePacket = (sig, tourStop, sscc, tourID) => {
+        AsyncStorage.getItem("packets")
+            .then((current) => {
+                let packets = current ? JSON.parse(current) : [];
+                packets.push({sig, tourStop, sscc, tourID});
+                // console.log(packets);
+                AsyncStorage.setItem("packets", JSON.stringify(packets));
+            })
+            .catch((err) => {
+                console.log(err);
+            });
+    };
+
     return (
         <TourContext.Provider
             value={{
                 tour,
+                packets,
                 error,
                 showNavigation,
                 showTourListe,
                 showPaketGeben,
                 currentStop,
+                currentPacket,
                 setTour: (tour) => {
-                    setTour(tour.tours[0]);
+                    setTour(tour.tours[0]); // change name
+                    setPackets(tour.tours[0].packets);
                     // AsyncStorage.setItem("tour", tour);
                 },
                 removeTour: (tour) => {
@@ -81,24 +104,27 @@ export const TourProvider = ({children}) => {
                 },
                 nextStop: () => {
                     setCurrentStop(currentStop + 1);
+                    setCurrentPacket(currentPacket + 1);
                 },
-                resetStops: () => {
+                resetTour: () => {
+                    setTour(null);
                     setCurrentStop(1);
+                    setCurrentPacket(0);
                 },
-                updatePacket: () => {
-                    structurePacketData;
+                reportDelivery: (sscc, deliveryDate) => {
+                    postDelivery(sscc, deliveryDate)
+                        .then((result) => console.log(result))
+                        .catch((err) => console.log(err));
                 },
-                saveSignature: (sig) => {
-                    AsyncStorage.getItem("signatures")
-                        .then((current) => {
-                            let sigs = current ? JSON.parse(current) : [];
-                            sigs.push(sig);
-                            // console.log(sigs);
-                            // console.log(sigs.length);
-                            AsyncStorage.setItem("signatures", JSON.stringify(sigs));
+                deliverPacket: (sig, tourStop, sscc, tourID) => {
+                    console.log(sig, tourStop, sscc, tourID);
+                    updatePacket(structurePacketData(sig, tourStop, sscc, tourID))
+                        .then((result) => {
+                            console.log(result);
                         })
                         .catch((err) => {
                             console.log(err);
+                            queuePacket(sig, tourStop, sscc, tourID);
                         });
                 },
             }}
