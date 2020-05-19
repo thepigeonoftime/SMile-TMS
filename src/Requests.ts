@@ -2,6 +2,8 @@ import {dataPersonProps, dataFahrzeugProps, dataGebietProps, dataZeitenProps} fr
 import Axios from "axios";
 import gql from "graphql-tag";
 import {addJob} from "./OfflineQueue";
+import moment from "moment";
+import uuid from "uuid";
 
 export const fetchTour = () => {
     return Axios.get("https://bpt-lab.org/smile/sphinx/getTours");
@@ -176,36 +178,37 @@ export const structureRegData = (
     }
 };
 
-export const structurePacketData = (currentStop, signature, sscc, tourID) => {
+export const structurePacketData = (signature, currentStop, sscc, tourID) => {
+    console.log("graphql-sig: " + signature);
     return {
         variables: {
-            ratingOfDepot: "1",
-            width: "20",
-            receiverId: "1",
-            height: "20",
-            positionInTour: currentStop,
+            ratingOfDepot: 1,
+            width: 20,
+            receiverId: uuid.v4(),
+            height: 20,
+            positionInTour: parseInt(currentStop),
             carrierItemId: "1",
-            length: "20",
+            length: 20,
             initialSendDate: new Date().toJSON(),
             pickDate: new Date().toJSON(),
-            depotId: "1",
-            grossWeight: "20",
+            depotId: uuid.v4(),
+            grossWeight: 20,
             receiverSignature: signature,
             dateOfArrivalInDepot: new Date().toJSON(),
-            acceptedByReceiver: "true",
-            ratingOfDriver: "5",
-            startOfWishTimeframe: {day: "TUESDAY", hour: 1, minute: 1},
-            id: "1",
+            acceptedByReceiver: true,
+            ratingOfDriver: 5,
+            startOfWishTimeframe: new Date().toJSON(),
+            id: uuid.v4(),
             dateOfPlannedDelivery: new Date().toJSON(),
             receiveDate: new Date().toJSON(),
             bizStep: "1",
-            plannedTimeframeStart: {day: "TUESDAY", hour: 1, minute: 1},
-            senderId: "1",
-            delivererId: "1",
-            price: "1",
-            propId: "1",
+            plannedTimeframeStart: new Date().toJSON(),
+            senderId: uuid.v4(),
+            delivererId: uuid.v4(),
+            price: 1,
+            propId: uuid.v4(),
             sscc: sscc,
-            endOfWishTimeframe: {day: "TUESDAY", hour: 1, minute: 1},
+            endOfWishTimeframe: new Date().toJSON(),
             tourId: tourID,
         },
     };
