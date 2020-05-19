@@ -108,13 +108,13 @@ export const TourProvider = ({children}) => {
                     setCurrentPacket(currentPacket + 1);
                 },
                 resetTour: (navigation) => {
-                    // navigation.dispatch(
-                    //     CommonActions.reset({
-                    //         index: 0,
-                    //         routes: [],
-                    //     })
-                    // );
-                    navigation.navigate("TourSuche");
+                    navigation.dispatch(
+                        CommonActions.reset({
+                            index: 0,
+                            routes: [{name: "TourSuche"}],
+                        })
+                    );
+                    // navigation.navigate("TourSuche");
                     setCurrentStop(1);
                     setCurrentPacket(0);
                     setTour(null);
@@ -126,7 +126,7 @@ export const TourProvider = ({children}) => {
                         .catch((err) => console.log(err));
                 },
                 deliverPacket: (sig, tourStop, sscc, tourID) => {
-                    console.log(sig, tourStop, sscc, tourID);
+                    // console.log(sig, tourStop, sscc, tourID);
                     updatePacket(structurePacketData(sig, tourStop, sscc, tourID))
                         .then((result) => {
                             console.log(result);
