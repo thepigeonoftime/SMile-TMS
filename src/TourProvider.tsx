@@ -85,11 +85,11 @@ export const TourProvider = ({children}) => {
                 setTour: (tour) => {
                     setTour(tour.tours[0]); // change name
                     setPackets(tour.tours[0].packets);
-                    // AsyncStorage.setItem("tour", tour);
+                    AsyncStorage.setItem("tour", JSON.stringify(tour));
                 },
                 removeTour: () => {
                     setTour(null);
-                    // AsyncStorage.removeItem("tour");
+                    AsyncStorage.removeItem("tour");
                 },
                 setError: (error) => {
                     setError(error);
@@ -118,6 +118,7 @@ export const TourProvider = ({children}) => {
                     setCurrentStop(1);
                     setCurrentPacket(0);
                     setTour(null);
+                    AsyncStorage.removeItem("tour");
                 },
                 reportDelivery: (sscc, deliveryDate) => {
                     postDelivery(sscc, deliveryDate)
