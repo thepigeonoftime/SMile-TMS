@@ -68,10 +68,7 @@ export const RegisterZeiten = ({navigation}) => {
     let lastKey = "";
 
     const formatTime = (time) => {
-        time.length > 2 &&
-            !time.includes(":") &&
-            lastKey !== "Backspace" &&
-            (time = time.slice(0, 2) + ":" + time.slice(2));
+        time.length > 1 && !time.includes(":") && lastKey !== "Backspace" && (time += ":00");
         return time;
     };
 
@@ -99,32 +96,32 @@ export const RegisterZeiten = ({navigation}) => {
         };
 
         makeResult("monday", {
-            day: isEnabled.monday && "MONDAY",
+            day: isEnabled.monday ? "MONDAY" : undefined,
             start: data.monStart,
             end: data.monEnd,
         });
         makeResult("tuesday", {
-            day: isEnabled.tuesday && "TUESDAY",
+            day: isEnabled.tuesday ? "TUESDAY" : undefined,
             start: data.tueStart,
             end: data.tueEnd,
         });
         makeResult("wednesday", {
-            day: isEnabled.wednesday && "WEDNESDAY",
+            day: isEnabled.wednesday ? "WEDNESDAY" : undefined,
             start: data.wedStart,
             end: data.wedEnd,
         });
         makeResult("thursday", {
-            day: isEnabled.thursday && "THURSDAY",
+            day: isEnabled.thursday ? "THURSDAY" : undefined,
             start: data.thuStart,
             end: data.thuEnd,
         });
         makeResult("friday", {
-            day: isEnabled.friday && "FRIDAY",
+            day: isEnabled.friday ? "FRIDAY" : undefined,
             start: data.friStart,
             end: data.friEnd,
         });
         makeResult("saturday", {
-            day: isEnabled.saturday && "SATURDAY",
+            day: isEnabled.saturday ? "SATURDAY" : undefined,
             start: data.satStart,
             end: data.satEnd,
         });
@@ -185,15 +182,17 @@ export const RegisterZeiten = ({navigation}) => {
                                         as={<Input />}
                                         control={control}
                                         name="monStart"
-                                        lastkey="none"
                                         onKeyPress={({nativeEvent}) => {
                                             lastKey = nativeEvent.key;
                                         }}
                                         onChangeText={(time) => {
-                                            setValue("monStart", formatTime(time));
+                                            setValue(
+                                                "monStart",
+                                                lastKey === "Backspace" ? "" : formatTime(time)
+                                            );
                                             errors.monStart && triggerValidation("monStart");
                                         }}
-                                        maxLength={5}
+                                        maxLength={2}
                                         placeholder={
                                             dataZeiten &&
                                             dataZeiten.monday &&
@@ -219,7 +218,10 @@ export const RegisterZeiten = ({navigation}) => {
                                             lastKey = nativeEvent.key;
                                         }}
                                         onChangeText={(time) => {
-                                            setValue("monEnd", formatTime(time));
+                                            setValue(
+                                                "monEnd",
+                                                lastKey === "Backspace" ? "" : formatTime(time)
+                                            );
                                             errors.monEnd && triggerValidation("monEnd");
                                         }}
                                         maxLength={5}
@@ -269,7 +271,10 @@ export const RegisterZeiten = ({navigation}) => {
                                                 lastKey = nativeEvent.key;
                                             }}
                                             onChangeText={(time) => {
-                                                setValue("tueStart", formatTime(time));
+                                                setValue(
+                                                    "tueStart",
+                                                    lastKey === "Backspace" ? "" : formatTime(time)
+                                                );
                                                 errors.tueStart && triggerValidation("tueStart");
                                             }}
                                             maxLength={5}
@@ -300,7 +305,10 @@ export const RegisterZeiten = ({navigation}) => {
                                                 lastKey = nativeEvent.key;
                                             }}
                                             onChangeText={(time) => {
-                                                setValue("tueEnd", formatTime(time));
+                                                setValue(
+                                                    "tueEnd",
+                                                    lastKey === "Backspace" ? "" : formatTime(time)
+                                                );
                                                 errors.tueEnd && triggerValidation("tueEnd");
                                             }}
                                             maxLength={5}
@@ -355,7 +363,10 @@ export const RegisterZeiten = ({navigation}) => {
                                                 lastKey = nativeEvent.key;
                                             }}
                                             onChangeText={(time) => {
-                                                setValue("wedStart", formatTime(time));
+                                                setValue(
+                                                    "wedStart",
+                                                    lastKey === "Backspace" ? "" : formatTime(time)
+                                                );
                                                 errors.wedStart && triggerValidation("wedStart");
                                             }}
                                             maxLength={5}
@@ -386,7 +397,10 @@ export const RegisterZeiten = ({navigation}) => {
                                                 lastKey = nativeEvent.key;
                                             }}
                                             onChangeText={(time) => {
-                                                setValue("wedEnd", formatTime(time));
+                                                setValue(
+                                                    "wedEnd",
+                                                    lastKey === "Backspace" ? "" : formatTime(time)
+                                                );
                                                 errors.wedEnd && triggerValidation("wedEnd");
                                             }}
                                             maxLength={5}
@@ -441,7 +455,10 @@ export const RegisterZeiten = ({navigation}) => {
                                                 lastKey = nativeEvent.key;
                                             }}
                                             onChangeText={(time) => {
-                                                setValue("thuStart", formatTime(time));
+                                                setValue(
+                                                    "thuStart",
+                                                    lastKey === "Backspace" ? "" : formatTime(time)
+                                                );
                                                 errors.thuStart && triggerValidation("thuStart");
                                             }}
                                             maxLength={5}
@@ -472,7 +489,10 @@ export const RegisterZeiten = ({navigation}) => {
                                                 lastKey = nativeEvent.key;
                                             }}
                                             onChangeText={(time) => {
-                                                setValue("thuEnd", formatTime(time));
+                                                setValue(
+                                                    "thuEnd",
+                                                    lastKey === "Backspace" ? "" : formatTime(time)
+                                                );
                                                 errors.thuEnd && triggerValidation("thuEnd");
                                             }}
                                             maxLength={5}
@@ -527,7 +547,10 @@ export const RegisterZeiten = ({navigation}) => {
                                                 lastKey = nativeEvent.key;
                                             }}
                                             onChangeText={(time) => {
-                                                setValue("friStart", formatTime(time));
+                                                setValue(
+                                                    "friStart",
+                                                    lastKey === "Backspace" ? "" : formatTime(time)
+                                                );
                                                 errors.friStart && triggerValidation("friStart");
                                             }}
                                             maxLength={5}
@@ -558,7 +581,10 @@ export const RegisterZeiten = ({navigation}) => {
                                                 lastKey = nativeEvent.key;
                                             }}
                                             onChangeText={(time) => {
-                                                setValue("friEnd", formatTime(time));
+                                                setValue(
+                                                    "friEnd",
+                                                    lastKey === "Backspace" ? "" : formatTime(time)
+                                                );
                                                 errors.friEnd && triggerValidation("friEnd");
                                             }}
                                             maxLength={5}
@@ -613,7 +639,10 @@ export const RegisterZeiten = ({navigation}) => {
                                                 lastKey = nativeEvent.key;
                                             }}
                                             onChangeText={(time) => {
-                                                setValue("satStart", formatTime(time));
+                                                setValue(
+                                                    "satStart",
+                                                    lastKey === "Backspace" ? "" : formatTime(time)
+                                                );
                                                 errors.satStart && triggerValidation("satStart");
                                             }}
                                             maxLength={5}
@@ -644,7 +673,10 @@ export const RegisterZeiten = ({navigation}) => {
                                                 lastKey = nativeEvent.key;
                                             }}
                                             onChangeText={(time) => {
-                                                setValue("satEnd", formatTime(time));
+                                                setValue(
+                                                    "satEnd",
+                                                    lastKey === "Backspace" ? "" : formatTime(time)
+                                                );
                                                 errors.satEnd && triggerValidation("satEnd");
                                             }}
                                             maxLength={5}
