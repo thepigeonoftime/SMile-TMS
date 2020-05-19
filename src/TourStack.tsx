@@ -17,28 +17,34 @@ import {ActivityIndicator} from "react-native-paper";
 const Stack = createStackNavigator<TourStackProps>();
 
 export const TourStack = ({navigation, route}) => {
-    const {setTour} = useContext(TourContext);
+    const {tour, setTour} = useContext(TourContext);
     const [loading, setLoading] = useState(true);
     const [initialRoute, setInitialRoute] = useState<"TourSuche" | "TourStart">("TourSuche");
+
     useEffect(() => {
         const routeName = route.state ? route.state.routes[route.state.index].name : "";
         const hideTabScreens = ["Signature", "CodeScanner"];
         navigation.setOptions({
             tabBarVisible: hideTabScreens.includes(routeName) ? false : true,
         });
+    });
 
-        AsyncStorage.getItem("tour")
-            .then((tourObject) => {
-                if (tourObject) {
-                    console.log(tourObject);
-                    setTour(JSON.parse(tourObject));
-                    setInitialRoute("TourStart");
-                }
-                setLoading(false);
-            })
-            .catch((err) => {
-                console.log(err);
-            });
+    useEffect(() => {
+        if (!tour) {
+            AsyncStorage.getItem("tour")
+                .then((tourObject) => {
+                    console.log("tour load");
+                    if (tourObject) {
+                        setTour(JSON.parse(tourObject));
+                        setInitialRoute("TourStart");
+                    }
+                    setLoading(false);
+                })
+                .catch((err) => {
+                    setLoading(false);
+                    console.log(err);
+                });
+        }
     }, []);
 
     if (loading) {
