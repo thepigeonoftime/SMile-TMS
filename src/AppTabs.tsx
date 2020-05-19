@@ -9,7 +9,7 @@ import {AppTabsProps} from "./Types";
 import {TourContext} from "./TourProvider";
 import {TourStack} from "./TourStack";
 import {Center} from "./Center";
-import {ActivityIndicator} from "react-native";
+import {ActivityIndicator} from "react-native-paper";
 
 const Tabs = createBottomTabNavigator<AppTabsProps>();
 
@@ -22,7 +22,7 @@ export const AppTabs: React.FC = () => {
 
     if (loading) {
         return (
-            <ImageBackground source={require("~/assets/splash.png")} style={{}}>
+            <ImageBackground source={require("~/assets/splash.png")} style={{flex: 1}}>
                 <Center>
                     <ActivityIndicator size="small" color="#FFF" />
                 </Center>
