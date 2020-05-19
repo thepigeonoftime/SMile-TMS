@@ -19,7 +19,7 @@ export const Signature = ({navigation}) => {
     let signature = useRef(null);
     useEffect(() => {
         ScreenOrientation.unlockAsync();
-    });
+    }, []);
 
     const detectOrientation = async () => {
         const {orientation} = await ScreenOrientation.getOrientationAsync();
@@ -37,6 +37,7 @@ export const Signature = ({navigation}) => {
             result: "base64",
         });
         deliverPacket(sig, currentStop, tour.packets[currentPacket].sscc, tour.tourMetaData.tourID);
+        ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.PORTRAIT);
         if (currentStop < tour.stops.length - 1) {
             nextStop();
             navigation.navigate("Ziel");
