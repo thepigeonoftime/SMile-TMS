@@ -22,13 +22,17 @@ export const RegisterZeiten = ({navigation}) => {
     const {dataZeiten, storeDataZeiten} = useContext(RegisterContext);
 
     const [isEnabled, setIsEnabled] = useState({
-        monday: false,
-        tuesday: false,
-        wednesday: false,
-        thursday: false,
-        friday: false,
-        saturday: false,
+        monday: dataZeiten && dataZeiten.monday && dataZeiten.monday.day ? true : false,
+        tuesday: dataZeiten && dataZeiten.tuesday && dataZeiten.tuesday.day ? true : false,
+        wednesday: dataZeiten && dataZeiten.wednesday && dataZeiten.wednesday.day ? true : false,
+        thursday: dataZeiten && dataZeiten.thursday && dataZeiten.thursday.day ? true : false,
+        friday: dataZeiten && dataZeiten.friday && dataZeiten.friday.day ? true : false,
+        saturday: dataZeiten && dataZeiten.saturday && dataZeiten.saturday.day ? true : false,
     });
+
+    const toggleSwitch = (key) => {
+        setIsEnabled({...isEnabled, [key]: !isEnabled[key]});
+    };
 
     const timeSchema = yup.string().test("is-time", "Keine gültige Zeit", function (value) {
         if (value) {
@@ -60,10 +64,6 @@ export const RegisterZeiten = ({navigation}) => {
         satStart: timeSchema,
         satEnd: timeSchema,
     });
-
-    const toggleSwitch = (key) => {
-        setIsEnabled({...isEnabled, [key]: !isEnabled[key]});
-    };
 
     let lastKey = "";
 
