@@ -179,7 +179,6 @@ export const structureRegData = (
 };
 
 export const structurePacketData = (signature, currentStop, sscc, tourID) => {
-    console.log("graphql-sig: " + signature);
     return {
         variables: {
             ratingOfDepot: 1,
@@ -193,7 +192,7 @@ export const structurePacketData = (signature, currentStop, sscc, tourID) => {
             pickDate: new Date().toJSON(),
             depotId: uuid.v4(),
             grossWeight: 20,
-            receiverSignature: signature,
+            receiverSignature: "signature",
             dateOfArrivalInDepot: new Date().toJSON(),
             acceptedByReceiver: true,
             ratingOfDriver: 5,
