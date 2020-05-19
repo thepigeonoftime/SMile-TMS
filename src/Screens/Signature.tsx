@@ -24,8 +24,10 @@ export const Signature = ({navigation}) => {
     const detectOrientation = async () => {
         const {orientation} = await ScreenOrientation.getOrientationAsync();
         if (orientation === "PORTRAIT" || orientation === "PORTRAIT_UP") {
+            signature.current.clear();
             setDynStyles(portrait);
         } else {
+            signature.current.clear();
             setDynStyles(landscape);
         }
     };
@@ -49,10 +51,11 @@ export const Signature = ({navigation}) => {
         return <TourSuche navigation={navigation} />;
     } else {
         return (
-            <SafeAreaView style={styles.container}>
+            <SafeAreaView style={dynStyles.container}>
                 <Header
                     text="Unterschrift"
                     color="#729628"
+                    bgColor="transparent"
                     containerStyle={dynStyles.header}
                     textStyle={dynStyles.headerText}
                 />
@@ -72,7 +75,7 @@ export const Signature = ({navigation}) => {
                     </View>
                     <View style={styles.pixiWrap}>
                         <ExpoPixi.Signature
-                            ref={(ref) => (signature = ref)}
+                            ref={signature}
                             style={styles.pixi}
                             strokeColor={"blue"}
                             strokeAlpha={1}
@@ -109,10 +112,15 @@ export const Signature = ({navigation}) => {
 // tslint:disable:no-unused-styles
 
 const portrait = StyleSheet.create({
+    container: {
+        flex: 1,
+        justifyContent: "flex-start",
+        backgroundColor: "#F2F2F2",
+    },
     header: {
         flex: 1,
         paddingLeft: "10%",
-        marginTop: 35,
+        marginTop: 15,
         alignItems: "flex-start",
         justifyContent: "center",
         marginBottom: 20,
@@ -137,15 +145,18 @@ const portrait = StyleSheet.create({
 });
 
 const landscape = StyleSheet.create({
+    container: {
+        flex: 1,
+        justifyContent: "flex-start",
+        backgroundColor: "#FFF",
+    },
     header: {
-        display: "none",
         flex: 0,
-        paddingLeft: "10%",
-        // marginTop: 35,
-        alignItems: "flex-start",
-        justifyContent: "center",
-        // marginBottom: 20,
-        backgroundColor: "#F2F2F2",
+        opacity: 0,
+        height: 0,
+        padding: 0,
+        margin: 0,
+        backgroundColor: "#FFF",
     },
     headerText: {
         paddingTop: 0,
@@ -167,11 +178,6 @@ const landscape = StyleSheet.create({
 });
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        justifyContent: "flex-start",
-    },
-
     content: {
         flex: 10,
         margin: 0,
