@@ -44,6 +44,8 @@ export const TourStack = ({navigation, route}) => {
                     setLoading(false);
                     console.log(err);
                 });
+        } else {
+            setLoading(false);
         }
     }, []);
 
