@@ -1,16 +1,17 @@
 import {dataPersonProps, dataFahrzeugProps, dataGebietProps, dataZeitenProps} from "./Types";
-import Axios from "axios";
+import axios from "axios";
 import gql from "graphql-tag";
 import {addJob} from "./OfflineQueue";
 import moment from "moment";
 import uuid from "uuid";
 
 export const fetchTour = () => {
-    return Axios.get("https://bpt-lab.org/smile/sphinx/getTours");
+    // return axios.get("https://bpt-lab.org/smile/sphinx/getTours");
+    return axios.get("https://unsafe.run/getTours");
 };
 
 export const postDelivery = (sscc, receiveDate) => {
-    return Axios.post("https://bpt-lab.org/smile/caz/tms/delivery-reported", {
+    return axios.post("https://bpt-lab.org/smile/caz/tms/delivery-reported", {
         sscc,
         receiveDate,
     });
@@ -192,7 +193,7 @@ export const structurePacketData = (signature, currentStop, sscc, tourID) => {
             pickDate: new Date().toJSON(),
             depotId: uuid.v4(),
             grossWeight: 20,
-            receiverSignature: "signature",
+            receiverSignature: signature,
             dateOfArrivalInDepot: new Date().toJSON(),
             acceptedByReceiver: true,
             ratingOfDriver: 5,
