@@ -16,7 +16,7 @@ export const Signature = ({navigation}) => {
         TourContext
     );
     const [dynStyles, setDynStyles] = useState<any>(portrait);
-    let signature = useRef(null);
+    let signatureRef = useRef(null);
     useEffect(() => {
         ScreenOrientation.unlockAsync();
     }, []);
@@ -24,10 +24,10 @@ export const Signature = ({navigation}) => {
     const detectOrientation = async () => {
         const {orientation} = await ScreenOrientation.getOrientationAsync();
         if (orientation === "PORTRAIT" || orientation === "PORTRAIT_UP") {
-            signature.current.clear();
+            signatureRef.current.clear();
             setDynStyles(portrait);
         } else {
-            signature.current.clear();
+            signatureRef.current.clear();
             setDynStyles(landscape);
         }
     };
@@ -35,10 +35,15 @@ export const Signature = ({navigation}) => {
     ScreenOrientation.addOrientationChangeListener(detectOrientation);
 
     const onSubmit = async () => {
-        const sig = await captureRef(signature, {
+        const signature = await captureRef(signatureRef, {
             result: "base64",
         });
-        deliverPacket(sig, currentStop, tour.packets[currentPacket].sscc, tour.tourMetaData.tourID);
+        deliverPacket(
+            signature,
+            tour.packets[currentPacket].sscc,
+            tour.tourMetaData.tourID,
+            currentStop
+        );
         ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.PORTRAIT);
         if (currentStop < tour.stops.length - 1) {
             nextStop();
@@ -62,7 +67,7 @@ export const Signature = ({navigation}) => {
                 {/* <TouchableOpacity
                 style={styles.button}
                 onPress={() => {
-                    signature.current.clear();
+                    signatureRef.current.clear();
                 }}
             >
                 <Text>Reset</Text>
@@ -75,7 +80,7 @@ export const Signature = ({navigation}) => {
                     </View>
                     <View style={styles.pixiWrap}>
                         <ExpoPixi.Signature
-                            ref={signature}
+                            ref={signatureRef}
                             style={styles.pixi}
                             strokeColor={"blue"}
                             strokeAlpha={1}
