@@ -179,7 +179,8 @@ export const structureRegData = (
     }
 };
 
-export const structurePacketData = (signature, currentStop, sscc, tourID) => {
+export const structurePacketData = (signature, sscc, tourID, currentStop) => {
+    // structure registration data for createDeliverer
     return {
         variables: {
             ratingOfDepot: 1,
@@ -209,7 +210,8 @@ export const structurePacketData = (signature, currentStop, sscc, tourID) => {
             propId: uuid.v4(),
             sscc: sscc,
             endOfWishTimeframe: new Date().toJSON(),
-            tourId: tourID,
+            // tourId: tourID,
+            tourID: uuid.v4(),
         },
     };
 };
