@@ -1,9 +1,9 @@
-import React, {useState, useEffect} from "react";
-import {CommonActions} from "@react-navigation/native";
-import {AsyncStorage} from "react-native";
-import {structurePacketData, UPDATE_PACKET, postDelivery} from "./Requests";
 import {useMutation} from "@apollo/react-hooks";
-import NetInfo, {useNetInfo} from "@react-native-community/netinfo";
+import NetInfo from "@react-native-community/netinfo";
+import {CommonActions} from "@react-navigation/native";
+import React, {useEffect, useState} from "react";
+import {AsyncStorage} from "react-native";
+import {postDelivery, structurePacketData, UPDATE_PACKET} from "./Requests";
 
 type tourType = any;
 
@@ -25,7 +25,7 @@ export const TourContext = React.createContext<{
     nextStop: () => void;
     resetTour: (navigation) => void;
     reportDelivery: (sscc, deliveryDate) => void;
-    deliverPacket: (sig, tourStop, sscc, tourID) => void;
+    deliverPacket: (signature, sscc, tourID, tourStop) => void;
 }>({
     tour: null,
     packets: null,
@@ -50,6 +50,7 @@ export const TourContext = React.createContext<{
 export const TourProvider = ({children}) => {
     const [tour, setTour] = useState(null);
     const [packets, setPackets] = useState(null);
+    const [offlinePackets, setOfflinePackets] = useState(null);
     const [error, setError] = useState(null);
     const [currentStop, setCurrentStop] = useState(1);
     const [currentPacket, setCurrentPacket] = useState(0);
@@ -58,18 +59,84 @@ export const TourProvider = ({children}) => {
     const [showPaketGeben, setShowPaketGeben] = useState(false);
     const [updatePacket] = useMutation(UPDATE_PACKET);
 
-    const queuePacket = (sig, tourStop, sscc, tourID) => {
-        AsyncStorage.getItem("packets")
+    const queuePacket = (signature, sscc, tourID, tourStop) => {
+        AsyncStorage.getItem("offlinePackets")
             .then((current) => {
-                let packets = current ? JSON.parse(current) : [];
-                packets.push({sig, tourStop, sscc, tourID});
-                // console.log(packets);
-                AsyncStorage.setItem("packets", JSON.stringify(packets));
+                let offlineBuffer = current ? JSON.parse(current) : [];
+                offlineBuffer.push({signature, sscc, tourID, tourStop});
+                setOfflinePackets(offlineBuffer);
+                AsyncStorage.setItem("offlinePackets", JSON.stringify(offlineBuffer));
             })
             .catch((err) => {
                 console.log(err);
             });
     };
+
+    const runQueue = async () => {
+        console.log("run queue");
+        let queueBuffer = [];
+        await AsyncStorage.getItem("offlinePackets").then(async (current) => {
+            const currentQueue = current && current.length ? JSON.parse(current) : null;
+            await Promise.all(
+                currentQueue.map(async (queuePacket) => {
+                    await updatePacket(
+                        structurePacketData(
+                            queuePacket.signature,
+                            queuePacket.sscc,
+                            queuePacket.tourID,
+                            queuePacket.tourStop
+                        )
+                    )
+                        .then(({data, errors}) => {
+                            if (errors && errors[0]) {
+                                console.log("graphql error:", errors[0].message);
+                                console.log("re-queuing packet");
+                                queueBuffer.push(queuePacket);
+                            } else {
+                                console.log("graphql success:");
+                                console.log(data);
+                                console.log("packet resolved, not requeueing");
+                            }
+                        })
+                        .catch((err) => {
+                            console.log("network error:", err);
+                            console.log("re-queuing packet");
+                            queueBuffer.push(queuePacket);
+                        });
+                })
+            );
+        });
+        console.log("resulting queue packets: " + queueBuffer.length);
+        AsyncStorage.setItem("offlinePackets", JSON.stringify(queueBuffer));
+    };
+
+    useEffect(() => {
+        // reload offlinePackets into state
+        if (!offlinePackets) {
+            AsyncStorage.getItem("offlinePackets")
+                .then((current) => JSON.parse(current))
+                .then((currentPackets) => {
+                    if (currentPackets && currentPackets.length) {
+                        console.log("current queue length:", currentPackets.length);
+                        setOfflinePackets(currentPackets);
+                    }
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
+        }
+        if (offlinePackets) {
+            // add eventListener when packets are queued
+            NetInfo.addEventListener((state) => {
+                // console.log("Connection type", state.type);
+                console.log("is connected?", state.isConnected);
+                console.log("queue packets:", offlinePackets.length);
+                if (state.isConnected && offlinePackets && offlinePackets.length) {
+                    runQueue();
+                }
+            });
+        }
+    }, [offlinePackets]);
 
     return (
         <TourContext.Provider
@@ -111,10 +178,10 @@ export const TourProvider = ({children}) => {
                     navigation.dispatch(
                         CommonActions.reset({
                             index: 0,
+                            history: [{}],
                             routes: [{name: "TourSuche"}],
                         })
                     );
-                    // navigation.navigate("TourSuche");
                     setCurrentStop(1);
                     setCurrentPacket(0);
                     setTour(null);
@@ -125,15 +192,22 @@ export const TourProvider = ({children}) => {
                         .then((result) => console.log(result))
                         .catch((err) => console.log(err));
                 },
-                deliverPacket: (sig, tourStop, sscc, tourID) => {
-                    // console.log(sig, tourStop, sscc, tourID);
-                    updatePacket(structurePacketData(sig, tourStop, sscc, tourID))
-                        .then((result) => {
-                            console.log(result);
+                deliverPacket: (signature, sscc, tourID, tourStop) => {
+                    updatePacket(structurePacketData(signature, sscc, tourID, tourStop))
+                        .then(({data, errors}) => {
+                            if (errors && errors[0]) {
+                                console.log("graphql error:", errors[0].message);
+                                console.log("queuing packet");
+                                queuePacket(signature, sscc, tourID, tourStop);
+                            } else {
+                                console.log("graphql success: ");
+                                console.log(data);
+                            }
                         })
                         .catch((err) => {
-                            console.log(err);
-                            queuePacket(sig, tourStop, sscc, tourID);
+                            console.log("network error:", err);
+                            console.log("queuing packet");
+                            queuePacket(signature, sscc, tourID, tourStop);
                         });
                 },
             }}
