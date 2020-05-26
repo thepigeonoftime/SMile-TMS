@@ -17,14 +17,17 @@ export const Login = ({navigation, route}: AuthNavProps<"Signup">) => {
             scrollEnabled={false}
             enableOnAndroid={true}
         >
-            <ImageBackground source={require("../../assets/signupbg.png")} style={styles.image}>
+            <ImageBackground
+                source={require("../../assets/signupbg.png")}
+                style={styles.headerImage}
+            >
                 <View style={[styles.header]}>
                     <View style={styles.textWrapper}>
                         <Text style={styles.loginHeaderText}>Herzlich Willkommen bei SMile</Text>
                         <Text style={styles.loginHeaderSubText}>
                             Anmelden, Touren übernehmen, Pakete ausliefern.
                         </Text>
-                        <Text style={[styles.loginHeaderSubText, {fontWeight: "bold"}]}>
+                        <Text style={[styles.loginHeaderSubText, {fontWeight: "800"}]}>
                             Ganz einfach.
                         </Text>
                     </View>
@@ -61,7 +64,7 @@ export const Login = ({navigation, route}: AuthNavProps<"Signup">) => {
             <View style={styles.buttonContainer}>
                 <View style={[styles.buttonWrap]}>
                     <Button
-                        title={"Weiter"}
+                        title={"Login"}
                         onPress={() => {
                             login();
                         }}
@@ -70,12 +73,7 @@ export const Login = ({navigation, route}: AuthNavProps<"Signup">) => {
                     />
                 </View>
             </View>
-            <View
-                style={{
-                    alignItems: "center",
-                    paddingBottom: 20,
-                }}
-            >
+            <View style={styles.switchLink}>
                 <TouchableOpacity
                     onPress={() => {
                         navigation.navigate("Signup");

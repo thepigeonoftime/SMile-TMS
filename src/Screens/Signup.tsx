@@ -17,7 +17,10 @@ export const Signup = ({navigation, route}: AuthNavProps<"Signup">) => {
             scrollEnabled={false}
             enableOnAndroid={true}
         >
-            <ImageBackground source={require("../../assets/signupbg.png")} style={styles.image}>
+            <ImageBackground
+                source={require("../../assets/signupbg.png")}
+                style={styles.headerImage}
+            >
                 <View style={[styles.header]}>
                     <View style={styles.textWrapper}>
                         <Text style={styles.signupHeaderText}>Jetzt</Text>
@@ -76,12 +79,7 @@ export const Signup = ({navigation, route}: AuthNavProps<"Signup">) => {
                     />
                 </View>
             </View>
-            <View
-                style={{
-                    alignItems: "center",
-                    paddingBottom: 20,
-                }}
-            >
+            <View style={styles.switchLink}>
                 <TouchableOpacity
                     onPress={() => {
                         navigation.navigate("Login");

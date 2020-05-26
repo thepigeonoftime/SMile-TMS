@@ -1,17 +1,18 @@
 import {StyleSheet} from "react-native";
-import {useFonts} from "@use-expo/font";
-/* tslint:disable:no-unused-styles */
 
+/* tslint:disable:no-unused-styles */
 export const styles = StyleSheet.create({
     container: {
-        // flex: 1,
+        flex: 1,
         backgroundColor: "#FFF",
         minHeight: "100%",
     },
+    headerImage: {
+        flex: 1.2,
+    },
     header: {
-        paddingHorizontal: "15%",
-        paddingTop: "15%",
-        paddingBottom: "30%",
+        flex: 0.95,
+        paddingHorizontal: "12%",
     },
     loginHeaderText: {
         fontWeight: "bold",
@@ -31,24 +32,26 @@ export const styles = StyleSheet.create({
     signupHeaderSubText: {
         color: "#FFF",
         fontSize: 16,
-        marginBottom: 10,
+        marginBottom: "10%",
     },
-    textWrapper: {},
-    image: {},
+    textWrapper: {
+        flex: 1,
+        justifyContent: "center",
+    },
     contentWrap: {
-        // flex: 1,
+        flex: 2,
         justifyContent: "center",
         alignItems: "center",
         borderTopLeftRadius: 40,
         borderTopRightRadius: 40,
         backgroundColor: "#fff",
-        top: "-13%",
+        top: "-5%",
         paddingHorizontal: "10%",
     },
     inputHeader: {
         fontSize: 21,
         color: "#696d7d",
-        fontWeight: "bold",
+        fontWeight: "800",
         paddingTop: "10%",
     },
     inputWrap: {
@@ -61,8 +64,7 @@ export const styles = StyleSheet.create({
         paddingLeft: "5%",
     },
     lineWrap: {
-        flex: 1,
-        paddingTop: "1%",
+        top: "10%",
         flexDirection: "row",
         justifyContent: "flex-start",
         alignItems: "flex-end",
@@ -72,21 +74,24 @@ export const styles = StyleSheet.create({
         fontSize: 14,
     },
     buttonContainer: {
-        flex: 1,
+        flex: 0.5,
         alignItems: "center",
-        // top: "-5%",
-        marginTop: "-5%",
     },
     buttonWrap: {
-        width: "75%",
+        flex: 1,
+        justifyContent: "flex-start",
+        width: "70%",
     },
     button: {
         borderRadius: 40,
-        height: 40,
-        marginHorizontal: "5%",
+        height: 42,
     },
     buttonTitle: {
         fontWeight: "bold",
-        fontSize: 20,
+        fontSize: 22,
+    },
+    switchLink: {
+        alignItems: "center",
+        paddingBottom: 30,
     },
 });
