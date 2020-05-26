@@ -50,7 +50,8 @@ export const TourContext = React.createContext<{
 export const TourProvider = ({children}) => {
     const [tour, setTour] = useState(null);
     const [packets, setPackets] = useState(null);
-    const [offlinePackets, setOfflinePackets] = useState(null);
+    const [packetQueue, setPacketQueue] = useState(null);
+    const [deliveryQueue, setDeliveryQueue] = useState(null);
     const [error, setError] = useState(null);
     const [currentStop, setCurrentStop] = useState(1);
     const [currentPacket, setCurrentPacket] = useState(0);
@@ -60,28 +61,44 @@ export const TourProvider = ({children}) => {
     const [updatePacket] = useMutation(UPDATE_PACKET);
 
     const queuePacket = (signature, sscc, tourID, tourStop) => {
-        AsyncStorage.getItem("offlinePackets")
+        // queue unsuccesful packet update in asyncstorage
+        AsyncStorage.getItem("packetQueue")
             .then((current) => {
-                let offlineBuffer = current ? JSON.parse(current) : [];
-                offlineBuffer.push({signature, sscc, tourID, tourStop});
-                setOfflinePackets(offlineBuffer);
-                AsyncStorage.setItem("offlinePackets", JSON.stringify(offlineBuffer));
+                let packetBuffer = current ? JSON.parse(current) : [];
+                packetBuffer.push({signature, sscc, tourID, tourStop});
+                setPacketQueue(packetBuffer);
+                AsyncStorage.setItem("packetQueue", JSON.stringify(packetBuffer));
             })
             .catch((err) => {
                 console.log(err);
             });
     };
 
-    const runQueue = async () => {
-        console.log("run queue");
+    const queueDelivery = (sscc, deliveryDate) => {
+        // queue unsuccesful delivery report in asyncstorage
+        AsyncStorage.getItem("deliveryQueue")
+            .then((current) => {
+                let deliveryBuffer = current ? JSON.parse(current) : [];
+                deliveryBuffer.push({sscc, deliveryDate});
+                setDeliveryQueue(deliveryBuffer);
+                AsyncStorage.setItem("deliveryQueue", JSON.stringify(deliveryBuffer));
+            })
+            .catch((err) => {
+                console.log(err);
+            });
+    };
+
+    const runPacketQueue = async () => {
+        // resolve queued packet updates
+        console.log("run packet queue");
         let queueBuffer = [];
-        await AsyncStorage.getItem("offlinePackets").then(async (current) => {
+        await AsyncStorage.getItem("packetQueue").then(async (current) => {
             const currentQueue = current && current.length ? JSON.parse(current) : null;
             await Promise.all(
                 currentQueue.map(async (queuePacket) => {
                     await updatePacket(
                         structurePacketData(
-                            queuePacket.signature,
+                            "queuePacket.signature",
                             queuePacket.sscc,
                             queuePacket.tourID,
                             queuePacket.tourStop
@@ -107,36 +124,85 @@ export const TourProvider = ({children}) => {
             );
         });
         console.log("resulting queue packets: " + queueBuffer.length);
-        AsyncStorage.setItem("offlinePackets", JSON.stringify(queueBuffer));
+        AsyncStorage.setItem("packetQueue", JSON.stringify(queueBuffer));
+    };
+
+    const runDeliveryQueue = async () => {
+        // resolve queued delivery reports
+        console.log("run delivery queue");
+        let queueBuffer = [];
+        await AsyncStorage.getItem("deliveryQueue").then(async (current) => {
+            const currentQueue = current && current.length ? JSON.parse(current) : null;
+            await Promise.all(
+                currentQueue.map(async (queueDelivery) => {
+                    await postDelivery(queueDelivery.sscc, queueDelivery.deliveryDate)
+                        .then((result) => {
+                            console.log(result);
+                            console.log("packet resolved, not requeueing");
+                        })
+                        .catch((err) => {
+                            console.log("request error:", err);
+                            console.log("re-queuing delivery");
+                            queueBuffer.push(queueDelivery);
+                        });
+                })
+            );
+        });
+        console.log("resulting queue deliveries: " + queueBuffer.length);
+        AsyncStorage.setItem("deliveryQueue", JSON.stringify(queueBuffer));
     };
 
     useEffect(() => {
-        // reload offlinePackets into state
-        if (!offlinePackets) {
-            AsyncStorage.getItem("offlinePackets")
+        if (!packetQueue) {
+            // reload packetQueue into state
+            AsyncStorage.getItem("packetQueue")
                 .then((current) => JSON.parse(current))
                 .then((currentPackets) => {
                     if (currentPackets && currentPackets.length) {
-                        console.log("current queue length:", currentPackets.length);
-                        setOfflinePackets(currentPackets);
+                        console.log("current packetQueue length:", currentPackets.length);
+                        setPacketQueue(currentPackets);
                     }
                 })
                 .catch((err) => {
                     console.log(err);
                 });
         }
-        if (offlinePackets) {
-            // add eventListener when packets are queued
+        if (!deliveryQueue) {
+            // reload deliveryQueue into state
+            AsyncStorage.getItem("deliveryQueue")
+                .then((current) => JSON.parse(current))
+                .then((currentDeliveries) => {
+                    if (currentDeliveries && currentDeliveries.length) {
+                        console.log("current deliveryQueue length:", currentDeliveries.length);
+                        setDeliveryQueue(currentDeliveries);
+                    }
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
+        }
+        if (packetQueue || deliveryQueue) {
+            // add eventListener when packet updates or delivery reports are queued
             NetInfo.addEventListener((state) => {
                 // console.log("Connection type", state.type);
                 console.log("is connected?", state.isConnected);
-                console.log("queue packets:", offlinePackets.length);
-                if (state.isConnected && offlinePackets && offlinePackets.length) {
-                    runQueue();
+                packetQueue &&
+                    packetQueue.length &&
+                    console.log("queue packets:", packetQueue.length);
+                deliveryQueue &&
+                    deliveryQueue.length &&
+                    console.log("queue deliveries:", deliveryQueue.length);
+                if (state.isConnected) {
+                    if (packetQueue && packetQueue.length) {
+                        runPacketQueue();
+                    }
+                    if (deliveryQueue && deliveryQueue.length) {
+                        runDeliveryQueue();
+                    }
                 }
             });
         }
-    }, [offlinePackets]);
+    }, [packetQueue, deliveryQueue]);
 
     return (
         <TourContext.Provider
@@ -175,6 +241,7 @@ export const TourProvider = ({children}) => {
                     setCurrentPacket(currentPacket + 1);
                 },
                 resetTour: (navigation) => {
+                    // reset navigation
                     navigation.dispatch(
                         CommonActions.reset({
                             index: 0,
@@ -182,17 +249,24 @@ export const TourProvider = ({children}) => {
                             routes: [{name: "TourSuche"}],
                         })
                     );
+                    // reset tour parameters
                     setCurrentStop(1);
                     setCurrentPacket(0);
                     setTour(null);
                     AsyncStorage.removeItem("tour");
                 },
                 reportDelivery: (sscc, deliveryDate) => {
+                    // reportDelivery REST post request
                     postDelivery(sscc, deliveryDate)
                         .then((result) => console.log(result))
-                        .catch((err) => console.log(err));
+                        .catch((err) => {
+                            console.log("request error:", err);
+                            console.log("queuing delivery report");
+                            queueDelivery(sscc, deliveryDate);
+                        });
                 },
                 deliverPacket: (signature, sscc, tourID, tourStop) => {
+                    // updatePacket graphql mutation
                     updatePacket(structurePacketData(signature, sscc, tourID, tourStop))
                         .then(({data, errors}) => {
                             if (errors && errors[0]) {
