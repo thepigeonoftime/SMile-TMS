@@ -52,9 +52,9 @@ export const TourStack = ({navigation, route}) => {
     if (loading) {
         return (
             <ImageBackground source={require("../assets/splash.png")} style={{flex: 1}}>
-                <Center>
+                {/* <Center>
                     <ActivityIndicator size="small" color="#FFF" />
-                </Center>
+                </Center> */}
             </ImageBackground>
         );
     }

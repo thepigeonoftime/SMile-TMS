@@ -1,6 +1,6 @@
 import Axios from "axios";
 import React, {useContext, useState} from "react";
-import {Text, TouchableOpacity, View, StyleSheet, Animated} from "react-native";
+import {Text, TouchableOpacity, View, StyleSheet, Animated, ImageBackground} from "react-native";
 import {Button} from "react-native-elements";
 import {AuthContext} from "../AuthProvider";
 import {Header} from "../Header";
@@ -44,78 +44,80 @@ export const TourSuche = ({navigation}) => {
 
     return (
         <View style={styles.container}>
-            <TouchableOpacity onPress={() => setShowError(false)}>
-                <Animated.View
+            <ImageBackground source={require("../../assets/splash.png")} style={{flex: 1}}>
+                <TouchableOpacity onPress={() => setShowError(false)}>
+                    <Animated.View
+                        style={{
+                            height: aHeight,
+                            backgroundColor: "#fb9f54",
+                            flexDirection: "row",
+                            justifyContent: "space-between",
+                            alignItems: "center",
+                            paddingHorizontal: 20,
+                        }}
+                    >
+                        <Text style={{color: "#fff", paddingTop: 10}}>
+                            Probleme beim Laden der Tour. Bitte erneut versuchen.
+                        </Text>
+                        <IconClose width={15} height={15} fill="#FFF" />
+                    </Animated.View>
+                </TouchableOpacity>
+                <View
                     style={{
-                        height: aHeight,
-                        backgroundColor: "#fb9f54",
+                        top: 30,
+                        zIndex: 10,
                         flexDirection: "row",
                         justifyContent: "space-between",
-                        alignItems: "center",
-                        paddingHorizontal: 20,
+                        paddingHorizontal: 10,
                     }}
                 >
-                    <Text style={{color: "#fff", paddingTop: 10}}>
-                        Probleme beim Laden der Tour. Bitte erneut versuchen.
-                    </Text>
-                    <IconClose width={15} height={15} fill="#FFF" />
-                </Animated.View>
-            </TouchableOpacity>
-            <View
-                style={{
-                    top: 30,
-                    zIndex: 10,
-                    flexDirection: "row",
-                    justifyContent: "space-between",
-                    paddingHorizontal: 10,
-                }}
-            >
-                <TouchableOpacity
-                    onPress={() => {
-                        unregister();
-                        navigation.navigate("Settings");
-                    }}
-                >
-                    <Text>unregister</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                    onPress={() => {
-                        logout();
-                    }}
-                >
-                    <Text>logout</Text>
-                </TouchableOpacity>
-            </View>
-            <View>
-                <Header
-                    text="Suche jetzt"
-                    color="#FFF"
-                    bgColor="transparent"
-                    subText="nach einer vefügbaren Route!"
-                />
-            </View>
-            <View style={styles.buttonWrap}>
-                <Button
-                    buttonStyle={styles.saveButton}
-                    titleStyle={styles.saveButtonTitle}
-                    disabledStyle={styles.saveButtonDisabled}
-                    disabled={sucheDisabled}
-                    title="Suche starten"
-                    onPress={getTour}
-                />
-                <Button
-                    buttonStyle={styles.saveButton}
-                    titleStyle={styles.saveButtonTitle}
-                    disabledStyle={styles.saveButtonDisabled}
-                    disabledTitleStyle={styles.saveButtonTitleDisabled}
-                    disabled={!sucheDisabled}
-                    title="abbrechen"
-                    onPress={() => {
-                        setSucheDisabled(false);
-                        setShowError(false);
-                    }}
-                />
-            </View>
+                    <TouchableOpacity
+                        onPress={() => {
+                            unregister();
+                            navigation.navigate("Settings");
+                        }}
+                    >
+                        <Text>unregister</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                        onPress={() => {
+                            logout();
+                        }}
+                    >
+                        <Text>logout</Text>
+                    </TouchableOpacity>
+                </View>
+                <View>
+                    <Header
+                        text="Suche jetzt"
+                        color="#FFF"
+                        bgColor="transparent"
+                        subText="nach einer vefügbaren Route!"
+                    />
+                </View>
+                <View style={styles.buttonWrap}>
+                    <Button
+                        buttonStyle={styles.saveButton}
+                        titleStyle={styles.saveButtonTitle}
+                        disabledStyle={styles.saveButtonDisabled}
+                        disabled={sucheDisabled}
+                        title="Suche starten"
+                        onPress={getTour}
+                    />
+                    <Button
+                        buttonStyle={styles.saveButton}
+                        titleStyle={styles.saveButtonTitle}
+                        disabledStyle={styles.saveButtonDisabled}
+                        disabledTitleStyle={styles.saveButtonTitleDisabled}
+                        disabled={!sucheDisabled}
+                        title="abbrechen"
+                        onPress={() => {
+                            setSucheDisabled(false);
+                            setShowError(false);
+                        }}
+                    />
+                </View>
+            </ImageBackground>
         </View>
     );
 };
