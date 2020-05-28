@@ -1,11 +1,20 @@
 import {AntDesign} from "@expo/vector-icons";
-import React from "react";
+import React, {useContext, useEffect} from "react";
 import {StyleSheet, Text, TouchableOpacity, View} from "react-native";
 import QRCode from "react-native-qrcode-svg";
 import {Header} from "../Header";
+import {TourContext} from "../TourProvider";
 
 export const PaketeLaden = ({navigation}) => {
+    const {tour, reportPickup} = useContext(TourContext);
     let content = "smile QR Code test";
+
+    useEffect(() => {
+        tour.packets.map((packet) => {
+            reportPickup(packet.sscc, new Date().toJSON());
+        });
+    }, []);
+
     return (
         <View style={{flex: 1}}>
             <Header

@@ -6,8 +6,15 @@ import moment from "moment";
 import uuid from "uuid";
 
 export const fetchTour = () => {
-    // return axios.get("https://bpt-lab.org/smile/sphinx/getTours");
-    return axios.get("https://unsafe.run/getTours");
+    return axios.get("https://bpt-lab.org/smile/sphinx/getTours");
+    // return axios.get("https://unsafe.run/getTours");
+};
+
+export const postPickup = (sscc, pickDate) => {
+    return axios.post("https://bpt-lab.org/smile/caz/tms/pick-up-reported", {
+        sscc,
+        pickDate,
+    });
 };
 
 export const postDelivery = (sscc, receiveDate) => {

@@ -6,14 +6,9 @@ import Modal from "react-native-modal";
 import IconClose from "~/assets/svg/menu-icn_close.svg";
 
 export const PaketGeben = ({navigation}) => {
-    const {
-        tour,
-        packets,
-        currentStop,
-        showPaketGeben,
-        togglePaketGeben,
-        reportDelivery,
-    } = useContext(TourContext);
+    const {tour, currentStop, showPaketGeben, togglePaketGeben, reportDelivery} = useContext(
+        TourContext
+    );
 
     const onSubmit = () => {
         const timestamp = new Date().toJSON();

@@ -3,7 +3,7 @@ import NetInfo from "@react-native-community/netinfo";
 import {CommonActions} from "@react-navigation/native";
 import React, {useEffect, useState} from "react";
 import {AsyncStorage} from "react-native";
-import {postDelivery, structurePacketData, UPDATE_PACKET} from "./Requests";
+import {postDelivery, structurePacketData, UPDATE_PACKET, postPickup} from "./Requests";
 
 type tourType = any; // specify
 
@@ -23,6 +23,7 @@ export const TourContext = React.createContext<{
     setStop: (stop) => void;
     nextStop: () => void;
     resetTour: (navigation) => void;
+    reportPickup: (sscc, pickDate) => void;
     reportDelivery: (sscc, deliveryDate) => void;
     deliverPacket: (signature, sscc, tourID, tourStop) => void;
 }>({
@@ -41,14 +42,16 @@ export const TourContext = React.createContext<{
     setStop: () => {},
     nextStop: () => {},
     resetTour: () => {},
+    reportPickup: (sscc, pickDate) => {},
     reportDelivery: () => {},
     deliverPacket: () => {},
 });
 
 export const TourProvider = ({children}) => {
     const [tour, setTour] = useState(null);
-    const [packetQueue, setPacketQueue] = useState(0);
+    const [pickupQueue, setPickupQueue] = useState(0);
     const [deliveryQueue, setDeliveryQueue] = useState(0);
+    const [packetQueue, setPacketQueue] = useState(0);
     const [isOnline, setIsOnline] = useState(false);
     const [error, setError] = useState(null);
     const [currentStop, setCurrentStop] = useState(1);
@@ -57,8 +60,36 @@ export const TourProvider = ({children}) => {
     const [showPaketGeben, setShowPaketGeben] = useState(false);
     const [updatePacket] = useMutation(UPDATE_PACKET);
 
+    const queuePickup = (sscc, pickDate) => {
+        // queue unsuccesful pickup report into asyncstorage
+        AsyncStorage.getItem("pickupQueue")
+            .then((current) => {
+                let pickupBuffer = current ? JSON.parse(current) : [];
+                pickupBuffer.push({sscc, pickDate});
+                setPickupQueue(pickupBuffer.length);
+                AsyncStorage.setItem("pickupQueue", JSON.stringify(pickupBuffer));
+            })
+            .catch((err) => {
+                console.log(err);
+            });
+    };
+
+    const queueDelivery = (sscc, deliveryDate) => {
+        // queue unsuccesful delivery report into asyncstorage
+        AsyncStorage.getItem("deliveryQueue")
+            .then((current) => {
+                let deliveryBuffer = current ? JSON.parse(current) : [];
+                deliveryBuffer.push({sscc, deliveryDate});
+                setDeliveryQueue(deliveryBuffer.length);
+                AsyncStorage.setItem("deliveryQueue", JSON.stringify(deliveryBuffer));
+            })
+            .catch((err) => {
+                console.log(err);
+            });
+    };
+
     const queuePacket = (signature, sscc, tourID, tourStop) => {
-        // queue unsuccesful packet update in asyncstorage
+        // queue unsuccesful packet update into asyncstorage
         AsyncStorage.getItem("packetQueue")
             .then((current) => {
                 let packetBuffer = current ? JSON.parse(current) : [];
@@ -71,18 +102,60 @@ export const TourProvider = ({children}) => {
             });
     };
 
-    const queueDelivery = (sscc, deliveryDate) => {
-        // queue unsuccesful delivery report in asyncstorage
-        AsyncStorage.getItem("deliveryQueue")
-            .then((current) => {
-                let deliveryBuffer = current ? JSON.parse(current) : [];
-                deliveryBuffer.push({sscc, deliveryDate});
-                setDeliveryQueue(deliveryBuffer.length);
-                AsyncStorage.setItem("deliveryQueue", JSON.stringify(deliveryBuffer));
-            })
-            .catch((err) => {
-                console.log(err);
-            });
+    const runPickupQueue = async () => {
+        // resolve queued pickup reports
+        console.log("run pickup queue");
+        let queueBuffer = [];
+        await AsyncStorage.getItem("pickupQueue").then(async (current) => {
+            const currentQueue = current && current.length ? JSON.parse(current) : null;
+            await Promise.all(
+                currentQueue.map(async (queuePickup) => {
+                    await postPickup(queuePickup.sscc, queuePickup.pickDate)
+                        .then((result) => {
+                            console.log(result);
+                            console.log("pickup resolved, not requeueing");
+                        })
+                        .catch((err) => {
+                            console.log("request error:", err);
+                            console.log("re-queuing pickup");
+                            queueBuffer.push(queuePickup);
+                        });
+                })
+            );
+        });
+        console.log("resulting queue pickups: " + queueBuffer.length);
+        AsyncStorage.setItem("pickupQueue", JSON.stringify(queueBuffer));
+        //     .then(() =>
+        //     setPickupQueue(queueBuffer.length)
+        // );
+    };
+
+    const runDeliveryQueue = async () => {
+        // resolve queued delivery reports
+        console.log("run delivery queue");
+        let queueBuffer = [];
+        await AsyncStorage.getItem("deliveryQueue").then(async (current) => {
+            const currentQueue = current && current.length ? JSON.parse(current) : null;
+            await Promise.all(
+                currentQueue.map(async (queueDelivery) => {
+                    await postDelivery(queueDelivery.sscc, queueDelivery.deliveryDate)
+                        .then((result) => {
+                            console.log(result);
+                            console.log("delivery resolved, not requeueing");
+                        })
+                        .catch((err) => {
+                            console.log("request error:", err);
+                            console.log("re-queuing delivery");
+                            queueBuffer.push(queueDelivery);
+                        });
+                })
+            );
+        });
+        console.log("resulting queue deliveries: " + queueBuffer.length);
+        AsyncStorage.setItem("deliveryQueue", JSON.stringify(queueBuffer));
+        //     .then(() =>
+        //     setDeliveryQueue(queueBuffer.length)
+        // );
     };
 
     const runPacketQueue = async () => {
@@ -122,49 +195,34 @@ export const TourProvider = ({children}) => {
         });
         console.log("resulting queue packets: " + queueBuffer.length);
         AsyncStorage.setItem("packetQueue", JSON.stringify(queueBuffer));
-    };
-
-    const runDeliveryQueue = async () => {
-        // resolve queued delivery reports
-        console.log("run delivery queue");
-        let queueBuffer = [];
-        await AsyncStorage.getItem("deliveryQueue").then(async (current) => {
-            const currentQueue = current && current.length ? JSON.parse(current) : null;
-            await Promise.all(
-                currentQueue.map(async (queueDelivery) => {
-                    await postDelivery(queueDelivery.sscc, queueDelivery.deliveryDate)
-                        .then((result) => {
-                            console.log(result);
-                            console.log("delivery resolved, not requeueing");
-                        })
-                        .catch((err) => {
-                            console.log("request error:", err);
-                            console.log("re-queuing delivery");
-                            queueBuffer.push(queueDelivery);
-                        });
-                })
-            );
-        });
-        console.log("resulting queue deliveries: " + queueBuffer.length);
-        AsyncStorage.setItem("deliveryQueue", JSON.stringify(queueBuffer));
+        //     .then(() =>
+        //     setPacketQueue(queueBuffer.length)
+        // );
     };
 
     useEffect(() => {
         (async () => {
-            // reload packetQueue into state
-            await AsyncStorage.multiGet(["packetQueue", "deliveryQueue"])
+            // reload offline queues into state
+            await AsyncStorage.multiGet(["pickupQueue", "deliveryQueue", "packetQueue"])
                 .then((queueObject) => {
                     console.log("queue load");
                     if (queueObject) {
-                        const storedPackets = JSON.parse(queueObject[0][1]);
+                        // error handling
+                        const storedPickups = JSON.parse(queueObject[0][1]);
                         const storedDeliveries = JSON.parse(queueObject[1][1]);
-                        if (storedPackets && storedPackets.length) {
-                            console.log("current packetQueue length:", storedPackets.length);
-                            setPacketQueue(storedPackets.length);
+                        const storedPackets = JSON.parse(queueObject[2][1]);
+
+                        if (storedPickups && storedPickups.length) {
+                            console.log("current pickupQueue length:", storedPickups.length);
+                            setPickupQueue(storedPickups.length);
                         }
                         if (storedDeliveries && storedDeliveries.length) {
                             console.log("current deliveryQueue length:", storedDeliveries.length);
                             setDeliveryQueue(storedDeliveries.length);
+                        }
+                        if (storedPackets && storedPackets.length) {
+                            console.log("current packetQueue length:", storedPackets.length);
+                            setPacketQueue(storedPackets.length);
                         }
                     }
                 })
@@ -182,14 +240,11 @@ export const TourProvider = ({children}) => {
         // run offline queues when packetQueue, deliveryQueue or isOnline state changes
         console.log("is online:", isOnline);
         if (isOnline) {
-            if (packetQueue) {
-                runPacketQueue();
-            }
-            if (deliveryQueue) {
-                runDeliveryQueue();
-            }
+            pickupQueue && runPickupQueue();
+            deliveryQueue && runDeliveryQueue();
+            packetQueue && runPacketQueue();
         }
-    }, [packetQueue, deliveryQueue, isOnline]);
+    }, [pickupQueue, deliveryQueue, packetQueue, isOnline]);
 
     return (
         <TourContext.Provider
@@ -206,6 +261,7 @@ export const TourProvider = ({children}) => {
                 setTour: (tour) => {
                     setTour(tour.tours[0]); // change name
                     AsyncStorage.setItem("tour", JSON.stringify(tour));
+                    // setCurrentStop(1);
                 },
                 removeTour: () => {
                     setTour(null);
@@ -224,6 +280,7 @@ export const TourProvider = ({children}) => {
                     setCurrentStop(1);
                     setTour(null);
                     AsyncStorage.removeItem("tour");
+                    AsyncStorage.removeItem("currentStop");
                 },
                 setStop: (stop) => {
                     console.log("setting current stop:", stop);
@@ -242,6 +299,15 @@ export const TourProvider = ({children}) => {
                 },
                 togglePaketGeben: () => {
                     setShowPaketGeben(!showPaketGeben);
+                },
+                reportPickup: (sscc, pickDate) => {
+                    postPickup(sscc, pickDate)
+                        .then((result) => console.log(result))
+                        .catch((err) => {
+                            console.log("request error:", err);
+                            console.log("queuing pickup report");
+                            queuePickup(sscc, pickDate);
+                        });
                 },
                 reportDelivery: (sscc, deliveryDate) => {
                     // reportDelivery REST post request
