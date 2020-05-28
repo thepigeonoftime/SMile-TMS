@@ -5,7 +5,7 @@ import React, {useEffect, useState} from "react";
 import {AsyncStorage} from "react-native";
 import {postDelivery, structurePacketData, UPDATE_PACKET} from "./Requests";
 
-type tourType = any;
+type tourType = any; // specify
 
 export const TourContext = React.createContext<{
     tour: tourType;
@@ -47,8 +47,9 @@ export const TourContext = React.createContext<{
 
 export const TourProvider = ({children}) => {
     const [tour, setTour] = useState(null);
-    const [packetQueue, setPacketQueue] = useState(null);
-    const [deliveryQueue, setDeliveryQueue] = useState(null);
+    const [packetQueue, setPacketQueue] = useState(0);
+    const [deliveryQueue, setDeliveryQueue] = useState(0);
+    const [isOnline, setIsOnline] = useState(false);
     const [error, setError] = useState(null);
     const [currentStop, setCurrentStop] = useState(1);
     const [showTourListe, setShowTourListe] = useState(false);
@@ -62,7 +63,7 @@ export const TourProvider = ({children}) => {
             .then((current) => {
                 let packetBuffer = current ? JSON.parse(current) : [];
                 packetBuffer.push({signature, sscc, tourID, tourStop});
-                setPacketQueue(packetBuffer);
+                setPacketQueue(packetBuffer.length);
                 AsyncStorage.setItem("packetQueue", JSON.stringify(packetBuffer));
             })
             .catch((err) => {
@@ -76,7 +77,7 @@ export const TourProvider = ({children}) => {
             .then((current) => {
                 let deliveryBuffer = current ? JSON.parse(current) : [];
                 deliveryBuffer.push({sscc, deliveryDate});
-                setDeliveryQueue(deliveryBuffer);
+                setDeliveryQueue(deliveryBuffer.length);
                 AsyncStorage.setItem("deliveryQueue", JSON.stringify(deliveryBuffer));
             })
             .catch((err) => {
@@ -134,7 +135,7 @@ export const TourProvider = ({children}) => {
                     await postDelivery(queueDelivery.sscc, queueDelivery.deliveryDate)
                         .then((result) => {
                             console.log(result);
-                            console.log("packet resolved, not requeueing");
+                            console.log("delivery resolved, not requeueing");
                         })
                         .catch((err) => {
                             console.log("request error:", err);
@@ -149,56 +150,46 @@ export const TourProvider = ({children}) => {
     };
 
     useEffect(() => {
-        if (!packetQueue) {
+        (async () => {
             // reload packetQueue into state
-            AsyncStorage.getItem("packetQueue")
-                .then((current) => JSON.parse(current))
-                .then((currentPackets) => {
-                    if (currentPackets && currentPackets.length) {
-                        console.log("current packetQueue length:", currentPackets.length);
-                        setPacketQueue(currentPackets);
+            await AsyncStorage.multiGet(["packetQueue", "deliveryQueue"])
+                .then((queueObject) => {
+                    console.log("queue load");
+                    if (queueObject) {
+                        const storedPackets = JSON.parse(queueObject[0][1]);
+                        const storedDeliveries = JSON.parse(queueObject[1][1]);
+                        if (storedPackets && storedPackets.length) {
+                            console.log("current packetQueue length:", storedPackets.length);
+                            setPacketQueue(storedPackets.length);
+                        }
+                        if (storedDeliveries && storedDeliveries.length) {
+                            console.log("current deliveryQueue length:", storedDeliveries.length);
+                            setDeliveryQueue(storedDeliveries.length);
+                        }
                     }
                 })
                 .catch((err) => {
                     console.log(err);
                 });
-        }
-        if (!deliveryQueue) {
-            // reload deliveryQueue into state
-            AsyncStorage.getItem("deliveryQueue")
-                .then((current) => JSON.parse(current))
-                .then((currentDeliveries) => {
-                    if (currentDeliveries && currentDeliveries.length) {
-                        console.log("current deliveryQueue length:", currentDeliveries.length);
-                        setDeliveryQueue(currentDeliveries);
-                    }
-                })
-                .catch((err) => {
-                    console.log(err);
-                });
-        }
-        if (packetQueue || deliveryQueue) {
-            // add eventListener when packet updates or delivery reports are queued
+            // add connection state event listener
             NetInfo.addEventListener((state) => {
-                // console.log("Connection type", state.type);
-                console.log("is connected?", state.isConnected);
-                packetQueue &&
-                    packetQueue.length &&
-                    console.log("queue packets:", packetQueue.length);
-                deliveryQueue &&
-                    deliveryQueue.length &&
-                    console.log("queue deliveries:", deliveryQueue.length);
-                if (state.isConnected) {
-                    if (packetQueue && packetQueue.length) {
-                        runPacketQueue();
-                    }
-                    if (deliveryQueue && deliveryQueue.length) {
-                        runDeliveryQueue();
-                    }
-                }
+                setIsOnline(state.isConnected ? true : false);
             });
+        })();
+    }, []);
+
+    useEffect(() => {
+        // run offline queues when packetQueue, deliveryQueue or isOnline state changes
+        console.log("is online:", isOnline);
+        if (isOnline) {
+            if (packetQueue) {
+                runPacketQueue();
+            }
+            if (deliveryQueue) {
+                runDeliveryQueue();
+            }
         }
-    }, [packetQueue, deliveryQueue]);
+    }, [packetQueue, deliveryQueue, isOnline]);
 
     return (
         <TourContext.Provider
