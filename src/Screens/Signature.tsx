@@ -12,9 +12,7 @@ import {TourSuche} from "./TourSuche";
 
 export const Signature = ({navigation}) => {
     console.disableYellowBox = true;
-    const {tour, currentStop, currentPacket, nextStop, resetTour, deliverPacket} = useContext(
-        TourContext
-    );
+    const {tour, currentStop, nextStop, resetTour, deliverPacket} = useContext(TourContext);
     const [dynStyles, setDynStyles] = useState<any>(portrait);
     let signatureRef = useRef(null);
     useEffect(() => {
@@ -40,7 +38,7 @@ export const Signature = ({navigation}) => {
         });
         deliverPacket(
             signature,
-            tour.packets[currentPacket].sscc,
+            tour.packets[currentStop - 1].sscc,
             tour.tourMetaData.tourID,
             currentStop
         );

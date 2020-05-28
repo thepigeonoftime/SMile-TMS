@@ -17,9 +17,11 @@ import {ActivityIndicator} from "react-native-paper";
 const Stack = createStackNavigator<TourStackProps>();
 
 export const TourStack = ({navigation, route}) => {
-    const {tour, setTour} = useContext(TourContext);
+    const {tour, setTour, setStop} = useContext(TourContext);
     const [loading, setLoading] = useState(true);
-    const [initialRoute, setInitialRoute] = useState<"TourSuche" | "TourStart">("TourSuche");
+    const [initialRoute, setInitialRoute] = useState<"TourSuche" | "TourStart" | "Ziel">(
+        "TourSuche"
+    );
 
     useEffect(() => {
         const routeName = route.state ? route.state.routes[route.state.index].name : "";
@@ -31,12 +33,16 @@ export const TourStack = ({navigation, route}) => {
 
     useEffect(() => {
         if (!tour) {
-            AsyncStorage.getItem("tour")
+            AsyncStorage.multiGet(["tour", "currentStop"])
                 .then((tourObject) => {
                     console.log("tour load");
                     if (tourObject) {
-                        setTour(JSON.parse(tourObject));
-                        setInitialRoute("TourStart");
+                        const [[, storedTour]] = tourObject;
+                        const [, [, storedStop]] = tourObject;
+                        storedTour &&
+                            (storedStop && setStop(storedStop),
+                            setTour(JSON.parse(storedTour)),
+                            setInitialRoute("Ziel"));
                     }
                     setLoading(false);
                 })

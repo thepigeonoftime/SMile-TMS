@@ -9,7 +9,6 @@ type tourType = any;
 
 export const TourContext = React.createContext<{
     tour: tourType;
-    packets: null | {};
     error: null | string;
     setTour: (tour: any) => void;
     removeTour: () => void;
@@ -21,14 +20,13 @@ export const TourContext = React.createContext<{
     showPaketGeben: boolean;
     togglePaketGeben: () => void;
     currentStop: number;
-    currentPacket: number;
+    setStop: (stop) => void;
     nextStop: () => void;
     resetTour: (navigation) => void;
     reportDelivery: (sscc, deliveryDate) => void;
     deliverPacket: (signature, sscc, tourID, tourStop) => void;
 }>({
     tour: null,
-    packets: null,
     error: null,
     setTour: () => {},
     removeTour: () => {},
@@ -40,21 +38,19 @@ export const TourContext = React.createContext<{
     showPaketGeben: false,
     togglePaketGeben: () => {},
     currentStop: 1,
-    currentPacket: 0,
+    setStop: () => {},
     nextStop: () => {},
-    resetTour: (navigation) => {},
-    reportDelivery: (sscc, deliveryDate) => {},
+    resetTour: () => {},
+    reportDelivery: () => {},
     deliverPacket: () => {},
 });
 
 export const TourProvider = ({children}) => {
     const [tour, setTour] = useState(null);
-    const [packets, setPackets] = useState(null);
     const [packetQueue, setPacketQueue] = useState(null);
     const [deliveryQueue, setDeliveryQueue] = useState(null);
     const [error, setError] = useState(null);
     const [currentStop, setCurrentStop] = useState(1);
-    const [currentPacket, setCurrentPacket] = useState(0);
     const [showTourListe, setShowTourListe] = useState(false);
     const [showNavigation, setShowNavigation] = useState(false);
     const [showPaketGeben, setShowPaketGeben] = useState(false);
@@ -208,37 +204,21 @@ export const TourProvider = ({children}) => {
         <TourContext.Provider
             value={{
                 tour,
-                packets,
                 error,
                 showNavigation,
                 showTourListe,
                 showPaketGeben,
                 currentStop,
-                currentPacket,
+                setError: (error) => {
+                    setError(error);
+                },
                 setTour: (tour) => {
                     setTour(tour.tours[0]); // change name
-                    setPackets(tour.tours[0].packets);
                     AsyncStorage.setItem("tour", JSON.stringify(tour));
                 },
                 removeTour: () => {
                     setTour(null);
                     AsyncStorage.removeItem("tour");
-                },
-                setError: (error) => {
-                    setError(error);
-                },
-                toggleNavigation: () => {
-                    setShowNavigation(!showNavigation);
-                },
-                toggleTourListe: () => {
-                    setShowTourListe(!showTourListe);
-                },
-                togglePaketGeben: () => {
-                    setShowPaketGeben(!showPaketGeben);
-                },
-                nextStop: () => {
-                    setCurrentStop(currentStop + 1);
-                    setCurrentPacket(currentPacket + 1);
                 },
                 resetTour: (navigation) => {
                     // reset navigation
@@ -251,9 +231,26 @@ export const TourProvider = ({children}) => {
                     );
                     // reset tour parameters
                     setCurrentStop(1);
-                    setCurrentPacket(0);
                     setTour(null);
                     AsyncStorage.removeItem("tour");
+                },
+                setStop: (stop) => {
+                    console.log("setting current stop:", stop);
+                    setCurrentStop(parseInt(stop));
+                    AsyncStorage.setItem("currentStop", stop);
+                },
+                nextStop: () => {
+                    setCurrentStop(currentStop + 1);
+                    AsyncStorage.setItem("currentStop", String(currentStop + 1));
+                },
+                toggleNavigation: () => {
+                    setShowNavigation(!showNavigation);
+                },
+                toggleTourListe: () => {
+                    setShowTourListe(!showTourListe);
+                },
+                togglePaketGeben: () => {
+                    setShowPaketGeben(!showPaketGeben);
                 },
                 reportDelivery: (sscc, deliveryDate) => {
                     // reportDelivery REST post request

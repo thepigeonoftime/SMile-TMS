@@ -17,7 +17,7 @@ export const PaketGeben = ({navigation}) => {
 
     const onSubmit = () => {
         const timestamp = new Date().toJSON();
-        reportDelivery(packets[currentStop - 1].sscc, timestamp);
+        reportDelivery(tour.packets[currentStop - 1].sscc, timestamp);
         navigation.navigate("Authentifizierung");
         togglePaketGeben();
     };
