@@ -7,6 +7,7 @@ import {Navigation} from "./Navigation";
 import {PaketGeben} from "./PaketGeben";
 import {TourListe} from "./TourListe";
 import {TourSuche} from "./TourSuche";
+import {RFValue} from "react-native-responsive-fontsize";
 
 export const Ziel = ({navigation}) => {
     const {
@@ -137,7 +138,7 @@ const styles = StyleSheet.create({
     },
     buttonWhiteTitle: {
         color: "#3FA9F5",
-        fontSize: 22,
+        fontSize: RFValue(22),
         fontWeight: "600",
     },
     buttonBlue: {
@@ -151,7 +152,7 @@ const styles = StyleSheet.create({
     },
     buttonBlueTitle: {
         color: "#FFF",
-        fontSize: 22,
+        fontSize: RFValue(22),
         fontWeight: "600",
     },
     buttonGrey: {
@@ -167,7 +168,7 @@ const styles = StyleSheet.create({
     },
     buttonGreyTitle: {
         color: "#aaa",
-        fontSize: 22,
+        fontSize: RFValue(22),
         fontWeight: "600",
     },
     buttonDisabled: {
@@ -177,6 +178,6 @@ const styles = StyleSheet.create({
     },
     zielText: {
         color: "#666",
-        fontSize: 20,
+        fontSize: RFValue(20),
     },
 });

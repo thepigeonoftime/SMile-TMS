@@ -6,6 +6,11 @@ import PaketIcon from "~/assets/svg/icn-mini_collie-no.svg";
 import StopsIcon from "~/assets/svg/menu-icn_tour_stops.svg";
 import LaengeIcon from "~/assets/svg/icn-mini_tour-length.svg";
 import {Header} from "../Header";
+import {RFPercentage, RFValue} from "react-native-responsive-fontsize";
+import {
+    widthPercentageToDP as wp,
+    heightPercentageToDP as hp,
+} from "react-native-responsive-screen";
 
 interface IRoute {
     tour: {
@@ -206,23 +211,23 @@ const styles = StyleSheet.create({
     },
     depotHeader: {
         color: "#666",
-        fontSize: 22,
+        fontSize: RFValue(20),
         fontWeight: "bold",
         marginBottom: "3%",
     },
     depotText: {
         color: "#666",
-        fontSize: 20,
+        fontSize: RFValue(19),
     },
     tourLinkWrap: {
         flexDirection: "row",
         justifyContent: "space-between",
         alignItems: "stretch",
-        marginTop: 30,
+        marginTop: 20,
     },
     tourLink: {
         color: "#41A9F5",
-        fontSize: 20,
+        fontSize: RFValue(20),
         fontWeight: "bold",
     },
     iconWrap: {
@@ -232,7 +237,7 @@ const styles = StyleSheet.create({
         color: "#729628",
     },
     mFont: {
-        fontSize: 20,
+        fontSize: RFValue(20),
     },
     pLeft: {
         paddingLeft: 30,
