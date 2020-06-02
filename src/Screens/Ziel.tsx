@@ -30,7 +30,7 @@ export const Ziel = ({navigation}) => {
                     textStyle={{top: 30}}
                 />
                 <View style={styles.content}>
-                    <View style={{flex: 1, paddingLeft: "10%", paddingTop: "10%"}}>
+                    <View style={{flex: 1, paddingLeft: "10%", paddingTop: "7%"}}>
                         <Text style={[styles.zielText, {fontWeight: "bold"}]}>
                             {tour.stops[currentStop].firstName} {tour.stops[currentStop].lastName}
                         </Text>
@@ -46,7 +46,7 @@ export const Ziel = ({navigation}) => {
                     </View>
                     <View
                         style={{
-                            flex: 2.5,
+                            flex: 2.8,
                             justifyContent: "flex-start",
                             alignSelf: "center",
                             width: "80%",
@@ -126,7 +126,7 @@ const styles = StyleSheet.create({
     },
     buttonWhite: {
         backgroundColor: "#FFF",
-        height: 50,
+        height: 48,
         width: "100%",
         borderRadius: 30,
         alignItems: "center",
@@ -142,7 +142,7 @@ const styles = StyleSheet.create({
     },
     buttonBlue: {
         backgroundColor: "#3FA9F5",
-        height: 50,
+        height: 48,
         width: "100%",
         borderRadius: 30,
         alignItems: "center",
@@ -156,7 +156,7 @@ const styles = StyleSheet.create({
     },
     buttonGrey: {
         backgroundColor: "transparent",
-        height: 50,
+        height: 48,
         width: "100%",
         borderRadius: 30,
         alignItems: "center",
