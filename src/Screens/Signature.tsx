@@ -12,6 +12,7 @@ import {TourSuche} from "./TourSuche";
 
 export const Signature = ({navigation}) => {
     console.disableYellowBox = true;
+    console.ignoredYellowBox = ["Warning: Each", "Warning: Failed"];
     const {tour, currentStop, nextStop, resetTour, deliverPacket} = useContext(TourContext);
     const [dynStyles, setDynStyles] = useState<any>(portrait);
     let signatureRef = useRef(null);
@@ -22,10 +23,10 @@ export const Signature = ({navigation}) => {
     const detectOrientation = async () => {
         const {orientation} = await ScreenOrientation.getOrientationAsync();
         if (orientation === "PORTRAIT" || orientation === "PORTRAIT_UP") {
-            signatureRef.current.clear();
+            signatureRef.current && signatureRef.current.clear();
             setDynStyles(portrait);
         } else {
-            signatureRef.current.clear();
+            signatureRef.current && signatureRef.current.clear();
             setDynStyles(landscape);
         }
     };
