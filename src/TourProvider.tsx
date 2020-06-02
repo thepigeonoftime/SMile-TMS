@@ -302,7 +302,14 @@ export const TourProvider = ({children}) => {
                 },
                 reportPickup: (sscc, pickDate) => {
                     postPickup(sscc, pickDate)
-                        .then((result) => console.log(result))
+                        .then((result) =>
+                            console.log(
+                                "pickup reported | status:",
+                                result.status,
+                                "data:",
+                                result.data
+                            )
+                        )
                         .catch((err) => {
                             console.log("request error:", err);
                             console.log("queuing pickup report");
@@ -312,7 +319,15 @@ export const TourProvider = ({children}) => {
                 reportDelivery: (sscc, deliveryDate) => {
                     // reportDelivery REST post request
                     postDelivery(sscc, deliveryDate)
-                        .then((result) => console.log(result))
+                        .then((result) =>
+                            console.log(
+                                "delivery reported | status:",
+                                result.status,
+                                "data:",
+                                result.data
+                            )
+                        )
+
                         .catch((err) => {
                             console.log("request error:", err);
                             console.log("queuing delivery report");
@@ -328,7 +343,8 @@ export const TourProvider = ({children}) => {
                                 console.log("queuing packet");
                                 queuePacket(signature, sscc, tourID, tourStop);
                             } else {
-                                console.log("graphql success: ");
+                                console.log("graphql success | packet reported");
+                                console.log("data:");
                                 console.log(data);
                             }
                         })
