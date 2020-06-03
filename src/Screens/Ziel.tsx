@@ -89,7 +89,6 @@ export const Ziel = ({navigation}) => {
                                     navigation.navigate("Ziel");
                                 } else {
                                     resetTour(navigation);
-                                    navigation.navigate("TourSuche");
                                 }
                             }}
                         />
