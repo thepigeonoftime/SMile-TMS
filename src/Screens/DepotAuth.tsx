@@ -5,15 +5,9 @@ import QRCode from "react-native-qrcode-svg";
 import {Header} from "../Header";
 import {TourContext} from "../TourProvider";
 
-export const PaketeLaden = ({navigation}) => {
+export const DepotAuth = ({navigation}) => {
     const {tour, reportPickup} = useContext(TourContext);
-    let content = "smile QR Code test";
-
-    useEffect(() => {
-        tour.packets.map((packet) => {
-            reportPickup(packet.sscc, new Date().toJSON());
-        });
-    }, []);
+    let content = "Depot Authentifizierung";
 
     return (
         <View style={{flex: 1}}>
@@ -47,8 +41,8 @@ export const PaketeLaden = ({navigation}) => {
                     />
                 </View>
                 <View style={{flex: 1, alignItems: "center"}}>
-                    <TouchableOpacity onPress={() => navigation.navigate("Ziel")}>
-                        <Text style={{color: "#3FA9F5"}}>Nächstes Ziel</Text>
+                    <TouchableOpacity onPress={() => navigation.navigate("PaketeScannen")}>
+                        <Text style={{color: "#3FA9F5"}}>Pakete Scannen</Text>
                     </TouchableOpacity>
                 </View>
             </View>

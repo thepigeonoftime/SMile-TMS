@@ -3,7 +3,7 @@ import React, {useEffect, useContext, useState} from "react";
 import {Authentifizierung} from "./Screens/Authentifizierung";
 import {CodeScanner} from "./Screens/CodeScanner";
 import {Maps} from "./Screens/Maps";
-import {PaketeLaden} from "./Screens/PaketeLaden";
+import {DepotAuth} from "./Screens/DepotAuth";
 import {Signature} from "./Screens/Signature";
 import {TourStart} from "./Screens/TourStart";
 import {TourSuche} from "./Screens/TourSuche";
@@ -13,6 +13,7 @@ import {AsyncStorage, ImageBackground} from "react-native";
 import {TourContext} from "./TourProvider";
 import {Center} from "./Center";
 import {ActivityIndicator} from "react-native-paper";
+import {PaketeScannen} from "./Screens/PaketeScannen";
 
 const Stack = createStackNavigator<TourStackProps>();
 
@@ -70,7 +71,7 @@ export const TourStack = ({navigation, route}) => {
             <Stack.Screen name="TourSuche" component={TourSuche} options={{}} />
             <Stack.Screen name="TourStart" component={TourStart} options={{}} />
             <Stack.Screen name="Maps" component={Maps} options={{}} />
-            <Stack.Screen name="PaketeLaden" component={PaketeLaden} options={{}} />
+            <Stack.Screen name="DepotAuth" component={DepotAuth} options={{}} />
             <Stack.Screen name="Ziel" component={Ziel} options={{}} />
             <Stack.Screen name="Authentifizierung" component={Authentifizierung} options={{}} />
             <Stack.Screen name="CodeScanner" component={CodeScanner} options={{}} />
