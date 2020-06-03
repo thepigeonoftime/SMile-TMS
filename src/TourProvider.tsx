@@ -277,7 +277,7 @@ export const TourProvider = ({children}) => {
                         })
                     );
                     // reset tour parameters
-                    setCurrentStop(1);
+                    setCurrentStop(0);
                     setTour(null);
                     AsyncStorage.removeItem("tour");
                     AsyncStorage.removeItem("currentStop");
@@ -285,7 +285,7 @@ export const TourProvider = ({children}) => {
                 setStop: (stop) => {
                     console.log("setting current stop:", stop);
                     setCurrentStop(parseInt(stop));
-                    AsyncStorage.setItem("currentStop", stop);
+                    AsyncStorage.setItem("currentStop", String(stop));
                 },
                 nextStop: () => {
                     setCurrentStop(currentStop + 1);
