@@ -3189,6 +3189,14 @@ expo-barcode-scanner@~8.0.0:
     lodash "^4.6.0"
     prop-types "^15.6.0"
 
+expo-camera@~8.0.0:
+  version "8.0.0"
+  resolved "https://registry.yarnpkg.com/expo-camera/-/expo-camera-8.0.0.tgz#a0caee7baf1f2013203fe6a4635125ade12ec164"
+  integrity sha512-mtP4NV2R4e+JTXUZBiA0ok4xSzTfRLxirvqJ5T7kjyozuCWUJeOhGk3hqNsBbWhwXDA+hirAge7169UB3vKfDQ==
+  dependencies:
+    lodash "^4.6.0"
+    prop-types "^15.6.0"
+
 expo-constants@~8.0.0:
   version "8.0.0"
   resolved "https://registry.yarnpkg.com/expo-constants/-/expo-constants-8.0.0.tgz#e2c5a072dacb4263ccfc57dcb4835ca791960d48"
@@ -5742,6 +5750,11 @@ react-native-responsive-fontsize@^0.4.3:
   integrity sha512-Xsy2Rmx6F6RP1YOY56NdttC/NdpeA1wX+aabTLXjeKw2MF0NilL9Vsqx3mf/gR8/PbU/c/FQMpCV2Ogt8rHNGQ==
   dependencies:
     react-native-iphone-x-helper "^1.0.2"
+
+react-native-responsive-screen@^1.4.1:
+  version "1.4.1"
+  resolved "https://registry.yarnpkg.com/react-native-responsive-screen/-/react-native-responsive-screen-1.4.1.tgz#0270bc8f03a208b578299c1594495db69aff506b"
+  integrity sha512-WuMkVyCPeepzKQaT3N+mbUAvQLL0jGsBnGf6yDtA7vyA/sp1imXYVPYjCNMRaKV+PSM5GzEMXxl4Bj+tUpD2Tw==
 
 react-native-safe-area-context@^0.6.0:
   version "0.6.4"
