@@ -1,18 +1,10 @@
-import {AntDesign} from "@expo/vector-icons";
+import {BarCodeScanner} from "expo-barcode-scanner";
+import {Camera} from "expo-camera";
 import React, {useContext, useEffect, useState} from "react";
-import {StyleSheet, Text, TouchableOpacity, View, Dimensions} from "react-native";
-import QRCode from "react-native-qrcode-svg";
+import {Dimensions, StyleSheet, Text, TouchableOpacity, View} from "react-native";
+import {Button} from "react-native-elements";
 import {Header} from "../Header";
 import {TourContext} from "../TourProvider";
-import {BarCodeScanner} from "expo-barcode-scanner";
-import BarcodeMask from "react-native-barcode-mask";
-import {Button} from "react-native-elements";
-import Constants from "expo-constants";
-import {
-    widthPercentageToDP as wp,
-    heightPercentageToDP as hp,
-} from "react-native-responsive-screen";
-import {Camera} from "expo-camera";
 
 const {width} = Dimensions.get("window");
 const qrSize = width * 0.7;
@@ -37,7 +29,6 @@ export const PaketeScannen = ({navigation}) => {
 
     const handleBarCodeScanned = ({type, data}) => {
         const sscc = "urn:epc:id:sscc:" + data;
-        alert(sscc);
         packets.map((packet) => {
             console.log("packet:", packet);
             console.log("data:", sscc);
