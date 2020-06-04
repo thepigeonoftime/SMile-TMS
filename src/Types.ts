@@ -57,7 +57,8 @@ export type TourStackProps = {
     TourLogbuch: undefined;
     Settings: undefined;
     Maps: undefined;
-    PaketeLaden: undefined;
+    DepotAuth: undefined;
+    PaketeScannen: undefined;
     Ziel: undefined;
     Authentifizierung: undefined;
     CodeScanner: undefined;

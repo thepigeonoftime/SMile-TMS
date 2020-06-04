@@ -73,6 +73,7 @@ export const TourStack = ({navigation, route}) => {
             <Stack.Screen name="TourStart" component={TourStart} options={{}} />
             <Stack.Screen name="Maps" component={Maps} options={{}} />
             <Stack.Screen name="DepotAuth" component={DepotAuth} options={{}} />
+            <Stack.Screen name="PaketeScannen" component={PaketeScannen} options={{}} />
             <Stack.Screen name="Ziel" component={Ziel} options={{}} />
             <Stack.Screen name="Authentifizierung" component={Authentifizierung} options={{}} />
             <Stack.Screen name="CodeScanner" component={CodeScanner} options={{}} />
