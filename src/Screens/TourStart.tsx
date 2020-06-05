@@ -173,7 +173,7 @@ export const TourStart: React.FC<IRoute> = ({navigation}) => {
                             <View style={styles.tourLinkWrap}>
                                 <View>
                                     <TouchableOpacity
-                                        onPress={() => navigation.navigate("PaketeLaden")}
+                                        onPress={() => navigation.navigate("PaketeScannen")}
                                     >
                                         <Text style={[styles.tourLink]}>
                                             Pakete laden und Tour starten
