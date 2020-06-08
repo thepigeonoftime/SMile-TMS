@@ -55,7 +55,7 @@ export const TourStack = ({navigation, route}) => {
         } else {
             setLoading(false);
         }
-    }, [tour]);
+    }, []);
 
     if (loading) {
         return (
