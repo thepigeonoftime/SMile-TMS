@@ -1,10 +1,12 @@
 import {BarCodeScanner} from "expo-barcode-scanner";
 import {Camera} from "expo-camera";
 import React, {useContext, useEffect, useState} from "react";
-import {Dimensions, StyleSheet, Text, TouchableOpacity, View} from "react-native";
+import {Dimensions, StyleSheet, Text, TouchableOpacity, View, Animated, Easing} from "react-native";
 import {Button} from "react-native-elements";
 import {Header} from "../Header";
 import {TourContext} from "../TourProvider";
+import {useAnimation} from "react-native-animation-hooks";
+import BarcodeMask from "react-native-barcode-mask";
 
 export const PaketeScannen = ({navigation}) => {
     const {tour, reportPickup, setStop} = useContext(TourContext);
@@ -15,10 +17,20 @@ export const PaketeScannen = ({navigation}) => {
     const [loading, setLoading] = useState(true);
     const [packets, setPackets] = useState([]);
     const [packetLen, setPacketLen] = useState(0);
+    const [scanColor, setScanColor] = useState("255,255,255");
+    const [fadeColor, setFadeColor] = useState(false);
+    const [animatedOpacity, setAnimatedOpacity] = useState(new Animated.Value(0));
 
     const tourPackets = tour.packets.map((packet) => {
         return packet.sscc;
     });
+
+    // const aOpacity = useAnimation({
+    //     type: "timing",
+    //     initialValue: 1,
+    //     toValue: 0,
+    //     duration: 1500,
+    // });
 
     useEffect(() => {
         (async () => {
@@ -28,7 +40,9 @@ export const PaketeScannen = ({navigation}) => {
 
         setPackets(tourPackets);
         setPacketLen(tourPackets.length);
-        setLoading(false);
+        setTimeout(() => {
+            setLoading(false);
+        }, 100);
     }, []);
 
     const showScanMsg = (msg) => {
@@ -38,7 +52,20 @@ export const PaketeScannen = ({navigation}) => {
         }, 5000);
     };
 
+    const showScanColor = (color) => {
+        animatedOpacity.setValue(0);
+        setScanColor(color);
+        Animated.timing(animatedOpacity, {
+            toValue: 1,
+            duration: 1500,
+            easing: Easing.linear,
+        }).start(() => {
+            // animatedOpacity.setValue(0);
+        });
+    };
+
     const handleBarCodeScanned = ({type, data}) => {
+        console.log("barcode type:", type);
         const sscc = "urn:epc:id:sscc:" + data;
         console.log(packets);
         let packetBuffer = [];
@@ -46,20 +73,22 @@ export const PaketeScannen = ({navigation}) => {
             if (sscc === packet) {
                 setScannedPackets(scannedPackets + 1);
                 reportPickup(packet.sscc, new Date().toJSON());
+                showScanColor("0,255,0");
             } else {
                 packetBuffer.push(packet);
             }
         });
-        setPackets(packetBuffer);
         if (!tourPackets.includes(sscc)) {
+            showScanColor("255,0,0");
             showScanMsg("Unbekanntes Paket oder Code!");
         }
         // else {
         //     showScanMsg("Paket bereits gescannt!");
         // }
-        if (!packets.length) {
+        if (!packetBuffer.length) {
             setFinished(true);
         }
+        setPackets(packetBuffer);
     };
 
     const onSubmit = () => {
@@ -93,7 +122,17 @@ export const PaketeScannen = ({navigation}) => {
                 <View style={{alignItems: "center"}}>
                     <Text>{scanMsg}</Text>
                 </View>
-                <View style={styles.scannerContainer}>
+                <Animated.View
+                    style={[
+                        styles.scannerContainer,
+                        {
+                            borderColor: animatedOpacity.interpolate({
+                                inputRange: [0, 1],
+                                outputRange: [`rgba( ${scanColor}, 1)`, `rgba(255,255,255, 1)`],
+                            }),
+                        },
+                    ]}
+                >
                     {!loading && (
                         <Camera
                             style={styles.scanner}
@@ -101,9 +140,16 @@ export const PaketeScannen = ({navigation}) => {
                             onBarCodeScanned={handleBarCodeScanned}
                             autoFocus={"on"}
                             ratio="16:9"
-                        />
+                        >
+                            <BarcodeMask
+                                edgeBorderWidth={0}
+                                width="100%"
+                                height="82%"
+                                backgroundColor="transparent"
+                            />
+                        </Camera>
                     )}
-                </View>
+                </Animated.View>
                 <View style={{justifyContent: "center", alignItems: "center"}}>
                     <Text>
                         {scannedPackets} von {packetLen} Paketen gescannt
@@ -146,10 +192,10 @@ const styles = StyleSheet.create({
         alignItems: "center",
         borderRadius: 30,
         overflow: "hidden",
-        width: "90%",
+        width: "95%",
         height: "50%",
         marginTop: "10%",
-        borderWidth: 5,
+        borderWidth: 10,
     },
     scanner: {
         justifyContent: "center",
