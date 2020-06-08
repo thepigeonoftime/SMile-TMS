@@ -6,8 +6,8 @@ import moment from "moment";
 import uuid from "uuid";
 
 export const fetchTour = () => {
-    return axios.get("https://bpt-lab.org/smile/sphinx/getTours");
-    // return axios.get("https://unsafe.run/getTours");
+    // return axios.get("https://bpt-lab.org/smile/sphinx/getTours");
+    return axios.get("https://unsafe.run/getTours");
 };
 
 export const postPickup = (sscc, pickDate) => {
@@ -77,6 +77,7 @@ export const CREATE_DELIVERER = gql`
             wishTimeframes {
                 day
                 startTime
+                endTime
             }
             id
         }
@@ -176,8 +177,8 @@ export const structureRegData = (
                 tmsCarrierId: "0",
                 vehicleType: dataFahrzeug.fahrzeugArt,
                 wishTimeframes: [
-                    {day: "MONDAY", startTime: 1},
-                    {day: "TUESDAY", startTime: 1},
+                    {day: "MONDAY", startTime: 12, endTime: 18},
+                    {day: "TUESDAY", startTime: 12, endTime: 18},
                 ],
             },
         };
