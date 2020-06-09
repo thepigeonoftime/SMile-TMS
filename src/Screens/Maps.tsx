@@ -7,6 +7,8 @@ import MapView, {Marker, PROVIDER_GOOGLE} from "react-native-maps";
 import MapViewDirections from "react-native-maps-directions";
 import {Header} from "../Header";
 import {TourContext} from "../TourProvider";
+import * as Location from "expo-location";
+import {lockAsync} from "expo/build/ScreenOrientation/ScreenOrientation";
 
 export const Maps = ({navigation}) => {
     const {tour} = useContext(TourContext);
@@ -19,7 +21,9 @@ export const Maps = ({navigation}) => {
     });
     const [origin, setOrigin] = useState(null);
     const [waypoints, setWaypoints] = useState([]);
+    const [deliveryStops, setDeliveryStops] = useState([]);
     const [destination, setDestination] = useState(null);
+    const [depot, setDepot] = useState(null);
     const {width, height} = Dimensions.get("window");
     // const ASPECT_RATIO = width / height;
     const DIRECTIONS_APIKEY = Constants.manifest.extra.credentials.directionsApiKey;
@@ -50,22 +54,40 @@ export const Maps = ({navigation}) => {
         );
         return {
             center: result[Math.floor(result.length / 2)],
-            start: result[0],
+            depot: result[0],
             end: result[result.length - 1],
             stops: result,
         };
     };
 
     useEffect(() => {
-        getGeocodes(tour.stops).then(({center, start, end, stops}) => {
-            setOrigin(start);
-            setDestination(end);
-            setWaypoints(stops);
-            setRegion({...center, latitudeDelta: 0.1, longitudeDelta: 0.1});
-            setTimeout(() => {
-                setShowMap(true);
-            }, 300);
-        });
+        (async () => {
+            let {status} = await Location.requestPermissionsAsync();
+            if (status !== "granted") {
+                // setErrorMsg("Permission to access location was denied");
+            }
+
+            let locationData = await Location.getCurrentPositionAsync({});
+            const location = {
+                latitude: locationData.coords.latitude,
+                longitude: locationData.coords.longitude,
+            };
+            getGeocodes(tour.stops).then(({center, depot, end, stops}) => {
+                // get stops without depot for deliveryStops
+                const [, ...deliveryPoints] = stops;
+                // add current location to waypoints/markers
+                stops.unshift(location);
+                setDeliveryStops(deliveryPoints);
+                setOrigin(location);
+                setDepot(depot);
+                setDestination(end);
+                setWaypoints(stops);
+                setRegion({...location, latitudeDelta: 0.1, longitudeDelta: 0.1});
+                setTimeout(() => {
+                    setShowMap(true);
+                }, 300);
+            });
+        })();
     }, []);
 
     return (
@@ -110,21 +132,23 @@ export const Maps = ({navigation}) => {
                                 <Marker
                                     key={`coordinate_${index}`}
                                     pinColor={
-                                        (index === 0 && "#074dff") ||
+                                        (index === 0 && "#ff009c") ||
+                                        (index === 1 && "#074dff") ||
                                         (index === waypoints.length - 1 && "#17a403") ||
                                         null
                                     }
                                     coordinate={coordinate}
+                                    // title={"depot"}
+                                    // description={"depot"}
                                 />
                             ))}
                             <MapViewDirections
                                 language="de"
                                 origin={origin}
-                                destination={destination}
-                                waypoints={waypoints}
+                                destination={depot}
                                 apikey={DIRECTIONS_APIKEY}
                                 strokeWidth={4}
-                                strokeColor="#ff009c"
+                                strokeColor="#00aaff"
                                 optimizeWaypoints={true}
                                 onReady={(result) => {
                                     mapRef.current.fitToCoordinates(result.coordinates, {
@@ -136,6 +160,27 @@ export const Maps = ({navigation}) => {
                                         },
                                     });
                                 }}
+                            />
+
+                            <MapViewDirections
+                                language="de"
+                                origin={depot}
+                                destination={destination}
+                                waypoints={deliveryStops}
+                                apikey={DIRECTIONS_APIKEY}
+                                strokeWidth={5}
+                                strokeColor="#ff009c"
+                                // optimizeWaypoints={true}
+                                // onReady={(result) => {
+                                //     mapRef.current.fitToCoordinates(result.coordinates, {
+                                //         edgePadding: {
+                                //             right: width / 20,
+                                //             bottom: height / 20,
+                                //             left: width / 20,
+                                //             top: height / 20,
+                                //         },
+                                //     });
+                                // }}
                             />
                         </MapView>
                     )}
