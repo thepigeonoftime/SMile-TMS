@@ -84,6 +84,32 @@ export const CREATE_DELIVERER = gql`
     }
 `;
 
+export const CREATE_PACKET = gql`
+    mutation createPacket(
+        $senderId: UUID!
+        $depotId: UUID!
+        $bizStep: String!
+        $initialSendDate: ZonedDateTime!
+        $sscc: String!
+        $dateOfPlannedDelivery: ZonedDateTime!
+        $receiverId: UUID!
+    ) {
+        createPacket(
+            packet: {
+                senderId: $senderId
+                depotId: $depotId
+                bizStep: $bizStep
+                initialSendDate: $initialSendDate
+                sscc: $sscc
+                dateOfPlannedDelivery: $dateOfPlannedDelivery
+                receiverId: $receiverId
+            }
+        ) {
+            id
+        }
+    }
+`;
+
 export const UPDATE_PACKET = gql`
     mutation updatePacket(
         $ratingOfDepot: Int
@@ -148,6 +174,29 @@ export const UPDATE_PACKET = gql`
             }
         )
     }
+    # mutation updatePacket($id: UUID!) {
+    #     updatePacket(packet: {id: "abd3a176-dead-4999-b4e2-ea67b79c5416"})
+    # }
+`;
+
+export const QUERY_PACKETS = gql`
+    query {
+        packets {
+            id
+        }
+        deliverers {
+            id
+        }
+        depots {
+            id
+        }
+        receivers {
+            id
+        }
+        senders {
+            id
+        }
+    }
 `;
 
 export const structureRegData = (
@@ -187,39 +236,53 @@ export const structureRegData = (
     }
 };
 
+export const structureCreatePacketData = (sscc) => {
+    return {
+        variables: {
+            senderId: "bf771bcb-9ec8-4d9a-94e5-50db4143cdd2",
+            depotId: "13450ab4-970f-4d04-bde6-952765c357e4",
+            bizStep: "1",
+            initialSendDate: new Date().toJSON(),
+            sscc: sscc,
+            dateOfPlannedDelivery: new Date().toJSON(),
+            receiverId: "ab6854df-d671-4def-9fbe-804f9d08288d",
+        },
+    };
+};
+
 export const structurePacketData = (signature, sscc, tourID, currentStop) => {
     // structure registration data for createDeliverer
     return {
         variables: {
             ratingOfDepot: 1,
             width: 20,
-            receiverId: uuid.v4(),
+            receiverId: "ab6854df-d671-4def-9fbe-804f9d08288d",
             height: 20,
             positionInTour: parseInt(currentStop),
             carrierItemId: "1",
             length: 20,
             initialSendDate: new Date().toJSON(),
             pickDate: new Date().toJSON(),
-            depotId: uuid.v4(),
+            depotId: "8b82621f-e658-4658-9f3b-e1e47e982654",
             grossWeight: 20,
             receiverSignature: signature,
             dateOfArrivalInDepot: new Date().toJSON(),
             acceptedByReceiver: true,
             ratingOfDriver: 5,
             startOfWishTimeframe: new Date().toJSON(),
-            id: uuid.v4(),
+            id: "abd3a176-dead-4999-b4e2-ea67b79c5416",
             dateOfPlannedDelivery: new Date().toJSON(),
             receiveDate: new Date().toJSON(),
             bizStep: "1",
             plannedTimeframeStart: new Date().toJSON(),
-            senderId: uuid.v4(),
-            delivererId: uuid.v4(),
+            // senderId: uuid.v4(),
+            delivererId: "c5790573-a9c0-4f49-a34b-f9866acebf32",
             price: 1,
-            propId: uuid.v4(),
+            // propId: uuid.v4(),
             sscc: sscc,
             endOfWishTimeframe: new Date().toJSON(),
             // tourId: tourID,
-            tourID: uuid.v4(),
+            // tourID: uuid.v4(),
         },
     };
 };

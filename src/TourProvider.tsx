@@ -1,9 +1,17 @@
-import {useMutation} from "@apollo/react-hooks";
+import {useMutation, useQuery} from "@apollo/react-hooks";
 import NetInfo from "@react-native-community/netinfo";
 import {CommonActions} from "@react-navigation/native";
 import React, {useEffect, useState} from "react";
 import {AsyncStorage} from "react-native";
-import {postDelivery, structurePacketData, UPDATE_PACKET, postPickup} from "./Requests";
+import {
+    postDelivery,
+    structurePacketData,
+    UPDATE_PACKET,
+    postPickup,
+    CREATE_PACKET,
+    structureCreatePacketData,
+    QUERY_PACKETS,
+} from "./Requests";
 
 type tourType = any; // specify
 
@@ -59,6 +67,30 @@ export const TourProvider = ({children}) => {
     const [showNavigation, setShowNavigation] = useState(false);
     const [showPaketGeben, setShowPaketGeben] = useState(false);
     const [updatePacket] = useMutation(UPDATE_PACKET);
+    const [createPacket] = useMutation(CREATE_PACKET);
+    // const {data, loading, error: queryErr} = useQuery(QUERY_PACKETS);
+
+    // const callCreatePacket = (sscc) => {
+    //     console.log(structureCreatePacketData(sscc));
+    //     createPacket(structureCreatePacketData(sscc))
+    //         .then(({data, errors}) => {
+    //             if (errors && errors[0]) {
+    //                 errors.forEach((error) => {
+    //                     console.log(error);
+    //                 });
+    //                 // console.log("graphql error:", errors[0].message, );
+    //             } else {
+    //                 console.log("graphql success | packet reported");
+    //                 console.log("data:");
+    //                 console.log(data);
+    //             }
+    //         })
+    //         .catch((err) => {
+    //             console.log("network error:", err);
+    //         });
+    //     data && console.log(data);
+    //     queryErr && console.log(queryErr);
+    // };
 
     const queuePickup = (sscc, pickDate) => {
         // queue unsuccesful pickup report into asyncstorage
@@ -318,6 +350,7 @@ export const TourProvider = ({children}) => {
                 },
                 reportDelivery: (sscc, deliveryDate) => {
                     // reportDelivery REST post request
+                    // callCreatePacket(sscc);
                     postDelivery(sscc, deliveryDate)
                         .then((result) =>
                             console.log(
@@ -336,6 +369,7 @@ export const TourProvider = ({children}) => {
                 },
                 deliverPacket: (signature, sscc, tourID, tourStop) => {
                     // updatePacket graphql mutation
+                    console.log(structurePacketData(signature, sscc, tourID, tourStop));
                     updatePacket(structurePacketData(signature, sscc, tourID, tourStop))
                         .then(({data, errors}) => {
                             if (errors && errors[0]) {
