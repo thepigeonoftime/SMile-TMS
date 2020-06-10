@@ -7,6 +7,7 @@ import {Header} from "../Header";
 import {TourContext} from "../TourProvider";
 import {useAnimation} from "react-native-animation-hooks";
 import BarcodeMask from "react-native-barcode-mask";
+import {Center} from "../Center";
 
 export const PaketeScannen = ({navigation}) => {
     const {tour, reportPickup, setStop} = useContext(TourContext);
@@ -18,31 +19,24 @@ export const PaketeScannen = ({navigation}) => {
     const [packets, setPackets] = useState([]);
     const [packetLen, setPacketLen] = useState(0);
     const [scanColor, setScanColor] = useState("255,255,255");
-    const [fadeColor, setFadeColor] = useState(false);
     const [animatedOpacity, setAnimatedOpacity] = useState(new Animated.Value(0));
 
     const tourPackets = tour.packets.map((packet) => {
         return packet.sscc;
     });
 
-    // const aOpacity = useAnimation({
-    //     type: "timing",
-    //     initialValue: 1,
-    //     toValue: 0,
-    //     duration: 1500,
-    // });
-
     useEffect(() => {
         (async () => {
             const {status} = await BarCodeScanner.requestPermissionsAsync();
             setHasPermission(status === "granted");
+            if (status !== "granted") {
+                setPackets(tourPackets);
+                setPacketLen(tourPackets.length);
+                setTimeout(() => {
+                    setLoading(false);
+                }, 100);
+            }
         })();
-
-        setPackets(tourPackets);
-        setPacketLen(tourPackets.length);
-        setTimeout(() => {
-            setLoading(false);
-        }, 100);
     }, []);
 
     const showScanMsg = (msg) => {
@@ -96,13 +90,6 @@ export const PaketeScannen = ({navigation}) => {
         navigation.navigate("Ziel");
     };
 
-    if (hasPermission === null) {
-        return <Text>Requesting for camera permission</Text>;
-    }
-    if (hasPermission === false) {
-        return <Text>No access to camera</Text>;
-    }
-
     return (
         <View style={{flex: 1}}>
             <Header
@@ -119,54 +106,67 @@ export const PaketeScannen = ({navigation}) => {
                 }}
             />
             <View style={styles.container}>
-                <View style={{alignItems: "center"}}>
-                    <Text>{scanMsg}</Text>
-                </View>
-                <Animated.View
-                    style={[
-                        styles.scannerContainer,
-                        {
-                            borderColor: animatedOpacity.interpolate({
-                                inputRange: [0, 1],
-                                outputRange: [`rgba( ${scanColor}, 1)`, `rgba(255,255,255, 1)`],
-                            }),
-                        },
-                    ]}
-                >
-                    {!loading && (
-                        <Camera
-                            style={styles.scanner}
-                            type={Camera.Constants.Type.back}
-                            onBarCodeScanned={handleBarCodeScanned}
-                            autoFocus={"on"}
-                            ratio="16:9"
+                {!hasPermission && (
+                    <Center>
+                        <Text>Kamera Berechtigung benötigt zum scannen der Pakete</Text>
+                    </Center>
+                )}
+                {hasPermission && (
+                    <View>
+                        <View style={{alignItems: "center"}}>
+                            <Text>{scanMsg}</Text>
+                        </View>
+
+                        <Animated.View
+                            style={[
+                                styles.scannerContainer,
+                                {
+                                    borderColor: animatedOpacity.interpolate({
+                                        inputRange: [0, 1],
+                                        outputRange: [
+                                            `rgba( ${scanColor}, 1)`,
+                                            `rgba(255,255,255, 1)`,
+                                        ],
+                                    }),
+                                },
+                            ]}
                         >
-                            <BarcodeMask
-                                edgeBorderWidth={0}
-                                width="100%"
-                                height="82%"
-                                backgroundColor="transparent"
-                            />
-                        </Camera>
-                    )}
-                </Animated.View>
-                <View style={{justifyContent: "center", alignItems: "center"}}>
-                    <Text>
-                        {scannedPackets} von {packetLen} Paketen gescannt
-                    </Text>
-                </View>
-                <View style={styles.buttonContainer}>
-                    {finished && (
-                        <Button
-                            buttonStyle={styles.button}
-                            title="Tour Starten"
-                            onPress={onSubmit}
-                        />
-                    )}
-                    <TouchableOpacity onPress={onSubmit}>
-                        <Text>skip</Text>
-                    </TouchableOpacity>
-                </View>
+                            {!loading && (
+                                <Camera
+                                    style={styles.scanner}
+                                    type={Camera.Constants.Type.back}
+                                    onBarCodeScanned={handleBarCodeScanned}
+                                    autoFocus={"on"}
+                                    ratio="16:9"
+                                >
+                                    <BarcodeMask
+                                        edgeBorderWidth={0}
+                                        width="100%"
+                                        height="82%"
+                                        backgroundColor="transparent"
+                                    />
+                                </Camera>
+                            )}
+                        </Animated.View>
+                        <View style={{justifyContent: "center", alignItems: "center"}}>
+                            <Text>
+                                {scannedPackets} von {packetLen} Paketen gescannt
+                            </Text>
+                        </View>
+                        <View style={styles.buttonContainer}>
+                            {finished && (
+                                <Button
+                                    buttonStyle={styles.button}
+                                    title="Tour Starten"
+                                    onPress={onSubmit}
+                                />
+                            )}
+                            <TouchableOpacity onPress={onSubmit}>
+                                <Text>skip</Text>
+                            </TouchableOpacity>
+                        </View>
+                    </View>
+                )}
             </View>
         </View>
     );
