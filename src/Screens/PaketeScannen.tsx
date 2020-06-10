@@ -107,9 +107,13 @@ export const PaketeScannen = ({navigation}) => {
             />
             <View style={styles.container}>
                 {!hasPermission && (
-                    <Center>
-                        <Text>Kamera Berechtigung benötigt zum scannen der Pakete</Text>
-                    </Center>
+                    <View style={styles.permissionWarning}>
+                        <Text style={{fontSize: 17}}>
+                            Kamera Berechtigung benötigt zum scannen der Pakete.
+                        </Text>
+                        <Text>{"\n"}</Text>
+                        <Text>Bitte erteilen Sie diese in den Einstellungen.</Text>
+                    </View>
                 )}
                 {hasPermission && (
                     <View>
@@ -184,6 +188,12 @@ const styles = StyleSheet.create({
         elevation: 2,
         justifyContent: "center",
         alignItems: "center",
+    },
+    permissionWarning: {
+        justifyContent: "center",
+        alignItems: "center",
+        paddingHorizontal: "5%",
+        marginTop: "-50%",
     },
     scannerContainer: {
         // flex: 1,
