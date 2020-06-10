@@ -139,7 +139,11 @@ export const Maps = ({navigation}) => {
                                         null
                                     }
                                     coordinate={coordinate}
-                                    // title={"depot"}
+                                    title={
+                                        (location && index === 0 && "Aktueller Standort") ||
+                                        (index === (location ? 1 : 0) && "Depot") ||
+                                        "Tour Stop"
+                                    }
                                     // description={"depot"}
                                 />
                             ))}
