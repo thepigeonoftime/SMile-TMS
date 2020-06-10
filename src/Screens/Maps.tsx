@@ -19,11 +19,11 @@ export const Maps = ({navigation}) => {
         latitudeDelta: 0.1,
         longitudeDelta: 0.1,
     });
-    const [origin, setOrigin] = useState(null);
     const [waypoints, setWaypoints] = useState([]);
     const [deliveryStops, setDeliveryStops] = useState([]);
     const [destination, setDestination] = useState(null);
     const [depot, setDepot] = useState(null);
+    const [location, setLocation] = useState(null);
     const {width, height} = Dimensions.get("window");
     // const ASPECT_RATIO = width / height;
     const DIRECTIONS_APIKEY = Constants.manifest.extra.credentials.directionsApiKey;
@@ -62,27 +62,28 @@ export const Maps = ({navigation}) => {
 
     useEffect(() => {
         (async () => {
+            let currentLocation;
             let {status} = await Location.requestPermissionsAsync();
             if (status !== "granted") {
                 // setErrorMsg("Permission to access location was denied");
+            } else {
+                const locationData = await Location.getCurrentPositionAsync({});
+                currentLocation = {
+                    latitude: locationData.coords.latitude,
+                    longitude: locationData.coords.longitude,
+                };
             }
+            currentLocation && setLocation(currentLocation);
 
-            let locationData = await Location.getCurrentPositionAsync({});
-            const location = {
-                latitude: locationData.coords.latitude,
-                longitude: locationData.coords.longitude,
-            };
             getGeocodes(tour.stops).then(({center, depot, end, stops}) => {
-                // get stops without depot for deliveryStops
-                const [, ...deliveryPoints] = stops;
-                // add current location to waypoints/markers
-                stops.unshift(location);
-                setDeliveryStops(deliveryPoints);
-                setOrigin(location);
+                const [, ...stopsWithoutDepot] = stops; // get stops without depot for deliveryStops
+                const region = currentLocation ? currentLocation : depot; // center map view on current location or fall back to depot
+                currentLocation && stops.unshift(currentLocation); // add current location to waypoints/markers
+                setDeliveryStops(stopsWithoutDepot);
                 setDepot(depot);
                 setDestination(end);
                 setWaypoints(stops);
-                setRegion({...location, latitudeDelta: 0.1, longitudeDelta: 0.1});
+                setRegion({...region, latitudeDelta: 0.1, longitudeDelta: 0.1});
                 setTimeout(() => {
                     setShowMap(true);
                 }, 300);
@@ -114,13 +115,13 @@ export const Maps = ({navigation}) => {
                     </TouchableOpacity>
                 </View>
                 <View style={styles.mapsContainer}>
-                    {region && origin && destination && showMap && (
+                    {region && depot && destination && waypoints && showMap && (
                         <MapView
                             ref={(ref) => {
                                 mapRef.current = ref;
                             }}
                             // onMapReady={() => {
-                            //     // mapRef.current.fitToSuppliedMarkers(waypoints);
+                            //     mapRef.current.fitToSuppliedMarkers(waypoints);
                             // }}
                             style={[StyleSheet.absoluteFillObject, {borderRadius: 25}]}
                             provider={PROVIDER_GOOGLE}
@@ -132,8 +133,8 @@ export const Maps = ({navigation}) => {
                                 <Marker
                                     key={`coordinate_${index}`}
                                     pinColor={
-                                        (index === 0 && "#ff009c") ||
-                                        (index === 1 && "#074dff") ||
+                                        (location && index === 0 && "#ff0099") ||
+                                        (index === (location ? 1 : 0) && "#074dff") ||
                                         (index === waypoints.length - 1 && "#17a403") ||
                                         null
                                     }
@@ -142,25 +143,28 @@ export const Maps = ({navigation}) => {
                                     // description={"depot"}
                                 />
                             ))}
-                            <MapViewDirections
-                                language="de"
-                                origin={origin}
-                                destination={depot}
-                                apikey={DIRECTIONS_APIKEY}
-                                strokeWidth={4}
-                                strokeColor="#00aaff"
-                                optimizeWaypoints={true}
-                                onReady={(result) => {
-                                    mapRef.current.fitToCoordinates(result.coordinates, {
-                                        edgePadding: {
-                                            right: width / 20,
-                                            bottom: height / 20,
-                                            left: width / 20,
-                                            top: height / 20,
-                                        },
-                                    });
-                                }}
-                            />
+                            {location && (
+                                <MapViewDirections
+                                    language="de"
+                                    origin={location}
+                                    destination={depot}
+                                    apikey={DIRECTIONS_APIKEY}
+                                    strokeWidth={4}
+                                    strokeColor="#00aaff"
+                                    optimizeWaypoints={true}
+                                    onReady={(result) => {
+                                        location &&
+                                            mapRef.current.fitToCoordinates(result.coordinates, {
+                                                edgePadding: {
+                                                    right: width / 20,
+                                                    bottom: height / 7,
+                                                    left: width / 20,
+                                                    top: height / 15,
+                                                },
+                                            });
+                                    }}
+                                />
+                            )}
 
                             <MapViewDirections
                                 language="de"
@@ -170,17 +174,18 @@ export const Maps = ({navigation}) => {
                                 apikey={DIRECTIONS_APIKEY}
                                 strokeWidth={5}
                                 strokeColor="#ff009c"
-                                // optimizeWaypoints={true}
-                                // onReady={(result) => {
-                                //     mapRef.current.fitToCoordinates(result.coordinates, {
-                                //         edgePadding: {
-                                //             right: width / 20,
-                                //             bottom: height / 20,
-                                //             left: width / 20,
-                                //             top: height / 20,
-                                //         },
-                                //     });
-                                // }}
+                                onReady={(result) => {
+                                    !location &&
+                                        mapRef.current.fitToCoordinates(result.coordinates, {
+                                            edgePadding: {
+                                                right: width / 20,
+                                                bottom: height / 7,
+                                                left: width / 20,
+                                                top: height / 15,
+                                            },
+                                        });
+                                }}
+                                optimizeWaypoints={true}
                             />
                         </MapView>
                     )}
