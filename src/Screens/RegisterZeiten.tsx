@@ -34,20 +34,12 @@ export const RegisterZeiten = ({navigation}) => {
         setIsEnabled({...isEnabled, [key]: !isEnabled[key]});
     };
 
-    const timeSchema = yup.string().test("is-time", "Keine gültige Zeit", function (value) {
+    const timeSchema = yup.string().test("is-time", "Ungültig", function (value) {
         if (value) {
             return moment(value, "HH:mm", true).isValid();
         } else {
             return true;
         }
-    });
-
-    const isGreater = yup.object({
-        start: yup.string(),
-        end: yup.string().test("is-greater", "end time should be greater", function (value) {
-            const {start} = this.parent;
-            return moment(value, "HH:mm").isSameOrAfter(moment(start, "HH:mm"));
-        }),
     });
 
     const validationSchema = yup.object().shape({
@@ -75,17 +67,28 @@ export const RegisterZeiten = ({navigation}) => {
     const {
         register,
         setValue,
+        getValues,
         handleSubmit,
         errors,
         triggerValidation,
         control,
         formState,
+        setError,
+        clearError,
     } = useForm({
         mode: "onBlur",
         reValidateMode: "onChange",
         validationSchema: validationSchema,
         submitFocusError: true,
     });
+
+    const isGreater = (start, end, errorField) => {
+        if (moment(getValues(start), "HH:mm").isSameOrAfter(moment(getValues(end), "HH:mm"))) {
+            setError(errorField, "", "Startzeit muss vor Endzeit liegen");
+        } else {
+            clearError(errorField);
+        }
+    };
 
     const onSubmit = (data) => {
         let result: resultProps = {};
@@ -182,6 +185,7 @@ export const RegisterZeiten = ({navigation}) => {
                                         as={<Input />}
                                         control={control}
                                         name="monStart"
+                                        lastkey="none"
                                         onKeyPress={({nativeEvent}) => {
                                             lastKey = nativeEvent.key;
                                         }}
@@ -224,6 +228,9 @@ export const RegisterZeiten = ({navigation}) => {
                                             );
                                             errors.monEnd && triggerValidation("monEnd");
                                         }}
+                                        onBlur={() => {
+                                            isGreater("monStart", "monEnd", "monday");
+                                        }}
                                         maxLength={5}
                                         placeholder={
                                             dataZeiten && dataZeiten.monday && dataZeiten.monday.end
@@ -238,6 +245,11 @@ export const RegisterZeiten = ({navigation}) => {
                                         errorStyle={styles.error}
                                     />
                                 </View>
+                            </View>
+                            <View style={styles.validation}>
+                                <Text style={styles.validationText}>
+                                    {errors.monday ? errors.monday.message : ""}
+                                </Text>
                             </View>
                             <View style={styles.rowContainer}>
                                 <View style={styles.labelWrap}>
@@ -311,6 +323,9 @@ export const RegisterZeiten = ({navigation}) => {
                                                 );
                                                 errors.tueEnd && triggerValidation("tueEnd");
                                             }}
+                                            onBlur={() => {
+                                                isGreater("tueStart", "tueEnd", "tuesday");
+                                            }}
                                             maxLength={5}
                                             placeholder={
                                                 dataZeiten &&
@@ -330,6 +345,11 @@ export const RegisterZeiten = ({navigation}) => {
                                         />
                                     </View>
                                 </View>
+                            </View>
+                            <View style={styles.validation}>
+                                <Text style={styles.validationText}>
+                                    {errors.tuesday ? errors.tuesday.message : ""}
+                                </Text>
                             </View>
                             <View style={styles.rowContainer}>
                                 <View style={styles.labelWrap}>
@@ -403,6 +423,9 @@ export const RegisterZeiten = ({navigation}) => {
                                                 );
                                                 errors.wedEnd && triggerValidation("wedEnd");
                                             }}
+                                            onBlur={() => {
+                                                isGreater("wedStart", "wedEnd", "wednesday");
+                                            }}
                                             maxLength={5}
                                             placeholder={
                                                 dataZeiten &&
@@ -422,6 +445,11 @@ export const RegisterZeiten = ({navigation}) => {
                                         />
                                     </View>
                                 </View>
+                            </View>
+                            <View style={styles.validation}>
+                                <Text style={styles.validationText}>
+                                    {errors.wednesday ? errors.wednesday.message : ""}
+                                </Text>
                             </View>
                             <View style={styles.rowContainer}>
                                 <View style={styles.labelWrap}>
@@ -506,6 +534,9 @@ export const RegisterZeiten = ({navigation}) => {
                                             errorMessage={
                                                 errors.thuEnd ? errors.thuEnd.message : " "
                                             }
+                                            onBlur={() => {
+                                                isGreater("thuStart", "thuEnd", "thursday");
+                                            }}
                                             containerStyle={styles.input}
                                             inputStyle={styles.inputText}
                                             keyboardType={"numeric"}
@@ -514,6 +545,11 @@ export const RegisterZeiten = ({navigation}) => {
                                         />
                                     </View>
                                 </View>
+                            </View>
+                            <View style={styles.validation}>
+                                <Text style={styles.validationText}>
+                                    {errors.thursday ? errors.thursday.message : ""}
+                                </Text>
                             </View>
                             <View style={styles.rowContainer}>
                                 <View style={styles.labelWrap}>
@@ -587,6 +623,9 @@ export const RegisterZeiten = ({navigation}) => {
                                                 );
                                                 errors.friEnd && triggerValidation("friEnd");
                                             }}
+                                            onBlur={() => {
+                                                isGreater("friStart", "friEnd", "friday");
+                                            }}
                                             maxLength={5}
                                             placeholder={
                                                 dataZeiten &&
@@ -606,6 +645,11 @@ export const RegisterZeiten = ({navigation}) => {
                                         />
                                     </View>
                                 </View>
+                            </View>
+                            <View style={styles.validation}>
+                                <Text style={styles.validationText}>
+                                    {errors.friday ? errors.friday.message : ""}
+                                </Text>
                             </View>
                             <View style={styles.rowContainer}>
                                 <View style={styles.labelWrap}>
@@ -690,6 +734,9 @@ export const RegisterZeiten = ({navigation}) => {
                                             errorMessage={
                                                 errors.satEnd ? errors.satEnd.message : " "
                                             }
+                                            onBlur={() => {
+                                                isGreater("satStart", "satEnd", "saturday");
+                                            }}
                                             containerStyle={styles.input}
                                             inputStyle={styles.inputText}
                                             keyboardType={"numeric"}
@@ -699,11 +746,16 @@ export const RegisterZeiten = ({navigation}) => {
                                     </View>
                                 </View>
                             </View>
+                            <View style={styles.validation}>
+                                <Text style={styles.validationText}>
+                                    {errors.saturday ? errors.saturday.message : ""}
+                                </Text>
+                            </View>
                             <View style={styles.saveButtonContainer}>
                                 <Button
                                     buttonStyle={styles.saveButton}
                                     titleStyle={styles.saveButtonTitle}
-                                    disabled={false}
+                                    disabled={Object.keys(errors).length !== 0}
                                     title="Speichern"
                                     onPress={handleSubmit(onSubmit)}
                                 />
@@ -812,6 +864,15 @@ export const styles = StyleSheet.create({
     error: {
         color: "#ff8787",
         marginLeft: -1,
+    },
+    validation: {
+        justifyContent: "center",
+        alignItems: "flex-end",
+        marginTop: "-8%",
+    },
+    validationText: {
+        color: "#ff8787",
+        fontSize: 13.5,
     },
     saveButtonContainer: {
         alignItems: "center",
