@@ -100,33 +100,33 @@ export const RegisterZeiten = ({navigation}) => {
 
         makeResult("monday", {
             day: isEnabled.monday ? "MONDAY" : undefined,
-            start: data.monStart,
-            end: data.monEnd,
+            startTime: data.monStart,
+            endTime: data.monEnd,
         });
         makeResult("tuesday", {
             day: isEnabled.tuesday ? "TUESDAY" : undefined,
-            start: data.tueStart,
-            end: data.tueEnd,
+            startTime: data.tueStart,
+            endTime: data.tueEnd,
         });
         makeResult("wednesday", {
             day: isEnabled.wednesday ? "WEDNESDAY" : undefined,
-            start: data.wedStart,
-            end: data.wedEnd,
+            startTime: data.wedStart,
+            endTime: data.wedEnd,
         });
         makeResult("thursday", {
             day: isEnabled.thursday ? "THURSDAY" : undefined,
-            start: data.thuStart,
-            end: data.thuEnd,
+            startTime: data.thuStart,
+            endTime: data.thuEnd,
         });
         makeResult("friday", {
             day: isEnabled.friday ? "FRIDAY" : undefined,
-            start: data.friStart,
-            end: data.friEnd,
+            startTime: data.friStart,
+            endTime: data.friEnd,
         });
         makeResult("saturday", {
             day: isEnabled.saturday ? "SATURDAY" : undefined,
-            start: data.satStart,
-            end: data.satEnd,
+            startTime: data.satStart,
+            endTime: data.satEnd,
         });
         console.log(result);
         storeDataZeiten(result, true);
