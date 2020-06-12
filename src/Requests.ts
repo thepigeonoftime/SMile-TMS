@@ -1,9 +1,31 @@
 import {dataPersonProps, dataFahrzeugProps, dataGebietProps, dataZeitenProps} from "./Types";
 import axios from "axios";
 import gql from "graphql-tag";
-import {addJob} from "./OfflineQueue";
-import moment from "moment";
 import uuid from "uuid";
+
+export const postSignup = (email, password) => {
+    return axios.post("https://pickshare.herokuapp.com/users/register", {
+        headers: {
+            "Content-Type": "application/json",
+        },
+        password,
+        email,
+        role: 3,
+        inviter: "5ec5002102cbd20015130c76",
+        firstName: "tbd",
+        lastName: "tbd",
+    });
+};
+
+export const postLogin = (alias, password) => {
+    return axios.post("https://pickshare.herokuapp.com/auth", {
+        headers: {
+            "Content-Type": "application/json",
+        },
+        alias,
+        password,
+    });
+};
 
 export const fetchTour = () => {
     // return axios.get("https://bpt-lab.org/smile/sphinx/getTours");
