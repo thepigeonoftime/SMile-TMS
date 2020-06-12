@@ -1,5 +1,5 @@
 import {AntDesign, SimpleLineIcons} from "@expo/vector-icons";
-import React, {useContext} from "react";
+import React, {useContext, useState} from "react";
 import {ImageBackground, KeyboardAvoidingView, Text, TouchableOpacity, View} from "react-native";
 import {Button, Input} from "react-native-elements";
 import {AuthContext} from "../AuthProvider";
@@ -9,6 +9,9 @@ import {KeyboardAwareScrollView} from "react-native-keyboard-aware-scroll-view";
 
 export const Login = ({navigation, route}: AuthNavProps<"Signup">) => {
     const {login} = useContext(AuthContext);
+    const [user, setUser] = useState(null);
+    const [password, setPassword] = useState(null);
+
     return (
         <KeyboardAwareScrollView
             style={{backgroundColor: "#FFF"}}
@@ -41,10 +44,12 @@ export const Login = ({navigation, route}: AuthNavProps<"Signup">) => {
                         <Input
                             label="Username"
                             placeholder="Username"
+                            onChangeText={(value) => setUser(value)}
                             containerStyle={styles.inputContainer}
                             inputContainerStyle={{borderBottomColor: "#aaa"}}
                             labelStyle={styles.input}
                             inputStyle={styles.input}
+                            autoCapitalize="none"
                         />
                     </View>
                     <View style={[styles.lineWrap, {marginTop: 20}]}>
@@ -52,11 +57,13 @@ export const Login = ({navigation, route}: AuthNavProps<"Signup">) => {
                         <Input
                             label="Passwort"
                             placeholder="Passwort eingeben"
+                            onChangeText={(value) => setPassword(value)}
                             containerStyle={styles.inputContainer}
                             inputContainerStyle={{borderBottomColor: "#aaa"}}
                             labelStyle={styles.input}
                             inputStyle={styles.input}
                             secureTextEntry={true}
+                            autoCapitalize="none"
                         />
                     </View>
                 </View>
@@ -66,7 +73,7 @@ export const Login = ({navigation, route}: AuthNavProps<"Signup">) => {
                     <Button
                         title={"Login"}
                         onPress={() => {
-                            login();
+                            login(user, password);
                         }}
                         buttonStyle={styles.button}
                         titleStyle={styles.buttonTitle}

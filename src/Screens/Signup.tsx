@@ -1,5 +1,5 @@
 import {AntDesign, SimpleLineIcons} from "@expo/vector-icons";
-import React, {useContext} from "react";
+import React, {useContext, useState} from "react";
 import {ImageBackground, KeyboardAvoidingView, Text, TouchableOpacity, View} from "react-native";
 import {Button, Input} from "react-native-elements";
 import {AuthContext} from "../AuthProvider";
@@ -9,6 +9,20 @@ import {KeyboardAwareScrollView} from "react-native-keyboard-aware-scroll-view";
 
 export const Signup = ({navigation, route}: AuthNavProps<"Signup">) => {
     const {signup} = useContext(AuthContext);
+    const [user, setUser] = useState(null);
+    const [password, setPassword] = useState(null);
+    // const [confirmation, setConfirmation] = useState(null);
+    const [complete, setComplete] = useState(false);
+
+    const checkInput = (confirmation) => {
+        console.log(confirmation, password);
+        if (user && confirmation === password) {
+            setComplete(true);
+        } else {
+            setComplete(false);
+        }
+    };
+
     return (
         <KeyboardAwareScrollView
             style={{backgroundColor: "#FFF"}}
@@ -36,10 +50,12 @@ export const Signup = ({navigation, route}: AuthNavProps<"Signup">) => {
                         <Input
                             label="E-Mail Adresse"
                             placeholder="E-Mail Adresse eingeben"
+                            onChangeText={(value) => setUser(value)}
                             containerStyle={styles.inputContainer}
                             inputContainerStyle={{borderBottomColor: "#aaa"}}
                             labelStyle={styles.input}
                             inputStyle={styles.input}
+                            autoCapitalize="none"
                         />
                     </View>
                     <View style={[styles.lineWrap, {marginTop: 20}]}>
@@ -47,6 +63,7 @@ export const Signup = ({navigation, route}: AuthNavProps<"Signup">) => {
                         <Input
                             label="Passwort"
                             placeholder="Passwort eingeben"
+                            onChangeText={(value) => setPassword(value)}
                             containerStyle={styles.inputContainer}
                             inputContainerStyle={{borderBottomColor: "#aaa"}}
                             labelStyle={styles.input}
@@ -58,6 +75,7 @@ export const Signup = ({navigation, route}: AuthNavProps<"Signup">) => {
                         <AntDesign name="unlock" size={28} color="#fff" style={{}} />
                         <Input
                             placeholder="Passwort wiederholen"
+                            onChangeText={(value) => checkInput(value)}
                             containerStyle={styles.inputContainer}
                             inputContainerStyle={{borderBottomColor: "#aaa"}}
                             labelStyle={styles.input}
@@ -72,10 +90,11 @@ export const Signup = ({navigation, route}: AuthNavProps<"Signup">) => {
                     <Button
                         title={"Weiter"}
                         onPress={() => {
-                            signup();
+                            signup(user, password);
                         }}
                         buttonStyle={styles.button}
                         titleStyle={styles.buttonTitle}
+                        disabled={!complete}
                     />
                 </View>
             </View>
