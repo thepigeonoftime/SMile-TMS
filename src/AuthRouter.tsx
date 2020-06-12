@@ -1,19 +1,20 @@
 import {NavigationContainer} from "@react-navigation/native";
+import * as SecureStore from "expo-secure-store";
 import React, {useContext, useEffect, useState} from "react";
-import {AsyncStorage, View} from "react-native";
+import {View} from "react-native";
+import {AppContainer} from "./AppContainer";
 import {AuthContext} from "./AuthProvider";
 import {AuthStack} from "./AuthStack";
-import {AppContainer} from "./AppContainer";
 
 export const AuthRouter: React.FC<{}> = ({}) => {
-    const {user, login} = useContext(AuthContext);
+    const {token, storeToken} = useContext(AuthContext);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        AsyncStorage.getItem("user")
-            .then((userString) => {
-                if (userString) {
-                    login();
+        SecureStore.getItemAsync("token")
+            .then((token) => {
+                if (token) {
+                    storeToken(token);
                 }
                 setLoading(false);
             })
@@ -25,10 +26,6 @@ export const AuthRouter: React.FC<{}> = ({}) => {
     if (loading) {
         return <View>{/* Splash Screen */}</View>;
     }
-
-    return (
-        <NavigationContainer>
-            {user ? <AppContainer /> : <AuthStack />}
-        </NavigationContainer>
-    );
+    // route to AppContainer if JWT token is set, otherwise show AuthStack
+    return <NavigationContainer>{token ? <AppContainer /> : <AuthStack />}</NavigationContainer>;
 };

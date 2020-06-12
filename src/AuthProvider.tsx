@@ -1,43 +1,60 @@
-import React, { useState } from "react";
-import { AsyncStorage } from "react-native";
+import React, {useState} from "react";
+import {AsyncStorage} from "react-native";
+import * as SecureStore from "expo-secure-store";
+import {postLogin, postSignup} from "./Requests";
 
-type User = null | { username: string };
+type Token = null | string;
 
 export const AuthContext = React.createContext<{
-  user: User;
-  login: () => void;
-  logout: () => void;
-  signup: () => void;
+    token: Token;
+    signup: (user, password) => void;
+    login: (user, password) => void;
+    storeToken: (token) => void;
+    logout: () => void;
 }>({
-  user: null,
-  login: () => {},
-  logout: () => {},
-  signup: () => {},
+    token: null,
+    signup: () => {},
+    login: () => {},
+    storeToken: () => {},
+    logout: () => {},
 });
 
-export const AuthProvider: React.FC<{}> = ({ children }) => {
-  const [user, setUser] = useState<User>(null);
-  return (
-    <AuthContext.Provider
-      value={{
-        user,
-        login: () => {
-          const dummyUser = { username: "smile" };
-          setUser(dummyUser);
-          AsyncStorage.setItem("user", JSON.stringify(dummyUser));
-        },
-        logout: () => {
-          setUser(null);
-          AsyncStorage.removeItem("user");
-        },
-        signup: () => {
-          const dummyUser = { username: "smile" };
-          setUser(dummyUser);
-          AsyncStorage.setItem("user", JSON.stringify(dummyUser));
-        }
-      }}
-    >
-      {children}
-    </AuthContext.Provider>
-  );
+export const AuthProvider: React.FC<{}> = ({children}) => {
+    const [token, setToken] = useState<Token>(null);
+    return (
+        <AuthContext.Provider
+            value={{
+                token,
+                signup: (user, password) => {
+                    postSignup(user, password)
+                        .then((response) => {
+                            console.log(response);
+                        })
+                        .catch((err) => {
+                            console.log(err);
+                        });
+                },
+                login: (user, password) => {
+                    postLogin(user, password)
+                        .then((response) => {
+                            SecureStore.setItemAsync("token", response.data.token);
+                            setToken(response.data.token);
+                        })
+                        .catch((err) => {
+                            console.log(err);
+                        });
+                },
+                storeToken: (token) => {
+                    SecureStore.setItemAsync("token", token);
+                    setToken(token);
+                },
+                logout: () => {
+                    setToken(null);
+                    AsyncStorage.removeItem("user");
+                },
+            }}
+        >
+            {children}
+        </AuthContext.Provider>
+    );
 };
