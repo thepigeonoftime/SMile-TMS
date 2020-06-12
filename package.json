@@ -29,6 +29,7 @@
         "expo-gl": "~8.0.0",
         "expo-location": "~8.0.0",
         "expo-pixi": "^1.2.0",
+        "expo-secure-store": "~8.0.0",
         "formik": "^2.1.4",
         "graphql": "^15.0.0",
         "graphql-tag": "^2.10.3",
