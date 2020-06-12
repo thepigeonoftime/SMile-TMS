@@ -1,6 +1,5 @@
-import React, {useState} from "react";
-import {AsyncStorage} from "react-native";
 import * as SecureStore from "expo-secure-store";
+import React, {useState} from "react";
 import {postLogin, postSignup} from "./Requests";
 
 type Token = null | string;
@@ -50,7 +49,7 @@ export const AuthProvider: React.FC<{}> = ({children}) => {
                 },
                 logout: () => {
                     setToken(null);
-                    AsyncStorage.removeItem("user");
+                    SecureStore.deleteItemAsync("token");
                 },
             }}
         >
