@@ -66,13 +66,13 @@ export const PaketeScannen = ({navigation}) => {
         setScanned(true);
         setTimeout(() => {
             setScanned(false);
-        }, 2000);
+        }, 1000);
         let packetBuffer = [];
         packets.forEach((packet) => {
             if (data === packet) {
-                setScannedPackets(scannedPackets + 1);
                 reportPickup(packet.sscc, new Date().toJSON());
                 showScanColor("0,255,0");
+                setScannedPackets(scannedPackets + 1);
             } else {
                 packetBuffer.push(packet);
             }
@@ -87,6 +87,7 @@ export const PaketeScannen = ({navigation}) => {
         if (!packetBuffer.length) {
             setFinished(true);
         }
+        setScannedPackets(-(-5 + packetBuffer.length)); // multiple packages same propID workaround
         setPackets(packetBuffer);
     };
 
@@ -146,7 +147,7 @@ export const PaketeScannen = ({navigation}) => {
                                     <BarcodeMask
                                         edgeBorderWidth={0}
                                         width="100%"
-                                        height="82%"
+                                        height="100%"
                                         backgroundColor="transparent"
                                     />
                                 </Camera>
