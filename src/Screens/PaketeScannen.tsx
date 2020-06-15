@@ -23,7 +23,7 @@ export const PaketeScannen = ({navigation}) => {
     const [animatedOpacity, setAnimatedOpacity] = useState(new Animated.Value(0));
 
     const tourPackets = tour.packets.map((packet) => {
-        return packet.sscc;
+        return packet.propID;
     });
 
     useEffect(() => {
@@ -61,7 +61,7 @@ export const PaketeScannen = ({navigation}) => {
 
     const handleBarCodeScanned = ({type, data}) => {
         console.log("barcode type:", type);
-        const sscc = "urn:epc:id:sscc:" + data;
+        console.log(data);
         console.log(packets);
         setScanned(true);
         setTimeout(() => {
@@ -69,7 +69,7 @@ export const PaketeScannen = ({navigation}) => {
         }, 2000);
         let packetBuffer = [];
         packets.forEach((packet) => {
-            if (sscc === packet) {
+            if (data === packet) {
                 setScannedPackets(scannedPackets + 1);
                 reportPickup(packet.sscc, new Date().toJSON());
                 showScanColor("0,255,0");
@@ -77,9 +77,9 @@ export const PaketeScannen = ({navigation}) => {
                 packetBuffer.push(packet);
             }
         });
-        if (!tourPackets.includes(sscc)) {
+        if (!tourPackets.includes(data)) {
             showScanColor("255,0,0");
-            showScanMsg("Unbekanntes Paket oder Code!");
+            showScanMsg("Unbekanntes Paket oder Code");
         }
         // else {
         //     showScanMsg("Paket bereits gescannt!");
@@ -157,8 +157,8 @@ export const PaketeScannen = ({navigation}) => {
                                 {scannedPackets} von {packetLen} Paketen gescannt
                             </Text>
                         </View>
-                        <View style={{alignItems: "center"}}>
-                            <Text>{scanMsg}</Text>
+                        <View style={styles.scanMsgContainer}>
+                            <Text style={styles.scanMsg}>{scanMsg}</Text>
                         </View>
                         <View style={styles.buttonContainer}>
                             {finished && (
@@ -219,10 +219,18 @@ const styles = StyleSheet.create({
         width: "100%",
         height: "105%",
     },
+    scanMsgContainer: {
+        paddingTop: "5%",
+        alignItems: "center",
+    },
+    scanMsg: {
+        color: "#ffb600",
+        fontWeight: "bold",
+    },
     buttonContainer: {
         flex: 1,
         alignItems: "center",
-        marginTop: "5%",
+        // marginTop: "5%",
         width: "100%",
         height: "140%",
     },
