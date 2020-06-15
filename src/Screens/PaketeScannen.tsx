@@ -12,12 +12,13 @@ import {Center} from "../Center";
 export const PaketeScannen = ({navigation}) => {
     const {tour, reportPickup, setStop} = useContext(TourContext);
     const [hasPermission, setHasPermission] = useState(null);
-    const [finished, setFinished] = useState(false);
     const [scannedPackets, setScannedPackets] = useState(0);
+    const [scanned, setScanned] = useState(false);
     const [scanMsg, setScanMsg] = useState("");
     const [loading, setLoading] = useState(true);
     const [packets, setPackets] = useState([]);
     const [packetLen, setPacketLen] = useState(0);
+    const [finished, setFinished] = useState(false);
     const [scanColor, setScanColor] = useState("255,255,255");
     const [animatedOpacity, setAnimatedOpacity] = useState(new Animated.Value(0));
 
@@ -29,7 +30,7 @@ export const PaketeScannen = ({navigation}) => {
         (async () => {
             const {status} = await BarCodeScanner.requestPermissionsAsync();
             setHasPermission(status === "granted");
-            if (status !== "granted") {
+            if (status === "granted") {
                 setPackets(tourPackets);
                 setPacketLen(tourPackets.length);
                 setTimeout(() => {
@@ -62,6 +63,10 @@ export const PaketeScannen = ({navigation}) => {
         console.log("barcode type:", type);
         const sscc = "urn:epc:id:sscc:" + data;
         console.log(packets);
+        setScanned(true);
+        setTimeout(() => {
+            setScanned(false);
+        }, 2000);
         let packetBuffer = [];
         packets.forEach((packet) => {
             if (sscc === packet) {
@@ -116,11 +121,7 @@ export const PaketeScannen = ({navigation}) => {
                     </View>
                 )}
                 {hasPermission && (
-                    <View>
-                        <View style={{alignItems: "center"}}>
-                            <Text>{scanMsg}</Text>
-                        </View>
-
+                    <View style={{alignItems: "center"}}>
                         <Animated.View
                             style={[
                                 styles.scannerContainer,
@@ -139,9 +140,8 @@ export const PaketeScannen = ({navigation}) => {
                                 <Camera
                                     style={styles.scanner}
                                     type={Camera.Constants.Type.back}
-                                    onBarCodeScanned={handleBarCodeScanned}
+                                    onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
                                     autoFocus={"on"}
-                                    ratio="16:9"
                                 >
                                     <BarcodeMask
                                         edgeBorderWidth={0}
@@ -156,6 +156,9 @@ export const PaketeScannen = ({navigation}) => {
                             <Text>
                                 {scannedPackets} von {packetLen} Paketen gescannt
                             </Text>
+                        </View>
+                        <View style={{alignItems: "center"}}>
+                            <Text>{scanMsg}</Text>
                         </View>
                         <View style={styles.buttonContainer}>
                             {finished && (
@@ -186,8 +189,8 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.05,
         shadowRadius: 1.0,
         elevation: 2,
-        justifyContent: "center",
-        alignItems: "center",
+        // justifyContent: "center",
+        // alignItems: "center",
     },
     permissionWarning: {
         justifyContent: "center",
@@ -203,18 +206,18 @@ const styles = StyleSheet.create({
         borderRadius: 30,
         overflow: "hidden",
         width: "95%",
-        height: "50%",
-        marginTop: "10%",
+        height: "70%",
+        marginTop: "3%",
         borderWidth: 10,
     },
     scanner: {
-        justifyContent: "center",
-        alignItems: "center",
+        // justifyContent: "center",
+        // alignItems: "center",
         backgroundColor: "#ecf0f1",
         padding: 8,
         // borderRadius: 30,
         width: "100%",
-        height: "140%",
+        height: "105%",
     },
     buttonContainer: {
         flex: 1,
