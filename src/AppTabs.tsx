@@ -14,7 +14,7 @@ import {ActivityIndicator} from "react-native-paper";
 const Tabs = createBottomTabNavigator<AppTabsProps>();
 
 export const AppTabs: React.FC = () => {
-    const {tour} = useContext(TourContext);
+    const {tour, currentStop} = useContext(TourContext);
     const {loading, registered} = useContext(RegisterContext);
 
     // StatusBar.setBackgroundColor("rgba(0,0,0,0)");
@@ -65,7 +65,7 @@ export const AppTabs: React.FC = () => {
                 }}
             >
                 <Tabs.Screen
-                    options={{title: "Tour Starten"}}
+                    options={{title: currentStop !== 0 ? "Aktive Tour" : "Tour Starten"}}
                     name="TourStarten"
                     component={TourStack}
                     listeners={({navigation}) => ({
