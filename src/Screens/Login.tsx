@@ -19,12 +19,16 @@ export const Login = ({navigation, route}: AuthNavProps<"Signup">) => {
             contentContainerStyle={styles.container}
             scrollEnabled={false}
             enableOnAndroid={true}
+            // viewIsInsideTabBar={true}
+            // enableAutomaticScroll={true}
+            // extraHeight={65}
+            extraScrollHeight={50}
         >
             <ImageBackground
                 source={require("../../assets/signupbg.png")}
                 style={styles.headerImage}
             >
-                <View style={[styles.header]}>
+                <View style={[styles.loginHeader]}>
                     <View style={styles.textWrapper}>
                         <Text style={styles.loginHeaderText}>Herzlich Willkommen bei SMile</Text>
                         <Text style={styles.loginHeaderSubText}>
@@ -69,7 +73,7 @@ export const Login = ({navigation, route}: AuthNavProps<"Signup">) => {
                 </View>
             </View>
             <View style={styles.buttonContainer}>
-                <View style={[styles.buttonWrap]}>
+                <View style={[styles.buttonWrap, {marginTop: "10%"}]}>
                     <Button
                         title={"Login"}
                         onPress={() => {

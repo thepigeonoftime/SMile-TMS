@@ -30,12 +30,14 @@ export const Signup = ({navigation, route}: AuthNavProps<"Signup">) => {
             contentContainerStyle={styles.container}
             scrollEnabled={false}
             enableOnAndroid={true}
+            // extraHeight={60}
+            extraScrollHeight={60}
         >
             <ImageBackground
                 source={require("../../assets/signupbg.png")}
                 style={styles.headerImage}
             >
-                <View style={[styles.header]}>
+                <View style={styles.signupHeader}>
                     <View style={styles.textWrapper}>
                         <Text style={styles.signupHeaderText}>Jetzt</Text>
                         <Text style={styles.signupHeaderSubText}>Bei SMile registrieren</Text>
@@ -58,7 +60,7 @@ export const Signup = ({navigation, route}: AuthNavProps<"Signup">) => {
                             autoCapitalize="none"
                         />
                     </View>
-                    <View style={[styles.lineWrap, {marginTop: 20}]}>
+                    <View style={[styles.lineWrap, {paddingTop: "8%"}]}>
                         <AntDesign name="unlock" size={28} color="#ccc" style={{}} />
                         <Input
                             label="Passwort"

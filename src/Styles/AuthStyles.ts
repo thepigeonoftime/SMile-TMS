@@ -3,16 +3,19 @@ import {StyleSheet} from "react-native";
 /* tslint:disable:no-unused-styles */
 export const styles = StyleSheet.create({
     container: {
-        flex: 1,
         backgroundColor: "#FFF",
         minHeight: "100%",
     },
-    headerImage: {
-        flex: 1.2,
-    },
-    header: {
-        flex: 0.95,
+    headerImage: {},
+    loginHeader: {
+        paddingTop: "17%",
         paddingHorizontal: "12%",
+        height: "37%",
+    },
+    signupHeader: {
+        paddingTop: "17%",
+        paddingHorizontal: "12%",
+        height: "36%",
     },
     loginHeaderText: {
         fontWeight: "bold",
@@ -35,17 +38,15 @@ export const styles = StyleSheet.create({
         marginBottom: "10%",
     },
     textWrapper: {
-        flex: 1,
         justifyContent: "center",
     },
     contentWrap: {
-        flex: 2,
         justifyContent: "center",
         alignItems: "center",
         borderTopLeftRadius: 40,
         borderTopRightRadius: 40,
         backgroundColor: "#fff",
-        top: "-5%",
+        top: "-10%",
         paddingHorizontal: "10%",
     },
     inputHeader: {
@@ -55,7 +56,6 @@ export const styles = StyleSheet.create({
         paddingTop: "10%",
     },
     inputWrap: {
-        flex: 1,
         flexDirection: "column",
         justifyContent: "flex-start",
         alignItems: "flex-start",
@@ -64,7 +64,7 @@ export const styles = StyleSheet.create({
         paddingLeft: "5%",
     },
     lineWrap: {
-        top: "10%",
+        paddingTop: "3%",
         flexDirection: "row",
         justifyContent: "flex-start",
         alignItems: "flex-end",
@@ -74,13 +74,12 @@ export const styles = StyleSheet.create({
         fontSize: 14,
     },
     buttonContainer: {
-        flex: 0.5,
         alignItems: "center",
     },
     buttonWrap: {
-        flex: 1,
         justifyContent: "flex-start",
         width: "70%",
+        // marginTop: "15%",
     },
     button: {
         borderRadius: 40,
@@ -92,6 +91,7 @@ export const styles = StyleSheet.create({
     },
     switchLink: {
         alignItems: "center",
+        paddingTop: 20,
         paddingBottom: 30,
     },
 });
