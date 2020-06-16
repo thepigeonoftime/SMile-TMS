@@ -57,10 +57,12 @@ export const RegisterZeiten = ({navigation}) => {
         satEnd: timeSchema,
     });
 
+    // save last keystroke in input fields to capture backspaces
     let lastKey = "";
 
     const formatTime = (time) => {
-        time.length > 1 && !time.includes(":") && lastKey !== "Backspace" && (time += ":00");
+        // automaticall add ":00" to time input to only allow full hours
+        time.length > 1 && (time += ":00");
         return time;
     };
 
@@ -93,6 +95,7 @@ export const RegisterZeiten = ({navigation}) => {
     const onSubmit = (data) => {
         let result: resultProps = {};
         const makeResult = (key, obj) => {
+            // reject time inputs with empty fields
             if (!Object.values(obj).includes(undefined)) {
                 result[key] = obj;
             }
@@ -141,7 +144,7 @@ export const RegisterZeiten = ({navigation}) => {
                 justifyContent: "center",
                 backgroundColor: "#FFF",
             }}
-            behavior="padding"
+            // behavior="padding"
         >
             <ScrollView>
                 <View>
@@ -185,7 +188,6 @@ export const RegisterZeiten = ({navigation}) => {
                                         as={<Input />}
                                         control={control}
                                         name="monStart"
-                                        lastkey="none"
                                         onKeyPress={({nativeEvent}) => {
                                             lastKey = nativeEvent.key;
                                         }}
@@ -194,9 +196,10 @@ export const RegisterZeiten = ({navigation}) => {
                                                 "monStart",
                                                 lastKey === "Backspace" ? "" : formatTime(time)
                                             );
+                                            lastKey = "";
                                             errors.monStart && triggerValidation("monStart");
                                         }}
-                                        maxLength={2}
+                                        maxLength={5}
                                         placeholder={
                                             dataZeiten &&
                                             dataZeiten.monday &&
@@ -217,7 +220,6 @@ export const RegisterZeiten = ({navigation}) => {
                                         as={<Input />}
                                         control={control}
                                         name="monEnd"
-                                        lastkey="none"
                                         onKeyPress={({nativeEvent}) => {
                                             lastKey = nativeEvent.key;
                                         }}
@@ -226,6 +228,7 @@ export const RegisterZeiten = ({navigation}) => {
                                                 "monEnd",
                                                 lastKey === "Backspace" ? "" : formatTime(time)
                                             );
+                                            lastKey = "";
                                             errors.monEnd && triggerValidation("monEnd");
                                         }}
                                         onBlur={() => {
@@ -278,7 +281,6 @@ export const RegisterZeiten = ({navigation}) => {
                                             as={<Input />}
                                             control={control}
                                             name="tueStart"
-                                            lastkey="none"
                                             onKeyPress={({nativeEvent}) => {
                                                 lastKey = nativeEvent.key;
                                             }}
@@ -287,6 +289,7 @@ export const RegisterZeiten = ({navigation}) => {
                                                     "tueStart",
                                                     lastKey === "Backspace" ? "" : formatTime(time)
                                                 );
+                                                lastKey = "";
                                                 errors.tueStart && triggerValidation("tueStart");
                                             }}
                                             maxLength={5}
@@ -312,7 +315,6 @@ export const RegisterZeiten = ({navigation}) => {
                                             as={<Input />}
                                             control={control}
                                             name="tueEnd"
-                                            lastkey="none"
                                             onKeyPress={({nativeEvent}) => {
                                                 lastKey = nativeEvent.key;
                                             }}
@@ -321,6 +323,7 @@ export const RegisterZeiten = ({navigation}) => {
                                                     "tueEnd",
                                                     lastKey === "Backspace" ? "" : formatTime(time)
                                                 );
+                                                lastKey = "";
                                                 errors.tueEnd && triggerValidation("tueEnd");
                                             }}
                                             onBlur={() => {
@@ -378,7 +381,6 @@ export const RegisterZeiten = ({navigation}) => {
                                             as={<Input />}
                                             control={control}
                                             name="wedStart"
-                                            lastkey="none"
                                             onKeyPress={({nativeEvent}) => {
                                                 lastKey = nativeEvent.key;
                                             }}
@@ -387,6 +389,7 @@ export const RegisterZeiten = ({navigation}) => {
                                                     "wedStart",
                                                     lastKey === "Backspace" ? "" : formatTime(time)
                                                 );
+                                                lastKey = "";
                                                 errors.wedStart && triggerValidation("wedStart");
                                             }}
                                             maxLength={5}
@@ -412,7 +415,6 @@ export const RegisterZeiten = ({navigation}) => {
                                             as={<Input />}
                                             control={control}
                                             name="wedEnd"
-                                            lastkey="none"
                                             onKeyPress={({nativeEvent}) => {
                                                 lastKey = nativeEvent.key;
                                             }}
@@ -421,6 +423,7 @@ export const RegisterZeiten = ({navigation}) => {
                                                     "wedEnd",
                                                     lastKey === "Backspace" ? "" : formatTime(time)
                                                 );
+                                                lastKey = "";
                                                 errors.wedEnd && triggerValidation("wedEnd");
                                             }}
                                             onBlur={() => {
@@ -478,7 +481,6 @@ export const RegisterZeiten = ({navigation}) => {
                                             as={<Input />}
                                             control={control}
                                             name="thuStart"
-                                            lastkey="none"
                                             onKeyPress={({nativeEvent}) => {
                                                 lastKey = nativeEvent.key;
                                             }}
@@ -487,6 +489,7 @@ export const RegisterZeiten = ({navigation}) => {
                                                     "thuStart",
                                                     lastKey === "Backspace" ? "" : formatTime(time)
                                                 );
+                                                lastKey = "";
                                                 errors.thuStart && triggerValidation("thuStart");
                                             }}
                                             maxLength={5}
@@ -512,7 +515,6 @@ export const RegisterZeiten = ({navigation}) => {
                                             as={<Input />}
                                             control={control}
                                             name="thuEnd"
-                                            lastkey="none"
                                             onKeyPress={({nativeEvent}) => {
                                                 lastKey = nativeEvent.key;
                                             }}
@@ -521,6 +523,7 @@ export const RegisterZeiten = ({navigation}) => {
                                                     "thuEnd",
                                                     lastKey === "Backspace" ? "" : formatTime(time)
                                                 );
+                                                lastKey = "";
                                                 errors.thuEnd && triggerValidation("thuEnd");
                                             }}
                                             maxLength={5}
@@ -578,7 +581,6 @@ export const RegisterZeiten = ({navigation}) => {
                                             as={<Input />}
                                             control={control}
                                             name="friStart"
-                                            lastkey="none"
                                             onKeyPress={({nativeEvent}) => {
                                                 lastKey = nativeEvent.key;
                                             }}
@@ -587,6 +589,7 @@ export const RegisterZeiten = ({navigation}) => {
                                                     "friStart",
                                                     lastKey === "Backspace" ? "" : formatTime(time)
                                                 );
+                                                lastKey = "";
                                                 errors.friStart && triggerValidation("friStart");
                                             }}
                                             maxLength={5}
@@ -612,7 +615,6 @@ export const RegisterZeiten = ({navigation}) => {
                                             as={<Input />}
                                             control={control}
                                             name="friEnd"
-                                            lastkey="none"
                                             onKeyPress={({nativeEvent}) => {
                                                 lastKey = nativeEvent.key;
                                             }}
@@ -621,6 +623,7 @@ export const RegisterZeiten = ({navigation}) => {
                                                     "friEnd",
                                                     lastKey === "Backspace" ? "" : formatTime(time)
                                                 );
+                                                lastKey = "";
                                                 errors.friEnd && triggerValidation("friEnd");
                                             }}
                                             onBlur={() => {
@@ -678,7 +681,6 @@ export const RegisterZeiten = ({navigation}) => {
                                             as={<Input />}
                                             control={control}
                                             name="satStart"
-                                            lastkey="none"
                                             onKeyPress={({nativeEvent}) => {
                                                 lastKey = nativeEvent.key;
                                             }}
@@ -687,6 +689,7 @@ export const RegisterZeiten = ({navigation}) => {
                                                     "satStart",
                                                     lastKey === "Backspace" ? "" : formatTime(time)
                                                 );
+                                                lastKey = "";
                                                 errors.satStart && triggerValidation("satStart");
                                             }}
                                             maxLength={5}
@@ -712,7 +715,6 @@ export const RegisterZeiten = ({navigation}) => {
                                             as={<Input />}
                                             control={control}
                                             name="satEnd"
-                                            lastkey="none"
                                             onKeyPress={({nativeEvent}) => {
                                                 lastKey = nativeEvent.key;
                                             }}
@@ -721,6 +723,7 @@ export const RegisterZeiten = ({navigation}) => {
                                                     "satEnd",
                                                     lastKey === "Backspace" ? "" : formatTime(time)
                                                 );
+                                                lastKey = "";
                                                 errors.satEnd && triggerValidation("satEnd");
                                             }}
                                             maxLength={5}
