@@ -8,10 +8,9 @@ import {AuthNavProps} from "../Types";
 import {KeyboardAwareScrollView} from "react-native-keyboard-aware-scroll-view";
 
 export const Signup = ({navigation, route}: AuthNavProps<"Signup">) => {
-    const {signup} = useContext(AuthContext);
+    const {signup, signupMsg} = useContext(AuthContext);
     const [user, setUser] = useState(null);
     const [password, setPassword] = useState(null);
-    // const [confirmation, setConfirmation] = useState(null);
     const [complete, setComplete] = useState(false);
 
     const checkInput = (confirmation) => {
@@ -37,7 +36,7 @@ export const Signup = ({navigation, route}: AuthNavProps<"Signup">) => {
                 source={require("../../assets/signupbg.png")}
                 style={styles.headerImage}
             >
-                <View style={styles.signupHeader}>
+                <View style={styles.header}>
                     <View style={styles.textWrapper}>
                         <Text style={styles.signupHeaderText}>Jetzt</Text>
                         <Text style={styles.signupHeaderSubText}>Bei SMile registrieren</Text>
@@ -86,6 +85,9 @@ export const Signup = ({navigation, route}: AuthNavProps<"Signup">) => {
                         />
                     </View>
                 </View>
+            </View>
+            <View style={styles.signupMsgContainer}>
+                <Text style={styles.signupMsg}>{signupMsg}</Text>
             </View>
             <View style={styles.buttonContainer}>
                 <View style={[styles.buttonWrap]}>

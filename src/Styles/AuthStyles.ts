@@ -7,15 +7,10 @@ export const styles = StyleSheet.create({
         minHeight: "100%",
     },
     headerImage: {},
-    loginHeader: {
+    header: {
         paddingTop: "17%",
         paddingHorizontal: "12%",
-        height: "37%",
-    },
-    signupHeader: {
-        paddingTop: "17%",
-        paddingHorizontal: "12%",
-        height: "36%",
+        height: "35%",
     },
     loginHeaderText: {
         fontWeight: "bold",
@@ -35,7 +30,6 @@ export const styles = StyleSheet.create({
     signupHeaderSubText: {
         color: "#FFF",
         fontSize: 16,
-        marginBottom: "10%",
     },
     textWrapper: {
         justifyContent: "center",
@@ -72,6 +66,23 @@ export const styles = StyleSheet.create({
     inputContainer: {},
     input: {
         fontSize: 14,
+    },
+    loginMsgContainer: {
+        alignItems: "center",
+        height: "5%",
+    },
+    loginMsg: {
+        color: "#534743",
+        fontSize: 13,
+    },
+    signupMsgContainer: {
+        alignItems: "center",
+        height: "3%",
+    },
+    signupMsg: {
+        marginTop: "-10%",
+        color: "#534743",
+        fontSize: 13,
     },
     buttonContainer: {
         alignItems: "center",

@@ -1,5 +1,5 @@
 import {AntDesign, SimpleLineIcons} from "@expo/vector-icons";
-import React, {useContext, useState} from "react";
+import React, {useContext, useState, useEffect, useRef} from "react";
 import {ImageBackground, KeyboardAvoidingView, Text, TouchableOpacity, View} from "react-native";
 import {Button, Input} from "react-native-elements";
 import {AuthContext} from "../AuthProvider";
@@ -8,7 +8,7 @@ import {AuthNavProps} from "../Types";
 import {KeyboardAwareScrollView} from "react-native-keyboard-aware-scroll-view";
 
 export const Login = ({navigation, route}: AuthNavProps<"Signup">) => {
-    const {login} = useContext(AuthContext);
+    const {login, loginMsg} = useContext(AuthContext);
     const [user, setUser] = useState(null);
     const [password, setPassword] = useState(null);
 
@@ -28,7 +28,7 @@ export const Login = ({navigation, route}: AuthNavProps<"Signup">) => {
                 source={require("../../assets/signupbg.png")}
                 style={styles.headerImage}
             >
-                <View style={[styles.loginHeader]}>
+                <View style={[styles.header]}>
                     <View style={styles.textWrapper}>
                         <Text style={styles.loginHeaderText}>Herzlich Willkommen bei SMile</Text>
                         <Text style={styles.loginHeaderSubText}>
@@ -72,8 +72,11 @@ export const Login = ({navigation, route}: AuthNavProps<"Signup">) => {
                     </View>
                 </View>
             </View>
+            <View style={styles.loginMsgContainer}>
+                <Text style={styles.loginMsg}>{loginMsg}</Text>
+            </View>
             <View style={styles.buttonContainer}>
-                <View style={[styles.buttonWrap, {marginTop: "10%"}]}>
+                <View style={[styles.buttonWrap, {marginTop: "8%"}]}>
                     <Button
                         title={"Login"}
                         onPress={() => {
