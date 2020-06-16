@@ -31,78 +31,61 @@ export const AppTabs: React.FC = () => {
     }
 
     return (
-        <View style={styles.tabContainer}>
-            <View
-                style={{
-                    height: 20,
-                    width: "100%",
-                    backgroundColor: "#F2F2F2",
-                    zIndex: 3,
-                    position: "absolute",
-                    top: 0,
-                    left: 0,
-                }}
-            />
-            <Tabs.Navigator
-                initialRouteName={registered ? "TourStarten" : "Settings"}
-                screenOptions={({route}) => ({
-                    tabBarIcon: ({focused, color, size}) => {
-                        if (route.name === "TourStarten") {
-                            return <EvilIcons name={"location"} size={size} color={color} />;
-                        } else if (route.name === "TourLogbuch") {
-                            return <AntDesign name={"calendar"} size={size} color={color} />;
-                        } else if (route.name === "Settings") {
-                            return <EvilIcons name={"gear"} size={size} color={color} />;
+        <Tabs.Navigator
+            initialRouteName={registered ? "TourStarten" : "Settings"}
+            screenOptions={({route}) => ({
+                tabBarIcon: ({focused, color, size}) => {
+                    if (route.name === "TourStarten") {
+                        return <EvilIcons name={"location"} size={size} color={color} />;
+                    } else if (route.name === "TourLogbuch") {
+                        return <AntDesign name={"calendar"} size={size} color={color} />;
+                    } else if (route.name === "Settings") {
+                        return <EvilIcons name={"gear"} size={size} color={color} />;
+                    }
+                    return <AntDesign name={"home"} size={size} color={color} />;
+                },
+            })}
+            tabBarOptions={{
+                activeTintColor: "#41A9F5",
+                inactiveTintColor: "gray",
+                style: styles.tabBar,
+                labelStyle: styles.tabLabel,
+            }}
+        >
+            <Tabs.Screen
+                options={{title: currentStop !== 0 ? "Aktive Tour" : "Tour Starten"}}
+                name="TourStarten"
+                component={TourStack}
+                listeners={({navigation}) => ({
+                    tabPress: (e) => {
+                        if (!registered || (tour && navigation.isFocused())) {
+                            e.preventDefault();
                         }
-                        return <AntDesign name={"home"} size={size} color={color} />;
                     },
                 })}
-                tabBarOptions={{
-                    activeTintColor: "#41A9F5",
-                    inactiveTintColor: "gray",
-                    style: styles.tabBar,
-                    labelStyle: styles.tabLabel,
+            />
+            <Tabs.Screen
+                options={{title: "Tourenlogbuch"}}
+                name="TourLogbuch"
+                component={Test}
+                listeners={{
+                    tabPress: (e) => {
+                        if (!registered) {
+                            e.preventDefault();
+                        }
+                    },
                 }}
-            >
-                <Tabs.Screen
-                    options={{title: currentStop !== 0 ? "Aktive Tour" : "Tour Starten"}}
-                    name="TourStarten"
-                    component={TourStack}
-                    listeners={({navigation}) => ({
-                        tabPress: (e) => {
-                            if (!registered || (tour && navigation.isFocused())) {
-                                e.preventDefault();
-                            }
-                        },
-                    })}
-                />
-                <Tabs.Screen
-                    options={{title: "Tourenlogbuch"}}
-                    name="TourLogbuch"
-                    component={Test}
-                    listeners={{
-                        tabPress: (e) => {
-                            if (!registered) {
-                                e.preventDefault();
-                            }
-                        },
-                    }}
-                />
-                <Tabs.Screen
-                    options={{title: "Einstellungen"}}
-                    name="Settings"
-                    component={RegisterStack}
-                />
-            </Tabs.Navigator>
-        </View>
+            />
+            <Tabs.Screen
+                options={{title: "Einstellungen"}}
+                name="Settings"
+                component={RegisterStack}
+            />
+        </Tabs.Navigator>
     );
 };
 
 const styles = StyleSheet.create({
-    tabContainer: {
-        height: "100%",
-        backgroundColor: "#FFF",
-    },
     tabBar: {
         position: "absolute",
         bottom: "3%",
