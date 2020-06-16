@@ -54,6 +54,7 @@ export const TourSuche = ({navigation}) => {
                             justifyContent: "space-between",
                             alignItems: "center",
                             paddingHorizontal: 20,
+                            opacity: showError ? 1 : 0,
                         }}
                     >
                         <Text style={{color: "#fff", paddingTop: 10}}>
