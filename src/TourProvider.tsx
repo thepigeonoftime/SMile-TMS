@@ -139,7 +139,7 @@ export const TourProvider = ({children}) => {
         console.log("run pickup queue");
         let queueBuffer = [];
         await AsyncStorage.getItem("pickupQueue").then(async (current) => {
-            const currentQueue = current && current.length ? JSON.parse(current) : null;
+            const currentQueue = current && current.length ? JSON.parse(current) : [];
             await Promise.all(
                 currentQueue.map(async (queuePickup) => {
                     await postPickup(queuePickup.sscc, queuePickup.pickDate)
@@ -167,7 +167,7 @@ export const TourProvider = ({children}) => {
         console.log("run delivery queue");
         let queueBuffer = [];
         await AsyncStorage.getItem("deliveryQueue").then(async (current) => {
-            const currentQueue = current && current.length ? JSON.parse(current) : null;
+            const currentQueue = current && current.length ? JSON.parse(current) : [];
             await Promise.all(
                 currentQueue.map(async (queueDelivery) => {
                     await postDelivery(queueDelivery.sscc, queueDelivery.deliveryDate)
@@ -195,7 +195,7 @@ export const TourProvider = ({children}) => {
         console.log("run packet queue");
         let queueBuffer = [];
         await AsyncStorage.getItem("packetQueue").then(async (current) => {
-            const currentQueue = current && current.length ? JSON.parse(current) : null;
+            const currentQueue = current && current.length ? JSON.parse(current) : [];
             await Promise.all(
                 currentQueue.map(async (queuePacket) => {
                     await updatePacket(
