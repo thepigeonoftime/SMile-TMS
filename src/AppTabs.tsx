@@ -10,6 +10,7 @@ import {TourContext} from "./TourProvider";
 import {TourStack} from "./TourStack";
 import {Center} from "./Center";
 import {ActivityIndicator} from "react-native-paper";
+import {TourLogbuch} from "./Screens/TourLogbuch";
 
 const Tabs = createBottomTabNavigator<AppTabsProps>();
 
@@ -67,7 +68,7 @@ export const AppTabs: React.FC = () => {
             <Tabs.Screen
                 options={{title: "Tourenlogbuch"}}
                 name="TourLogbuch"
-                component={Test}
+                component={TourLogbuch}
                 listeners={{
                     tabPress: (e) => {
                         if (!registered) {
