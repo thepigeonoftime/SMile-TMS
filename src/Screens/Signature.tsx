@@ -13,7 +13,7 @@ import {TourSuche} from "./TourSuche";
 export const Signature = ({navigation}) => {
     console.disableYellowBox = true;
     console.ignoredYellowBox = ["Warning: Each", "Warning: Failed"];
-    const {tour, currentStop, nextStop, resetTour, deliverPacket} = useContext(TourContext);
+    const {tour, currentStop, nextStop, finishTour, deliverPacket} = useContext(TourContext);
     const [dynStyles, setDynStyles] = useState<any>(portrait);
     let signatureRef = useRef(null);
     useEffect(() => {
@@ -48,7 +48,7 @@ export const Signature = ({navigation}) => {
             nextStop();
             navigation.navigate("Ziel");
         } else {
-            resetTour(navigation);
+            finishTour(navigation);
         }
     };
     if (!tour) {

@@ -30,7 +30,7 @@ export const TourContext = React.createContext<{
     currentStop: number;
     setStop: (stop) => void;
     nextStop: () => void;
-    resetTour: (navigation) => void;
+    finishTour: (navigation) => void;
     reportPickup: (sscc, pickDate) => void;
     reportDelivery: (sscc, deliveryDate) => void;
     deliverPacket: (signature, sscc, tourID, tourStop) => void;
@@ -49,7 +49,7 @@ export const TourContext = React.createContext<{
     currentStop: 1,
     setStop: () => {},
     nextStop: () => {},
-    resetTour: () => {},
+    finishTour: () => {},
     reportPickup: (sscc, pickDate) => {},
     reportDelivery: () => {},
     deliverPacket: () => {},
@@ -299,7 +299,7 @@ export const TourProvider = ({children}) => {
                     setTour(null);
                     AsyncStorage.removeItem("tour");
                 },
-                resetTour: (navigation) => {
+                finishTour: async (navigation) => {
                     // reset navigation
                     navigation.dispatch(
                         CommonActions.reset({
@@ -308,6 +308,12 @@ export const TourProvider = ({children}) => {
                             routes: [{name: "TourSuche"}],
                         })
                     );
+                    // save tour object to TourLogbuch
+                    AsyncStorage.getItem("TourLogbuch").then((current) => {
+                        let logBuffer = current ? JSON.parse(current) : [];
+                        logBuffer.push(tour);
+                        AsyncStorage.setItem("TourLogbuch", JSON.stringify(logBuffer));
+                    });
                     // reset tour parameters
                     setCurrentStop(0);
                     setTour(null);

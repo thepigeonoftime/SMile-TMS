@@ -14,7 +14,7 @@ export const Ziel = ({navigation}) => {
         tour,
         currentStop,
         nextStop,
-        resetTour,
+        finishTour,
         toggleTourListe,
         toggleNavigation,
         togglePaketGeben,
@@ -88,7 +88,7 @@ export const Ziel = ({navigation}) => {
                                     nextStop();
                                     navigation.navigate("Ziel");
                                 } else {
-                                    resetTour(navigation);
+                                    finishTour(navigation);
                                 }
                             }}
                         />
