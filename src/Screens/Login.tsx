@@ -12,6 +12,10 @@ export const Login = ({navigation, route}: AuthNavProps<"Signup">) => {
     const [user, setUser] = useState(null);
     const [password, setPassword] = useState(null);
 
+    const onSubmit = () => {
+        login(user.trim(), password);
+    };
+
     return (
         <KeyboardAwareScrollView
             style={{backgroundColor: "#FFF"}}
@@ -79,9 +83,7 @@ export const Login = ({navigation, route}: AuthNavProps<"Signup">) => {
                 <View style={[styles.buttonWrap, {marginTop: "8%"}]}>
                     <Button
                         title={"Login"}
-                        onPress={() => {
-                            login(user, password);
-                        }}
+                        onPress={onSubmit}
                         buttonStyle={styles.button}
                         titleStyle={styles.buttonTitle}
                     />

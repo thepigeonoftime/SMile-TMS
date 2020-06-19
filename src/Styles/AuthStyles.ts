@@ -77,7 +77,7 @@ export const styles = StyleSheet.create({
     },
     signupMsgContainer: {
         alignItems: "center",
-        height: "3%",
+        height: "3.2%",
     },
     signupMsg: {
         marginTop: "-10%",

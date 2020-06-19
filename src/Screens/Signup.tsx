@@ -22,6 +22,10 @@ export const Signup = ({navigation, route}: AuthNavProps<"Signup">) => {
         }
     };
 
+    const onSubmit = () => {
+        signup(user.trim(), password);
+    };
+
     return (
         <KeyboardAwareScrollView
             style={{backgroundColor: "#FFF"}}
@@ -93,9 +97,7 @@ export const Signup = ({navigation, route}: AuthNavProps<"Signup">) => {
                 <View style={[styles.buttonWrap]}>
                     <Button
                         title={"Weiter"}
-                        onPress={() => {
-                            signup(user, password);
-                        }}
+                        onPress={onSubmit}
                         buttonStyle={styles.button}
                         titleStyle={styles.buttonTitle}
                         disabled={!complete}
