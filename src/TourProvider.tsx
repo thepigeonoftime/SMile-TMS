@@ -299,7 +299,7 @@ export const TourProvider = ({children}) => {
                     setTour(null);
                     AsyncStorage.removeItem("tour");
                 },
-                finishTour: async (navigation) => {
+                finishTour: (navigation) => {
                     // reset navigation
                     navigation.dispatch(
                         CommonActions.reset({
