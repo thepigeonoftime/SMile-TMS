@@ -309,11 +309,13 @@ export const TourProvider = ({children}) => {
                         })
                     );
                     // save tour object to TourLogbuch
-                    AsyncStorage.getItem("TourLogbuch").then((current) => {
-                        let logBuffer = current ? JSON.parse(current) : [];
-                        logBuffer.push(tour);
-                        AsyncStorage.setItem("TourLogbuch", JSON.stringify(logBuffer));
-                    });
+                    AsyncStorage.getItem("TourLogbuch")
+                        .then((current) => {
+                            let logBuffer = current ? JSON.parse(current) : [];
+                            logBuffer.push(tour);
+                            AsyncStorage.setItem("TourLogbuch", JSON.stringify(logBuffer));
+                        })
+                        .catch((err) => console.log(err));
                     // reset tour parameters
                     setCurrentStop(0);
                     setTour(null);
