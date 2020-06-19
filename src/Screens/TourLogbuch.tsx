@@ -1,4 +1,5 @@
 import React, {useEffect, useState} from "react";
+import {Ionicons} from "@expo/vector-icons";
 import {View, StyleSheet, Text, AsyncStorage} from "react-native";
 import {Header} from "../Header";
 import moment from "moment";
@@ -41,7 +42,7 @@ export const TourLogbuch = ({navigation}) => {
                     // paddingBottom: "4%",
                 }}
             />
-            <View style={{position: "absolute", top: 20, right: 40}}>
+            <View style={{position: "absolute", top: 50, right: 40}}>
                 <TouchableOpacity onPress={clearTours}>
                     <Text>clear</Text>
                 </TouchableOpacity>
@@ -49,13 +50,17 @@ export const TourLogbuch = ({navigation}) => {
             <View style={styles.container}>
                 {!loading &&
                     tourLogs.map((tourItem, index) => {
-                        console.log(tourItem);
                         return (
                             <View key={index} style={styles.tourItem}>
-                                <Text style={styles.date}>
-                                    {moment(tourItem.tourMetaData.tourStartTime).format("L")} |{" "}
-                                    {moment(tourItem.tourMetaData.tourStartTime).format("LT")}
-                                </Text>
+                                <TouchableOpacity style={styles.titleLink}>
+                                    <Text style={styles.date}>
+                                        {moment(tourItem.tourMetaData.tourStartTime).format("L")} |{" "}
+                                        {moment(tourItem.tourMetaData.tourStartTime).format("LT")}
+                                    </Text>
+                                    <View style={styles.icon}>
+                                        <Ionicons name="ios-arrow-forward" size={25} color="#ccc" />
+                                    </View>
+                                </TouchableOpacity>
                                 <View style={styles.details}>
                                     <Text style={styles.detailText}>
                                         {Object.keys(tourItem.packets).length} Pakete
@@ -93,6 +98,10 @@ const styles = StyleSheet.create({
     tourItem: {
         paddingBottom: 20,
     },
+    titleLink: {
+        flexDirection: "row",
+        justifyContent: "space-between",
+    },
     date: {
         fontSize: 20,
         fontWeight: "700",
@@ -105,5 +114,9 @@ const styles = StyleSheet.create({
     detailText: {
         color: "#729628",
         paddingRight: 40,
+    },
+    icon: {
+        justifyContent: "flex-start",
+        alignItems: "flex-end",
     },
 });
