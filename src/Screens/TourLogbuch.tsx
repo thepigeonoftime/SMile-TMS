@@ -3,10 +3,14 @@ import {View, StyleSheet, Text, AsyncStorage} from "react-native";
 import {Header} from "../Header";
 import moment from "moment";
 import "moment/locale/de";
+import {TouchableOpacity} from "react-native-gesture-handler";
 
-export const TourLogbuch = ({}) => {
+export const TourLogbuch = ({navigation}) => {
     const [loading, setLoading] = useState(true);
-    const [tourLogs, setTourLogs] = useState(null);
+    const [tourLogs, setTourLogs] = useState([]);
+
+    moment.locale("de");
+
     useEffect(() => {
         AsyncStorage.getItem("TourLogbuch")
             .then((logs) => {
@@ -14,9 +18,12 @@ export const TourLogbuch = ({}) => {
                 setLoading(false);
             })
             .catch((err) => console.log(err));
-    }, []);
+    }, [loading]);
 
-    moment.locale("de");
+    const clearTours = () => {
+        AsyncStorage.removeItem("TourLogbuch");
+        setTourLogs([]);
+    };
 
     return (
         <View style={{flex: 1}}>
@@ -34,6 +41,11 @@ export const TourLogbuch = ({}) => {
                     // paddingBottom: "4%",
                 }}
             />
+            <View style={{position: "absolute", top: 20, right: 40}}>
+                <TouchableOpacity onPress={clearTours}>
+                    <Text>clear</Text>
+                </TouchableOpacity>
+            </View>
             <View style={styles.container}>
                 {!loading &&
                     tourLogs.map((tourItem, index) => {
