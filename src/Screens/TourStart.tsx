@@ -1,5 +1,5 @@
 import {Entypo, Ionicons} from "@expo/vector-icons";
-import React, {useContext} from "react";
+import React, {useContext, useEffect, useState} from "react";
 import {ScrollView, StyleSheet, Text, TouchableOpacity, View} from "react-native";
 import {TourContext} from "../TourProvider";
 import PaketIcon from "~/assets/svg/icn-mini_collie-no.svg";
@@ -11,6 +11,7 @@ import {
     widthPercentageToDP as wp,
     heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
+import {calculateDistance} from "../Requests";
 
 interface IRoute {
     tour: {
@@ -25,6 +26,34 @@ interface IRoute {
 
 export const TourStart: React.FC<IRoute> = ({navigation}) => {
     const {tour, setTour, removeTour, setError, error} = useContext(TourContext);
+    const [distance, setDistance] = useState("...");
+
+    useEffect(() => {
+        const formatAddress = (stop) => {
+            const result =
+                stop.streetName + "+" + stop.streetNumber + "+" + stop.zip + "+" + stop.city;
+            return result.replace(/ /g, "+");
+        };
+        const tourBuffer = [...tour.stops];
+        const origin = formatAddress(tourBuffer.shift());
+        const destination = formatAddress(tourBuffer.pop());
+        const waypoints = tourBuffer
+            .map((stop, index) => {
+                const separator = index === 0 ? "via:" : "|via:";
+                return separator + formatAddress(stop);
+            })
+            .join("");
+        calculateDistance(origin, destination, waypoints)
+            .then((result) => {
+                // console.log(result);
+                setDistance(
+                    String(
+                        (parseFloat(result.data.routes[0].legs[0].distance.value) / 1000).toFixed(1)
+                    )
+                );
+            })
+            .catch((err) => console.log(err));
+    }, []);
 
     return (
         <ScrollView>
@@ -133,7 +162,7 @@ export const TourStart: React.FC<IRoute> = ({navigation}) => {
                                             style={{marginLeft: -30, marginRight: 20}}
                                         />
                                         <Text style={[styles.mFont, styles.green]}>
-                                            {Object.keys(tour.stops).length - 1} Stops
+                                            {tour.stops.length - 1} Stops
                                         </Text>
                                     </View>
                                     <View
@@ -163,9 +192,8 @@ export const TourStart: React.FC<IRoute> = ({navigation}) => {
                                             fill="#ccc"
                                             style={{marginLeft: -30, marginRight: 20}}
                                         />
-                                        {/* Google Maps calc distance */}
                                         <Text style={[styles.mFont, styles.green]}>
-                                            10 Kilometer{" "}
+                                            {distance} Kilometer{" "}
                                         </Text>
                                     </View>
                                 </View>

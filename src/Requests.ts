@@ -46,6 +46,14 @@ export const postDelivery = (sscc, receiveDate) => {
     });
 };
 
+export const calculateDistance = (origin, destination, waypoints) => {
+    return axios.get(`https://maps.googleapis.com/maps/api/directions/json?\
+origin=${origin}&\
+destination=${destination}&\
+waypoints=${waypoints}&\
+key=AIzaSyDzgQenA9LdgC7sIXpng2GgV9lvasHUFOo`);
+};
+
 export const CREATE_DELIVERER = gql`
     mutation createDeliverer(
         $costsPerStop: Int!
