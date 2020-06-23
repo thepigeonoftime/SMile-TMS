@@ -13,13 +13,15 @@ export const TourLogbuch = ({navigation}) => {
     moment.locale("de");
 
     useEffect(() => {
-        AsyncStorage.getItem("TourLogbuch")
-            .then((logs) => {
-                logs && setTourLogs(JSON.parse(logs));
-                setLoading(false);
-            })
-            .catch((err) => console.log(err));
-    }, [loading]);
+        navigation.addListener("focus", () => {
+            AsyncStorage.getItem("TourLogbuch")
+                .then((logs) => {
+                    logs && setTourLogs(JSON.parse(logs));
+                    setLoading(false);
+                })
+                .catch((err) => console.log(err));
+        });
+    }, []);
 
     const clearTours = () => {
         AsyncStorage.removeItem("TourLogbuch");
