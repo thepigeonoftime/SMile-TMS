@@ -22,15 +22,20 @@ export const RegisterZeiten = ({navigation}) => {
     const {dataZeiten, storeDataZeiten} = useContext(RegisterContext);
 
     const [isEnabled, setIsEnabled] = useState({
-        monday: dataZeiten && dataZeiten.monday && dataZeiten.monday.day ? true : false,
-        tuesday: dataZeiten && dataZeiten.tuesday && dataZeiten.tuesday.day ? true : false,
-        wednesday: dataZeiten && dataZeiten.wednesday && dataZeiten.wednesday.day ? true : false,
-        thursday: dataZeiten && dataZeiten.thursday && dataZeiten.thursday.day ? true : false,
-        friday: dataZeiten && dataZeiten.friday && dataZeiten.friday.day ? true : false,
-        saturday: dataZeiten && dataZeiten.saturday && dataZeiten.saturday.day ? true : false,
+        // restore previous switch states
+        // monday: dataZeiten && dataZeiten.monday && dataZeiten.monday.day ? true : false,
+        // tuesday: dataZeiten && dataZeiten.tuesday && dataZeiten.tuesday.day ? true : false,
+        // wednesday: dataZeiten && dataZeiten.wednesday && dataZeiten.wednesday.day ? true : false,
+        // thursday: dataZeiten && dataZeiten.thursday && dataZeiten.thursday.day ? true : false,
+        // friday: dataZeiten && dataZeiten.friday && dataZeiten.friday.day ? true : false,
+        // saturday: dataZeiten && dataZeiten.saturday && dataZeiten.saturday.day ? true : false,
+        monday: false,
+        tuesday: false,
+        wednesday: false,
+        thursday: false,
+        friday: false,
+        saturday: false,
     });
-
-    // console.log(dataZeiten.monday);
 
     const toggleSwitch = (key) => {
         setIsEnabled({...isEnabled, [key]: !isEnabled[key]});
@@ -92,6 +97,12 @@ export const RegisterZeiten = ({navigation}) => {
         } else {
             clearError(errorField);
         }
+    };
+
+    const getPlaceholder = (day, type) => {
+        return dataZeiten && dataZeiten[day] && dataZeiten[day][type]
+            ? String(dataZeiten[day][type]) + ":00"
+            : "";
     };
 
     const onSubmit = (data) => {
@@ -188,13 +199,7 @@ export const RegisterZeiten = ({navigation}) => {
                                             errors.monStart && triggerValidation("monStart");
                                         }}
                                         maxLength={5}
-                                        placeholder={
-                                            dataZeiten &&
-                                            dataZeiten.monday &&
-                                            dataZeiten.monday.startTime
-                                                ? String(dataZeiten.monday.startTime)
-                                                : ""
-                                        }
+                                        placeholder={getPlaceholder("monday", "startTime")}
                                         errorMessage={
                                             errors.monStart ? errors.monStart.message : " "
                                         }
@@ -223,13 +228,7 @@ export const RegisterZeiten = ({navigation}) => {
                                             isGreater("monStart", "monEnd", "monday");
                                         }}
                                         maxLength={5}
-                                        placeholder={
-                                            dataZeiten &&
-                                            dataZeiten.monday &&
-                                            dataZeiten.monday.endTime
-                                                ? String(String(dataZeiten.monday.endTime))
-                                                : ""
-                                        }
+                                        placeholder={getPlaceholder("monday", "endTime")}
                                         errorMessage={errors.monEnd ? errors.monEnd.message : " "}
                                         containerStyle={styles.input}
                                         inputStyle={styles.inputText}
@@ -283,13 +282,7 @@ export const RegisterZeiten = ({navigation}) => {
                                                 errors.tueStart && triggerValidation("tueStart");
                                             }}
                                             maxLength={5}
-                                            placeholder={
-                                                dataZeiten &&
-                                                dataZeiten.tuesday &&
-                                                dataZeiten.tuesday.startTime
-                                                    ? String(String(dataZeiten.tuesday.startTime))
-                                                    : ""
-                                            }
+                                            placeholder={getPlaceholder("tuesday", "startTime")}
                                             errorMessage={
                                                 errors.tueStart ? errors.tueStart.message : " "
                                             }
@@ -320,13 +313,7 @@ export const RegisterZeiten = ({navigation}) => {
                                                 isGreater("tueStart", "tueEnd", "tuesday");
                                             }}
                                             maxLength={5}
-                                            placeholder={
-                                                dataZeiten &&
-                                                dataZeiten.tuesday &&
-                                                dataZeiten.tuesday.endTime
-                                                    ? String(String(dataZeiten.tuesday.endTime))
-                                                    : ""
-                                            }
+                                            placeholder={getPlaceholder("tuesday", "endTime")}
                                             errorMessage={
                                                 errors.tueEnd ? errors.tueEnd.message : " "
                                             }
@@ -383,13 +370,7 @@ export const RegisterZeiten = ({navigation}) => {
                                                 errors.wedStart && triggerValidation("wedStart");
                                             }}
                                             maxLength={5}
-                                            placeholder={
-                                                dataZeiten &&
-                                                dataZeiten.wednesday &&
-                                                dataZeiten.wednesday.startTime
-                                                    ? String(String(dataZeiten.wednesday.startTime))
-                                                    : ""
-                                            }
+                                            placeholder={getPlaceholder("wednesday", "startTime")}
                                             errorMessage={
                                                 errors.wedStart ? errors.wedStart.message : " "
                                             }
@@ -420,13 +401,7 @@ export const RegisterZeiten = ({navigation}) => {
                                                 isGreater("wedStart", "wedEnd", "wednesday");
                                             }}
                                             maxLength={5}
-                                            placeholder={
-                                                dataZeiten &&
-                                                dataZeiten.wednesday &&
-                                                dataZeiten.wednesday.endTime
-                                                    ? String(String(dataZeiten.wednesday.endTime))
-                                                    : ""
-                                            }
+                                            placeholder={getPlaceholder("wednesday", "endTime")}
                                             errorMessage={
                                                 errors.wedEnd ? errors.wedEnd.message : " "
                                             }
@@ -483,13 +458,7 @@ export const RegisterZeiten = ({navigation}) => {
                                                 errors.thuStart && triggerValidation("thuStart");
                                             }}
                                             maxLength={5}
-                                            placeholder={
-                                                dataZeiten &&
-                                                dataZeiten.thursday &&
-                                                dataZeiten.thursday.startTime
-                                                    ? String(String(dataZeiten.thursday.startTime))
-                                                    : ""
-                                            }
+                                            placeholder={getPlaceholder("thursday", "startTime")}
                                             errorMessage={
                                                 errors.thuStart ? errors.thuStart.message : " "
                                             }
@@ -517,13 +486,7 @@ export const RegisterZeiten = ({navigation}) => {
                                                 errors.thuEnd && triggerValidation("thuEnd");
                                             }}
                                             maxLength={5}
-                                            placeholder={
-                                                dataZeiten &&
-                                                dataZeiten.thursday &&
-                                                dataZeiten.thursday.endTime
-                                                    ? String(String(dataZeiten.thursday.endTime))
-                                                    : ""
-                                            }
+                                            placeholder={getPlaceholder("thursday", "endTime")}
                                             errorMessage={
                                                 errors.thuEnd ? errors.thuEnd.message : " "
                                             }
@@ -583,13 +546,7 @@ export const RegisterZeiten = ({navigation}) => {
                                                 errors.friStart && triggerValidation("friStart");
                                             }}
                                             maxLength={5}
-                                            placeholder={
-                                                dataZeiten &&
-                                                dataZeiten.friday &&
-                                                dataZeiten.friday.startTime
-                                                    ? String(String(dataZeiten.friday.startTime))
-                                                    : ""
-                                            }
+                                            placeholder={getPlaceholder("friday", "startTime")}
                                             errorMessage={
                                                 errors.friStart ? errors.friStart.message : " "
                                             }
@@ -620,15 +577,7 @@ export const RegisterZeiten = ({navigation}) => {
                                                 isGreater("friStart", "friEnd", "friday");
                                             }}
                                             maxLength={5}
-                                            placeholder={
-                                                dataZeiten &&
-                                                dataZeiten.friday &&
-                                                dataZeiten.friday.endTime
-                                                    ? String(
-                                                          String(String(dataZeiten.friday.endTime))
-                                                      )
-                                                    : ""
-                                            }
+                                            placeholder={getPlaceholder("friday", "endTime")}
                                             errorMessage={
                                                 errors.friEnd ? errors.friEnd.message : " "
                                             }
@@ -685,13 +634,7 @@ export const RegisterZeiten = ({navigation}) => {
                                                 errors.satStart && triggerValidation("satStart");
                                             }}
                                             maxLength={5}
-                                            placeholder={
-                                                dataZeiten &&
-                                                dataZeiten.saturday &&
-                                                dataZeiten.saturday.startTime
-                                                    ? String(String(dataZeiten.saturday.startTime))
-                                                    : ""
-                                            }
+                                            placeholder={getPlaceholder("saturday", "startTime")}
                                             errorMessage={
                                                 errors.satStart ? errors.satStart.message : " "
                                             }
@@ -718,18 +661,7 @@ export const RegisterZeiten = ({navigation}) => {
                                                 lastKey = "";
                                                 errors.satEnd && triggerValidation("satEnd");
                                             }}
-                                            maxLength={5}
-                                            placeholder={
-                                                dataZeiten &&
-                                                dataZeiten.saturday &&
-                                                dataZeiten.saturday.endTime
-                                                    ? String(
-                                                          String(
-                                                              String(dataZeiten.saturday.endTime)
-                                                          )
-                                                      )
-                                                    : ""
-                                            }
+                                            placeholder={getPlaceholder("saturday", "endTime")}
                                             errorMessage={
                                                 errors.satEnd ? errors.satEnd.message : " "
                                             }
