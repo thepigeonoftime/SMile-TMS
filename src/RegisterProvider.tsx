@@ -69,10 +69,15 @@ export const RegisterProvider: React.FC<RegisterProviderProps> = ({children}) =>
                         createDeliverer(
                             structureRegData(dataPerson, dataFahrzeug, dataGebiet, dataZeiten)
                         )
-                            .then((result) => {
-                                setRegistered("smile");
-                                AsyncStorage.setItem("registered", "true");
-                                resolve(result);
+                            .then(({data, errors}) => {
+                                if (errors && errors[0]) {
+                                    console.log("graphql error:", errors[0].message);
+                                    reject(errors[0]);
+                                } else {
+                                    setRegistered("smile");
+                                    AsyncStorage.setItem("registered", "true");
+                                    resolve(data);
+                                }
                             })
                             .catch((err) => reject(err));
                     });
