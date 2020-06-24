@@ -16,7 +16,7 @@ import {Switch, Text} from "react-native-paper";
 import * as yup from "yup";
 import {Header} from "../Header";
 import {RegisterContext} from "../RegisterProvider";
-import {resultProps} from "../Types";
+import {wishTimeFrame, resultProps} from "../Types";
 
 export const RegisterZeiten = ({navigation}) => {
     const {dataZeiten, storeDataZeiten} = useContext(RegisterContext);
@@ -29,6 +29,8 @@ export const RegisterZeiten = ({navigation}) => {
         friday: dataZeiten && dataZeiten.friday && dataZeiten.friday.day ? true : false,
         saturday: dataZeiten && dataZeiten.saturday && dataZeiten.saturday.day ? true : false,
     });
+
+    // console.log(dataZeiten.monday);
 
     const toggleSwitch = (key) => {
         setIsEnabled({...isEnabled, [key]: !isEnabled[key]});
@@ -93,44 +95,30 @@ export const RegisterZeiten = ({navigation}) => {
     };
 
     const onSubmit = (data) => {
-        let result: resultProps = {};
-        const makeResult = (key, obj) => {
-            // reject time inputs with empty fields
-            if (!Object.values(obj).includes(undefined)) {
-                result[key] = obj;
-            }
-        };
+        let result = {};
 
-        makeResult("monday", {
-            day: isEnabled.monday ? "MONDAY" : undefined,
-            startTime: data.monStart,
-            endTime: data.monEnd,
+        const makeResultData = [
+            ["monday", "monStart", "monEnd"],
+            ["tuesday", "tueStart", "tueEnd"],
+            ["wednesday", "wedStart", "wedEnd"],
+            ["thursday", "thuStart", "thuEnd"],
+            ["friday", "friStart", "friEnd"],
+            ["saturday", "satStart", "satEnd"],
+        ];
+
+        makeResultData.forEach((row) => {
+            // reject time inputs with empty fields
+            const day = row[0],
+                start = row[1],
+                end = row[2];
+            const obj = {
+                day: isEnabled[day] ? day.toUpperCase() : undefined,
+                startTime: parseInt(data[start]),
+                endTime: parseInt(data[end]),
+            };
+            !Object.values(obj).includes(undefined) && (result[day] = obj);
         });
-        makeResult("tuesday", {
-            day: isEnabled.tuesday ? "TUESDAY" : undefined,
-            startTime: data.tueStart,
-            endTime: data.tueEnd,
-        });
-        makeResult("wednesday", {
-            day: isEnabled.wednesday ? "WEDNESDAY" : undefined,
-            startTime: data.wedStart,
-            endTime: data.wedEnd,
-        });
-        makeResult("thursday", {
-            day: isEnabled.thursday ? "THURSDAY" : undefined,
-            startTime: data.thuStart,
-            endTime: data.thuEnd,
-        });
-        makeResult("friday", {
-            day: isEnabled.friday ? "FRIDAY" : undefined,
-            startTime: data.friStart,
-            endTime: data.friEnd,
-        });
-        makeResult("saturday", {
-            day: isEnabled.saturday ? "SATURDAY" : undefined,
-            startTime: data.satStart,
-            endTime: data.satEnd,
-        });
+
         console.log(result);
         storeDataZeiten(result, true);
         navigation.goBack();
@@ -203,8 +191,8 @@ export const RegisterZeiten = ({navigation}) => {
                                         placeholder={
                                             dataZeiten &&
                                             dataZeiten.monday &&
-                                            dataZeiten.monday.start
-                                                ? dataZeiten.monday.start
+                                            dataZeiten.monday.startTime
+                                                ? String(dataZeiten.monday.startTime)
                                                 : ""
                                         }
                                         errorMessage={
@@ -236,8 +224,10 @@ export const RegisterZeiten = ({navigation}) => {
                                         }}
                                         maxLength={5}
                                         placeholder={
-                                            dataZeiten && dataZeiten.monday && dataZeiten.monday.end
-                                                ? dataZeiten.monday.end
+                                            dataZeiten &&
+                                            dataZeiten.monday &&
+                                            dataZeiten.monday.endTime
+                                                ? String(String(dataZeiten.monday.endTime))
                                                 : ""
                                         }
                                         errorMessage={errors.monEnd ? errors.monEnd.message : " "}
@@ -296,8 +286,8 @@ export const RegisterZeiten = ({navigation}) => {
                                             placeholder={
                                                 dataZeiten &&
                                                 dataZeiten.tuesday &&
-                                                dataZeiten.tuesday.start
-                                                    ? dataZeiten.tuesday.start
+                                                dataZeiten.tuesday.startTime
+                                                    ? String(String(dataZeiten.tuesday.startTime))
                                                     : ""
                                             }
                                             errorMessage={
@@ -333,8 +323,8 @@ export const RegisterZeiten = ({navigation}) => {
                                             placeholder={
                                                 dataZeiten &&
                                                 dataZeiten.tuesday &&
-                                                dataZeiten.tuesday.end
-                                                    ? dataZeiten.tuesday.end
+                                                dataZeiten.tuesday.endTime
+                                                    ? String(String(dataZeiten.tuesday.endTime))
                                                     : ""
                                             }
                                             errorMessage={
@@ -396,8 +386,8 @@ export const RegisterZeiten = ({navigation}) => {
                                             placeholder={
                                                 dataZeiten &&
                                                 dataZeiten.wednesday &&
-                                                dataZeiten.wednesday.start
-                                                    ? dataZeiten.wednesday.start
+                                                dataZeiten.wednesday.startTime
+                                                    ? String(String(dataZeiten.wednesday.startTime))
                                                     : ""
                                             }
                                             errorMessage={
@@ -433,8 +423,8 @@ export const RegisterZeiten = ({navigation}) => {
                                             placeholder={
                                                 dataZeiten &&
                                                 dataZeiten.wednesday &&
-                                                dataZeiten.wednesday.end
-                                                    ? dataZeiten.wednesday.end
+                                                dataZeiten.wednesday.endTime
+                                                    ? String(String(dataZeiten.wednesday.endTime))
                                                     : ""
                                             }
                                             errorMessage={
@@ -496,8 +486,8 @@ export const RegisterZeiten = ({navigation}) => {
                                             placeholder={
                                                 dataZeiten &&
                                                 dataZeiten.thursday &&
-                                                dataZeiten.thursday.start
-                                                    ? dataZeiten.thursday.start
+                                                dataZeiten.thursday.startTime
+                                                    ? String(String(dataZeiten.thursday.startTime))
                                                     : ""
                                             }
                                             errorMessage={
@@ -530,8 +520,8 @@ export const RegisterZeiten = ({navigation}) => {
                                             placeholder={
                                                 dataZeiten &&
                                                 dataZeiten.thursday &&
-                                                dataZeiten.thursday.end
-                                                    ? dataZeiten.thursday.end
+                                                dataZeiten.thursday.endTime
+                                                    ? String(String(dataZeiten.thursday.endTime))
                                                     : ""
                                             }
                                             errorMessage={
@@ -596,8 +586,8 @@ export const RegisterZeiten = ({navigation}) => {
                                             placeholder={
                                                 dataZeiten &&
                                                 dataZeiten.friday &&
-                                                dataZeiten.friday.start
-                                                    ? dataZeiten.friday.start
+                                                dataZeiten.friday.startTime
+                                                    ? String(String(dataZeiten.friday.startTime))
                                                     : ""
                                             }
                                             errorMessage={
@@ -633,8 +623,10 @@ export const RegisterZeiten = ({navigation}) => {
                                             placeholder={
                                                 dataZeiten &&
                                                 dataZeiten.friday &&
-                                                dataZeiten.friday.end
-                                                    ? dataZeiten.friday.end
+                                                dataZeiten.friday.endTime
+                                                    ? String(
+                                                          String(String(dataZeiten.friday.endTime))
+                                                      )
                                                     : ""
                                             }
                                             errorMessage={
@@ -696,8 +688,8 @@ export const RegisterZeiten = ({navigation}) => {
                                             placeholder={
                                                 dataZeiten &&
                                                 dataZeiten.saturday &&
-                                                dataZeiten.saturday.start
-                                                    ? dataZeiten.saturday.start
+                                                dataZeiten.saturday.startTime
+                                                    ? String(String(dataZeiten.saturday.startTime))
                                                     : ""
                                             }
                                             errorMessage={
@@ -730,8 +722,12 @@ export const RegisterZeiten = ({navigation}) => {
                                             placeholder={
                                                 dataZeiten &&
                                                 dataZeiten.saturday &&
-                                                dataZeiten.saturday.end
-                                                    ? dataZeiten.saturday.end
+                                                dataZeiten.saturday.endTime
+                                                    ? String(
+                                                          String(
+                                                              String(dataZeiten.saturday.endTime)
+                                                          )
+                                                      )
                                                     : ""
                                             }
                                             errorMessage={
