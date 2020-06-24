@@ -89,6 +89,7 @@ export const CREATE_DELIVERER = gql`
                 wishTimeframes: $wishTimeframes
             }
         ) {
+            id
             costsPerHour
             costsPerKm
             costsPerStop
@@ -109,7 +110,6 @@ export const CREATE_DELIVERER = gql`
                 startTime
                 endTime
             }
-            id
         }
     }
 `;
@@ -236,7 +236,11 @@ export const structureRegData = (
     dataZeiten: dataZeitenProps
 ) => {
     if (dataPerson && dataFahrzeug && dataGebiet && dataZeiten) {
-        console.log(dataGebiet.zustellGebietPLZ);
+        const wishTimeFrames = [];
+        // anonymize wishTimeFrame object from weekday keys
+        for (const [key, obj] of Object.entries(dataZeiten)) {
+            wishTimeFrames.push(obj);
+        }
         return {
             variables: {
                 costsPerHour: parseInt(dataGebiet.grundpreis),
@@ -255,10 +259,7 @@ export const structureRegData = (
                 maxStopsPerTour: 1,
                 tmsCarrierId: "0",
                 vehicleType: dataFahrzeug.fahrzeugArt,
-                wishTimeframes: [
-                    {day: "MONDAY", startTime: 12, endTime: 18},
-                    {day: "TUESDAY", startTime: 12, endTime: 18},
-                ],
+                wishTimeframes: wishTimeFrames,
             },
         };
     } else {
