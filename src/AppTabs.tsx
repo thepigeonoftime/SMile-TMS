@@ -54,7 +54,7 @@ export const AppTabs: React.FC = () => {
             }}
         >
             <Tabs.Screen
-                options={{title: currentStop !== 0 ? "Aktive Tour" : "Tour Starten"}}
+                options={{title: tour && currentStop !== 0 ? "Aktive Tour" : "Tour Starten"}}
                 name="TourStarten"
                 component={TourStack}
                 listeners={({navigation}) => ({
