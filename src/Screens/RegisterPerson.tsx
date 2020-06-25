@@ -52,7 +52,7 @@ export const RegisterPerson = ({navigation}) => {
     const {setValue, handleSubmit, errors, triggerValidation, control, formState} = useForm({
         mode: "onBlur",
         reValidateMode: "onChange",
-        validationSchema: validationSchema,
+        validationSchema,
         submitFocusError: true,
     });
     const onSubmit = (data) => {

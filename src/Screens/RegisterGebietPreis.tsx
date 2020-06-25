@@ -17,7 +17,7 @@ import {RegisterContext} from "../RegisterProvider";
 export const RegisterGebietPreis = ({navigation}) => {
     const {dataGebiet, storeDataGebiet} = useContext(RegisterContext);
 
-    const registerSchema = Yup.object().shape({
+    const validationSchema = Yup.object().shape({
         zustellGebietPLZ: Yup.string()
             .matches(/^[0-9]{5}$/, "5-stellige Zahl")
             .required("Benötigt"),
@@ -58,7 +58,7 @@ export const RegisterGebietPreis = ({navigation}) => {
     } = useForm({
         mode: "onBlur",
         reValidateMode: "onChange",
-        validationSchema: registerSchema,
+        validationSchema,
         submitFocusError: true,
     });
     const onSubmit = (data) => {

@@ -41,12 +41,8 @@ export const RegisterZeiten = ({navigation}) => {
         setIsEnabled({...isEnabled, [key]: !isEnabled[key]});
     };
 
-    const timeSchema = yup.string().test("is-time", "Ungültig", function (value) {
-        if (value) {
-            return moment(value, "HH:mm", true).isValid();
-        } else {
-            return true;
-        }
+    const timeSchema = yup.string().test("is-time", "Ungültig", (value) => {
+        return value ? moment(value, "HH:mm", true).isValid() : true;
     });
 
     const validationSchema = yup.object().shape({
@@ -87,7 +83,7 @@ export const RegisterZeiten = ({navigation}) => {
     } = useForm({
         mode: "onBlur",
         reValidateMode: "onChange",
-        validationSchema: validationSchema,
+        validationSchema,
         submitFocusError: true,
     });
 
@@ -106,7 +102,7 @@ export const RegisterZeiten = ({navigation}) => {
     };
 
     const onSubmit = (data) => {
-        let result = {};
+        const result = {};
 
         const makeResultData = [
             ["monday", "monStart", "monEnd"],
@@ -124,8 +120,8 @@ export const RegisterZeiten = ({navigation}) => {
                 end = row[2];
             const obj = {
                 day: isEnabled[day] ? day.toUpperCase() : undefined,
-                startTime: parseInt(data[start]),
-                endTime: parseInt(data[end]),
+                startTime: Number(data[start]),
+                endTime: Number(data[end]),
             };
             !Object.values(obj).includes(undefined) && (result[day] = obj);
         });

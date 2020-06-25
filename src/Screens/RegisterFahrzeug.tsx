@@ -19,7 +19,7 @@ import {RegisterContext} from "../RegisterProvider";
 export const RegisterFahrzeug = ({navigation}) => {
     const {dataFahrzeug, storeDataFahrzeug} = useContext(RegisterContext);
 
-    const registerSchema = Yup.object().shape({
+    const validationSchema = Yup.object().shape({
         fahrzeugArt: Yup.string().nullable().required("Benötigt"),
         ladevolumen: Yup.string()
             .min(1, "Zu kurz")
@@ -46,7 +46,7 @@ export const RegisterFahrzeug = ({navigation}) => {
     const {setValue, handleSubmit, errors, triggerValidation, control, formState} = useForm({
         mode: "onBlur",
         reValidateMode: "onChange",
-        validationSchema: registerSchema,
+        validationSchema,
         submitFocusError: true,
     });
 
