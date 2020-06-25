@@ -29,28 +29,32 @@ export const TourStart: React.FC<IRoute> = ({navigation}) => {
     const [distance, setDistance] = useState("...");
 
     useEffect(() => {
+        // format tour stop addresses for google directions API call
         const formatAddress = (stop) => {
             const result =
                 stop.streetName + "+" + stop.streetNumber + "+" + stop.zip + "+" + stop.city;
             return result.replace(/ /g, "+");
         };
+        // clone tour stops to buffer
         const tourBuffer = [...tour.stops];
         const origin = formatAddress(tourBuffer.shift());
         const destination = formatAddress(tourBuffer.pop());
         const waypoints = tourBuffer
             .map((stop, index) => {
-                const separator = index === 0 ? "via:" : "|via:";
+                const separator = index === 0 ? "optimize:true|" : "|";
                 return separator + formatAddress(stop);
             })
             .join("");
-        calculateDistance(origin, destination, waypoints)
+        // google directions API call
+        calculateDistance(origin, destination, waypoints, 1)
             .then((result) => {
-                // console.log(result);
-                setDistance(
-                    String(
-                        (parseFloat(result.data.routes[0].legs[0].distance.value) / 1000).toFixed(1)
-                    )
-                );
+                // calculate tour distance based on segment ("leg") distances
+                const tourDistance =
+                    result.data.routes[0].legs &&
+                    result.data.routes[0].legs.reduce((total, leg) => {
+                        return total + leg.distance.value;
+                    }, 0);
+                setDistance(tourDistance ? String((tourDistance / 1000).toFixed(1)) : "n/a");
             })
             .catch((err) => console.log(err));
     }, []);
