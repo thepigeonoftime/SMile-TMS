@@ -10,13 +10,16 @@
         "no-console": false,
         "no-duplicate-variable": true,
         "no-eval": true,
+        "no-implicit-dependencies": false,
         "no-internal-module": true,
+        "no-submodule-imports": false,
         "no-trailing-whitespace": true,
         "no-unsafe-finally": true,
         "no-unused-expression": false,
         "no-unused-styles": true,
         "no-var-keyword": true,
         "one-line": [true, "check-open-brace", "check-whitespace"],
+        "one-variable-per-declaration": false,
         "quotemark": [true, "double"],
         "semicolon": [true, "always"],
         "triple-equals": [true, "allow-null-check"],
@@ -31,6 +34,13 @@
             }
         ],
         "variable-name": [true, "ban-keywords"],
-        "whitespace": [true, "check-branch", "check-decl", "check-operator", "check-separator", "check-type"]
+        "whitespace": [
+            true,
+            "check-branch",
+            "check-decl",
+            "check-operator",
+            "check-separator",
+            "check-type"
+        ]
     }
 }
