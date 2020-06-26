@@ -68,7 +68,7 @@ export const TourStart: React.FC<IRoute> = ({navigation}) => {
                         color="#729628"
                         containerStyle={{
                             paddingLeft: "10%",
-                            paddingTop: "13%",
+                            paddingTop: RFPercentage(7),
                             alignItems: "flex-start",
                             paddingBottom: "1%",
                             backgroundColor: "#F2F2F2",
@@ -243,13 +243,13 @@ const styles = StyleSheet.create({
     },
     depotHeader: {
         color: "#666",
-        fontSize: RFValue(20),
+        fontSize: RFValue(19.5),
         fontWeight: "bold",
         marginBottom: "3%",
     },
     depotText: {
         color: "#666",
-        fontSize: RFValue(19),
+        fontSize: RFValue(19.5),
     },
     tourLinkWrap: {
         flexDirection: "row",
@@ -259,7 +259,7 @@ const styles = StyleSheet.create({
     },
     tourLink: {
         color: "#41A9F5",
-        fontSize: RFValue(20),
+        fontSize: RFPercentage(3),
         fontWeight: "bold",
     },
     iconWrap: {
@@ -269,7 +269,7 @@ const styles = StyleSheet.create({
         color: "#729628",
     },
     mFont: {
-        fontSize: RFValue(20),
+        fontSize: RFValue(19),
     },
     pLeft: {
         paddingLeft: 30,

@@ -102,13 +102,16 @@ export const PaketeScannen = ({navigation}) => {
                 text="Pakete Scannen"
                 color="#729628"
                 containerStyle={{
-                    // flex: 0.15,
+                    flex: 0.2,
                     paddingLeft: "10%",
-                    paddingTop: "10%",
+
                     alignItems: "flex-start",
                     height: 100,
-                    // paddingBottom: "4%",
                     backgroundColor: "#F2F2F2",
+                }}
+                textStyle={{
+                    paddingTop: "10%",
+                    // paddingBottom: "4%",
                 }}
             />
             <View style={styles.container}>
@@ -194,10 +197,11 @@ const styles = StyleSheet.create({
         // alignItems: "center",
     },
     permissionWarning: {
+        flex: 1,
         justifyContent: "center",
         alignItems: "center",
         paddingHorizontal: "5%",
-        marginTop: "-50%",
+        marginTop: -100,
     },
     scannerContainer: {
         // flex: 1,
