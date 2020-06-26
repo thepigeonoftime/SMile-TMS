@@ -37,22 +37,22 @@ export const TourContext = React.createContext<{
 }>({
     tour: null,
     error: null,
-    setTour: () => {},
-    removeTour: () => {},
-    setError: () => {},
+    setTour: () => true,
+    removeTour: () => true,
+    setError: () => true,
     showNavigation: false,
-    toggleNavigation: () => {},
+    toggleNavigation: () => true,
     showTourListe: false,
-    toggleTourListe: () => {},
+    toggleTourListe: () => true,
     showPaketGeben: false,
-    togglePaketGeben: () => {},
+    togglePaketGeben: () => true,
     currentStop: 1,
-    setStop: () => {},
-    nextStop: () => {},
-    finishTour: () => {},
-    reportPickup: (sscc, pickDate) => {},
-    reportDelivery: () => {},
-    deliverPacket: () => {},
+    setStop: () => true,
+    nextStop: () => true,
+    finishTour: () => true,
+    reportPickup: (sscc, pickDate) => true,
+    reportDelivery: () => true,
+    deliverPacket: () => true,
 });
 
 export const TourProvider = ({children}) => {
@@ -96,7 +96,7 @@ export const TourProvider = ({children}) => {
         // queue unsuccesful pickup report into asyncstorage
         AsyncStorage.getItem("pickupQueue")
             .then((current) => {
-                let pickupBuffer = current ? JSON.parse(current) : [];
+                const pickupBuffer = current ? JSON.parse(current) : [];
                 pickupBuffer.push({sscc, pickDate});
                 setPickupQueue(pickupBuffer.length);
                 AsyncStorage.setItem("pickupQueue", JSON.stringify(pickupBuffer));
@@ -110,7 +110,7 @@ export const TourProvider = ({children}) => {
         // queue unsuccesful delivery report into asyncstorage
         AsyncStorage.getItem("deliveryQueue")
             .then((current) => {
-                let deliveryBuffer = current ? JSON.parse(current) : [];
+                const deliveryBuffer = current ? JSON.parse(current) : [];
                 deliveryBuffer.push({sscc, deliveryDate});
                 setDeliveryQueue(deliveryBuffer.length);
                 AsyncStorage.setItem("deliveryQueue", JSON.stringify(deliveryBuffer));
@@ -124,7 +124,7 @@ export const TourProvider = ({children}) => {
         // queue unsuccesful packet update into asyncstorage
         AsyncStorage.getItem("packetQueue")
             .then((current) => {
-                let packetBuffer = current ? JSON.parse(current) : [];
+                const packetBuffer = current ? JSON.parse(current) : [];
                 packetBuffer.push({signature, sscc, tourID, tourStop});
                 setPacketQueue(packetBuffer.length);
                 AsyncStorage.setItem("packetQueue", JSON.stringify(packetBuffer));
@@ -137,7 +137,7 @@ export const TourProvider = ({children}) => {
     const runPickupQueue = async () => {
         // resolve queued pickup reports
         console.log("run pickup queue");
-        let queueBuffer = [];
+        const queueBuffer = [];
         await AsyncStorage.getItem("pickupQueue").then(async (current) => {
             const currentQueue = current && current.length ? JSON.parse(current) : [];
             await Promise.all(
@@ -165,7 +165,7 @@ export const TourProvider = ({children}) => {
     const runDeliveryQueue = async () => {
         // resolve queued delivery reports
         console.log("run delivery queue");
-        let queueBuffer = [];
+        const queueBuffer = [];
         await AsyncStorage.getItem("deliveryQueue").then(async (current) => {
             const currentQueue = current && current.length ? JSON.parse(current) : [];
             await Promise.all(
@@ -193,7 +193,7 @@ export const TourProvider = ({children}) => {
     const runPacketQueue = async () => {
         // resolve queued packet updates
         console.log("run packet queue");
-        let queueBuffer = [];
+        const queueBuffer = [];
         await AsyncStorage.getItem("packetQueue").then(async (current) => {
             const currentQueue = current && current.length ? JSON.parse(current) : [];
             await Promise.all(
@@ -311,7 +311,7 @@ export const TourProvider = ({children}) => {
                     // save tour object to TourLogbuch
                     AsyncStorage.getItem("TourLogbuch")
                         .then((current) => {
-                            let logBuffer = current ? JSON.parse(current) : [];
+                            const logBuffer = current ? JSON.parse(current) : [];
                             logBuffer.push(tour);
                             AsyncStorage.setItem("TourLogbuch", JSON.stringify(logBuffer));
                         })
@@ -324,7 +324,7 @@ export const TourProvider = ({children}) => {
                 },
                 setStop: (stop) => {
                     console.log("setting current stop:", stop);
-                    setCurrentStop(parseInt(stop));
+                    setCurrentStop(Number(stop));
                     AsyncStorage.setItem("currentStop", String(stop));
                 },
                 nextStop: () => {
