@@ -188,7 +188,6 @@ export const Register = ({navigation}) => {
 export const styles = StyleSheet.create({
     container: {
         backgroundColor: "#FFF",
-        marginBottom: "-20%",
     },
     contentWrap: {
         top: "-5%",
@@ -205,6 +204,8 @@ export const styles = StyleSheet.create({
         shadowOpacity: 0.1,
         shadowRadius: 2.84,
         elevation: 5,
+        marginBottom: "-20%",
+        marginTop: "-2%",
     },
     contentInner: {
         flex: 1,
