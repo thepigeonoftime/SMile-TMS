@@ -54,7 +54,6 @@ export type SettingsProps = {
 export type TourStackProps = {
     TourSuche: undefined;
     TourStart: undefined;
-    TourLogbuch: undefined;
     Settings: undefined;
     Maps: undefined;
     DepotAuth: undefined;
@@ -159,6 +158,12 @@ export type resultProps = {
     thursday?: {};
     friday?: {};
     saturday?: {};
+};
+
+export type wishTimeFrame = {
+    day: string;
+    startTime: number;
+    endTime: number;
 };
 
 export type ZielProps = {
