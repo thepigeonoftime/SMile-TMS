@@ -102,8 +102,6 @@ export const RegisterZeiten = ({navigation}) => {
     };
 
     const onSubmit = (data) => {
-        const result = {};
-
         const makeResultData = [
             ["monday", "monStart", "monEnd"],
             ["tuesday", "tueStart", "tueEnd"],
@@ -113,19 +111,22 @@ export const RegisterZeiten = ({navigation}) => {
             ["saturday", "satStart", "satEnd"],
         ];
 
+        const result = {};
+
         makeResultData.forEach((row) => {
-            // reject time inputs with empty fields
+            // assemble wishTimeFrame objects for createDeliverer
             const day = row[0],
-                start = row[1],
-                end = row[2];
+                start = data[row[1]],
+                end = data[row[2]];
             const obj = {
+                // format to schema: {"MONDAY", 10, 16}
                 day: isEnabled[day] ? day.toUpperCase() : undefined,
-                startTime: Number(data[start]),
-                endTime: Number(data[end]),
+                startTime: start && Number(start.slice(0, 2)),
+                endTime: end && Number(end.slice(0, 2)),
             };
+            // reject objects that have undefined fields
             !Object.values(obj).includes(undefined) && (result[day] = obj);
         });
-
         console.log(result);
         storeDataZeiten(result, true);
         navigation.goBack();
