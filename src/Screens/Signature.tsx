@@ -15,7 +15,7 @@ export const Signature = ({navigation}) => {
     console.ignoredYellowBox = ["Warning: Each", "Warning: Failed"];
     const {tour, currentStop, nextStop, finishTour, deliverPacket} = useContext(TourContext);
     const [dynStyles, setDynStyles] = useState<any>(portrait);
-    let signatureRef = useRef(null);
+    const signatureRef = useRef(null);
     useEffect(() => {
         ScreenOrientation.unlockAsync();
     }, []);
@@ -37,12 +37,7 @@ export const Signature = ({navigation}) => {
         const signature = await captureRef(signatureRef, {
             result: "base64",
         });
-        deliverPacket(
-            signature,
-            tour.packets[currentStop - 1].sscc,
-            tour.tourMetaData.tourID,
-            currentStop
-        );
+        deliverPacket(signature);
         ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.PORTRAIT);
         if (currentStop < tour.stops.length - 1) {
             nextStop();

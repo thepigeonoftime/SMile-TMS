@@ -33,7 +33,7 @@ export const TourContext = React.createContext<{
     finishTour: (navigation) => void;
     reportPickup: (sscc, pickDate) => void;
     reportDelivery: (sscc, deliveryDate) => void;
-    deliverPacket: (signature, sscc, tourID, tourStop) => void;
+    deliverPacket: (signature) => void;
 }>({
     tour: null,
     error: null,
@@ -50,7 +50,7 @@ export const TourContext = React.createContext<{
     setStop: () => true,
     nextStop: () => true,
     finishTour: () => true,
-    reportPickup: (sscc, pickDate) => true,
+    reportPickup: () => true,
     reportDelivery: () => true,
     deliverPacket: () => true,
 });
@@ -141,8 +141,8 @@ export const TourProvider = ({children}) => {
         await AsyncStorage.getItem("pickupQueue").then(async (current) => {
             const currentQueue = current && current.length ? JSON.parse(current) : [];
             await Promise.all(
-                currentQueue.map(async (queuePickup) => {
-                    await postPickup(queuePickup.sscc, queuePickup.pickDate)
+                currentQueue.map(async (queuedPickup) => {
+                    await postPickup(queuedPickup.sscc, queuedPickup.pickDate)
                         .then((result) => {
                             console.log(result);
                             console.log("pickup resolved, not requeueing");
@@ -150,7 +150,7 @@ export const TourProvider = ({children}) => {
                         .catch((err) => {
                             console.log("request error:", err);
                             console.log("re-queuing pickup");
-                            queueBuffer.push(queuePickup);
+                            queueBuffer.push(queuedPickup);
                         });
                 })
             );
@@ -169,8 +169,8 @@ export const TourProvider = ({children}) => {
         await AsyncStorage.getItem("deliveryQueue").then(async (current) => {
             const currentQueue = current && current.length ? JSON.parse(current) : [];
             await Promise.all(
-                currentQueue.map(async (queueDelivery) => {
-                    await postDelivery(queueDelivery.sscc, queueDelivery.deliveryDate)
+                currentQueue.map(async (queuedDelivery) => {
+                    await postDelivery(queuedDelivery.sscc, queuedDelivery.deliveryDate)
                         .then((result) => {
                             console.log(result);
                             console.log("delivery resolved, not requeueing");
@@ -178,7 +178,7 @@ export const TourProvider = ({children}) => {
                         .catch((err) => {
                             console.log("request error:", err);
                             console.log("re-queuing delivery");
-                            queueBuffer.push(queueDelivery);
+                            queueBuffer.push(queuedDelivery);
                         });
                 })
             );
@@ -197,20 +197,20 @@ export const TourProvider = ({children}) => {
         await AsyncStorage.getItem("packetQueue").then(async (current) => {
             const currentQueue = current && current.length ? JSON.parse(current) : [];
             await Promise.all(
-                currentQueue.map(async (queuePacket) => {
+                currentQueue.map(async (queuedPacket) => {
                     await updatePacket(
                         structurePacketData(
-                            "queuePacket.signature",
-                            queuePacket.sscc,
-                            queuePacket.tourID,
-                            queuePacket.tourStop
+                            "queuedPacket.signature",
+                            queuedPacket.sscc,
+                            queuedPacket.tourID,
+                            queuedPacket.tourStop
                         )
                     )
                         .then(({data, errors}) => {
                             if (errors && errors[0]) {
                                 console.log("graphql error:", errors[0].message);
                                 console.log("re-queuing packet");
-                                queueBuffer.push(queuePacket);
+                                queueBuffer.push(queuedPacket);
                             } else {
                                 console.log("graphql success:");
                                 console.log(data);
@@ -220,7 +220,7 @@ export const TourProvider = ({children}) => {
                         .catch((err) => {
                             console.log("network error:", err);
                             console.log("re-queuing packet");
-                            queueBuffer.push(queuePacket);
+                            queueBuffer.push(queuedPacket);
                         });
                 })
             );
@@ -239,7 +239,7 @@ export const TourProvider = ({children}) => {
                 .then((queueObject) => {
                     console.log("queue load");
                     if (queueObject) {
-                        // error handling
+                        // add error handling
                         const storedPickups = JSON.parse(queueObject[0][1]);
                         const storedDeliveries = JSON.parse(queueObject[1][1]);
                         const storedPackets = JSON.parse(queueObject[2][1]);
@@ -287,12 +287,12 @@ export const TourProvider = ({children}) => {
                 showTourListe,
                 showPaketGeben,
                 currentStop,
-                setError: (error) => {
-                    setError(error);
+                setError: (tourError) => {
+                    setError(tourError);
                 },
-                setTour: (tour) => {
-                    setTour(tour.tours[0]); // change name
-                    AsyncStorage.setItem("tour", JSON.stringify(tour));
+                setTour: (tourObject) => {
+                    setTour(tourObject.tours[0]); // change name
+                    AsyncStorage.setItem("tour", JSON.stringify(tourObject));
                     // setCurrentStop(1);
                 },
                 removeTour: () => {
@@ -375,25 +375,35 @@ export const TourProvider = ({children}) => {
                             queueDelivery(sscc, deliveryDate);
                         });
                 },
-                deliverPacket: (signature, sscc, tourID, tourStop) => {
+                deliverPacket: (signature) => {
                     // updatePacket graphql mutation
-                    console.log(structurePacketData(signature, sscc, tourID, tourStop));
-                    updatePacket(structurePacketData(signature, sscc, tourID, tourStop))
-                        .then(({data, errors}) => {
-                            if (errors && errors[0]) {
-                                console.log("graphql error:", errors[0].message);
-                                console.log("queuing packet");
-                                queuePacket(signature, sscc, tourID, tourStop);
-                            } else {
-                                console.log("graphql success | packet reported");
-                                console.log("data:");
-                                console.log(data);
-                            }
-                        })
-                        .catch((err) => {
-                            console.log("network error:", err);
-                            console.log("queuing packet");
-                            queuePacket(signature, sscc, tourID, tourStop);
+                    const receiverID = tour.stops[currentStop].id;
+                    const tourID = tour.tourMetaData.tourID;
+                    tour.packets
+                        .filter((packet) => packet.receiverID === receiverID)
+                        .forEach((packet) => {
+                            console.log(
+                                structurePacketData("signature", packet.sscc, tourID, currentStop)
+                            );
+                            updatePacket(
+                                structurePacketData(signature, packet.sscc, tourID, currentStop)
+                            )
+                                .then(({data, errors}) => {
+                                    if (errors && errors[0]) {
+                                        console.log("graphql error:", errors[0].message);
+                                        console.log("queuing packet");
+                                        queuePacket(signature, packet.sscc, tourID, currentStop);
+                                    } else {
+                                        console.log("graphql success | packet reported");
+                                        console.log("data:");
+                                        console.log(data);
+                                    }
+                                })
+                                .catch((err) => {
+                                    console.log("network error:", err);
+                                    console.log("queuing packet");
+                                    queuePacket(signature, packet.sscc, tourID, currentStop);
+                                });
                         });
                 },
             }}
