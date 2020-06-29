@@ -54,6 +54,7 @@ export const PaketeScannen = ({navigation}) => {
             toValue: 1,
             duration: 1500,
             easing: Easing.linear,
+            useNativeDriver: false,
         }).start(() => {
             // animatedOpacity.setValue(0);
         });
@@ -67,7 +68,7 @@ export const PaketeScannen = ({navigation}) => {
         setTimeout(() => {
             setScanned(false);
         }, 1000);
-        let packetBuffer = [];
+        const packetBuffer = [];
         packets.forEach((packet) => {
             if (data === packet) {
                 reportPickup(packet.sscc, new Date().toJSON());
@@ -152,6 +153,7 @@ export const PaketeScannen = ({navigation}) => {
                                         width="100%"
                                         height="100%"
                                         backgroundColor="transparent"
+                                        lineAnimationDuration={1500}
                                     />
                                 </Camera>
                             )}

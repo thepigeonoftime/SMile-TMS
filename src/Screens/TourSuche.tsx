@@ -40,6 +40,7 @@ export const TourSuche = ({navigation}) => {
         initialValue: 0,
         toValue: showError ? 100 : 0,
         duration: showError ? 300 : 200,
+        useNativeDriver: false,
     });
 
     return (
@@ -88,14 +89,18 @@ export const TourSuche = ({navigation}) => {
                         <Text>logout</Text>
                     </TouchableOpacity>
                 </View>
-                <View>
-                    <Header
-                        text="Suche jetzt"
-                        color="#FFF"
-                        bgColor="transparent"
-                        subText="nach einer vefügbaren Route!"
-                    />
-                </View>
+                <Header
+                    text="Suche jetzt"
+                    color="#FFF"
+                    bgColor="transparent"
+                    subText="nach einer vefügbaren Route!"
+                    containerStyle={{
+                        flex: 1,
+                        justifyContent: "center",
+                        alignItems: "center",
+                        paddingTop: "2%",
+                    }}
+                />
                 <View style={styles.buttonWrap}>
                     <Button
                         buttonStyle={styles.saveButton}
@@ -132,10 +137,10 @@ const styles = StyleSheet.create({
         justifyContent: "flex-start",
     },
     buttonWrap: {
-        flex: 1,
-        justifyContent: "center",
+        flex: 1.8,
+        justifyContent: "flex-start",
         alignItems: "center",
-        marginTop: -40,
+        // marginTop: -40,
     },
     saveButton: {
         backgroundColor: "#3FA9F5",
@@ -152,7 +157,7 @@ const styles = StyleSheet.create({
     },
     saveButtonDisabled: {
         backgroundColor: "transparent",
-        borderWidth: 2,
+        borderWidth: 3,
         borderColor: "#ccc",
     },
     saveButtonTitleDisabled: {

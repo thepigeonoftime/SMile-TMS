@@ -28,6 +28,7 @@ export const RegisterModal = ({navigation}) => {
         initialValue: 0,
         toValue: showError ? 70 : 0,
         duration: showError ? 300 : 200,
+        useNativeDriver: false,
     });
     return (
         <Modal isVisible={showRegModal} style={styles.modal} backdropOpacity={0.4}>
