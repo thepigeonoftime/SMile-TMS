@@ -8,6 +8,7 @@ import {PaketGeben} from "./PaketGeben";
 import {TourListe} from "./TourListe";
 import {TourSuche} from "./TourSuche";
 import {RFValue, RFPercentage} from "react-native-responsive-fontsize";
+import PaketIcon from "~/assets/svg/icn-mini_collie-no.svg";
 
 export const Ziel = ({navigation}) => {
     const {
@@ -31,28 +32,39 @@ export const Ziel = ({navigation}) => {
                     textStyle={{top: 30}}
                 />
                 <View style={styles.content}>
-                    <View style={{flex: 1, paddingLeft: "10%", paddingTop: "7%"}}>
-                        <Text style={[styles.zielText, {fontWeight: "bold"}]}>
-                            {tour.stops[currentStop].firstName} {tour.stops[currentStop].lastName}
-                        </Text>
-                        <Text style={[styles.zielText, {fontWeight: "bold"}]}>
-                            {tour.stops[currentStop].streetName}
-                        </Text>
-                        <Text style={[styles.zielText]}>
-                            Nummer: {tour.stops[currentStop].streetNumber}
-                        </Text>
-                        <Text style={[styles.zielText]}>
-                            {tour.stops[currentStop].zip + " " + tour.stops[1].city}
-                        </Text>
+                    <View style={styles.zielWrap}>
+                        <View style={styles.ziel}>
+                            <Text style={[styles.zielText, {fontWeight: "bold"}]}>
+                                {tour.stops[currentStop].firstName}{" "}
+                                {tour.stops[currentStop].lastName}
+                            </Text>
+                            <Text style={[styles.zielText, {fontWeight: "bold"}]}>
+                                {tour.stops[currentStop].streetName}
+                            </Text>
+                            <Text style={[styles.zielText]}>
+                                Nummer: {tour.stops[currentStop].streetNumber}
+                            </Text>
+                            <Text style={[styles.zielText]}>
+                                {tour.stops[currentStop].zip + " " + tour.stops[1].city}
+                            </Text>
+                        </View>
+                        <View style={styles.packetInfo}>
+                            <Text style={styles.packetText}>
+                                {
+                                    tour.packets.filter(
+                                        (packet) => packet.receiverID === tour.stops[currentStop].id
+                                    ).length
+                                }
+                            </Text>
+                            <PaketIcon
+                                width={20}
+                                height={20}
+                                fill="#ccc"
+                                style={{marginTop: 1, marginHorizontal: 5}}
+                            />
+                        </View>
                     </View>
-                    <View
-                        style={{
-                            flex: 2.8,
-                            justifyContent: "flex-start",
-                            alignSelf: "center",
-                            width: "80%",
-                        }}
-                    >
+                    <View style={styles.buttonWrap}>
                         <Button
                             buttonStyle={styles.buttonWhite}
                             titleStyle={styles.buttonWhiteTitle}
@@ -112,7 +124,7 @@ const styles = StyleSheet.create({
     content: {
         flex: 10,
         justifyContent: "center",
-        alignItems: "flex-start",
+        alignItems: "stretch",
         // paddingTop: "7%",
         // marginBottom: "40%",
         borderRadius: 25,
@@ -123,6 +135,35 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.05,
         shadowRadius: 1.0,
         elevation: 2,
+    },
+    zielWrap: {
+        flex: 1,
+        flexDirection: "row",
+        justifyContent: "space-between",
+    },
+    ziel: {
+        flex: 1,
+        paddingLeft: "10%",
+        paddingTop: "7%",
+    },
+    zielText: {
+        color: "#666",
+        fontSize: RFPercentage(3),
+    },
+    packetInfo: {
+        flexDirection: "row",
+        paddingRight: "10%",
+        paddingTop: "7%",
+    },
+    packetText: {
+        color: "#888",
+        fontSize: RFPercentage(2.8),
+    },
+    buttonWrap: {
+        flex: 2.8,
+        justifyContent: "flex-start",
+        alignSelf: "center",
+        width: "80%",
     },
     buttonWhite: {
         backgroundColor: "#FFF",
@@ -174,9 +215,5 @@ const styles = StyleSheet.create({
         backgroundColor: "transparent",
         borderWidth: 2,
         borderColor: "#ccc",
-    },
-    zielText: {
-        color: "#666",
-        fontSize: RFPercentage(3),
     },
 });
