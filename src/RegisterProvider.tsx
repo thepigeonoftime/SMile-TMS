@@ -41,6 +41,8 @@ export const RegisterProvider: React.FC<RegisterProviderProps> = ({children}) =>
     const [createDeliverer] = useMutation(CREATE_DELIVERER);
 
     useEffect(() => {
+        // register by default for testing
+        setRegistered("smile");
         AsyncStorage.getItem("registered")
             .then((registerString) => {
                 if (registerString) {
