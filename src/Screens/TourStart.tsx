@@ -54,9 +54,16 @@ export const TourStart: React.FC<IRoute> = ({navigation}) => {
                     result.data.routes[0].legs.reduce((total, leg) => {
                         return total + leg.distance.value;
                     }, 0);
-                setDistance(tourDistance ? String((tourDistance / 1000).toFixed(1)) : "n/a");
+                setDistance(
+                    tourDistance
+                        ? String((tourDistance / 1000).toFixed(1)) + " Kilometer"
+                        : "Unbekannte Distanz"
+                );
             })
-            .catch((err) => console.log(err));
+            .catch((err) => {
+                console.log(err);
+                setDistance("Unbekannte Distanz");
+            });
     }, []);
 
     return (
@@ -196,9 +203,7 @@ export const TourStart: React.FC<IRoute> = ({navigation}) => {
                                             fill="#ccc"
                                             style={{marginLeft: -30, marginRight: 20}}
                                         />
-                                        <Text style={[styles.mFont, styles.green]}>
-                                            {distance} Kilometer{" "}
-                                        </Text>
+                                        <Text style={[styles.mFont, styles.green]}>{distance}</Text>
                                     </View>
                                 </View>
                             </View>
