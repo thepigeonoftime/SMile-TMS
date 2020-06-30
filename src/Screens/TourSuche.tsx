@@ -16,23 +16,33 @@ export const TourSuche = ({navigation}) => {
     const {tour, setTour, removeTour, setError} = useContext(TourContext);
     const [sucheDisabled, setSucheDisabled] = useState(false);
     const [showError, setShowError] = useState(false);
+    const [timeoutID, setTimeoutID] = useState<ReturnType<typeof setTimeout>>(null);
 
     const getTour = () => {
+        fetchTour()
+            .then((response) => {
+                setTour(response.data);
+                setSucheDisabled(false);
+                navigation.navigate("TourStart");
+            })
+            .catch((error) => {
+                setShowError(true);
+                setSucheDisabled(false);
+                setError(error);
+            });
+    };
+
+    const cancelSearch = () => {
+        clearTimeout(timeoutID);
+        setSucheDisabled(false);
+        setShowError(false);
+    };
+
+    const searchTour = () => {
+        const searchTimeout = setTimeout(getTour, 1000);
+        setTimeoutID(searchTimeout);
         setShowError(false);
         setSucheDisabled(true);
-        setTimeout(() => {
-            fetchTour()
-                .then((response) => {
-                    setTour(response.data);
-                    setSucheDisabled(false);
-                    navigation.navigate("TourStart");
-                })
-                .catch((error) => {
-                    setShowError(true);
-                    setSucheDisabled(false);
-                    setError(error);
-                });
-        }, 1000);
     };
 
     const aHeight = useAnimation({
@@ -108,7 +118,7 @@ export const TourSuche = ({navigation}) => {
                         disabledStyle={styles.saveButtonDisabled}
                         disabled={sucheDisabled}
                         title="Suche starten"
-                        onPress={getTour}
+                        onPress={searchTour}
                     />
                     <Button
                         buttonStyle={styles.saveButton}
@@ -117,10 +127,7 @@ export const TourSuche = ({navigation}) => {
                         disabledTitleStyle={styles.saveButtonTitleDisabled}
                         disabled={!sucheDisabled}
                         title="abbrechen"
-                        onPress={() => {
-                            setSucheDisabled(false);
-                            setShowError(false);
-                        }}
+                        onPress={cancelSearch}
                     />
                 </View>
             </ImageBackground>
