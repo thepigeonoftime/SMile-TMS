@@ -8,7 +8,6 @@ import MapViewDirections from "react-native-maps-directions";
 import {Header} from "../Header";
 import {TourContext} from "../TourProvider";
 import * as Location from "expo-location";
-import {lockAsync} from "expo/build/ScreenOrientation/ScreenOrientation";
 
 export const Maps = ({navigation}) => {
     const {tour} = useContext(TourContext);
@@ -53,8 +52,7 @@ export const Maps = ({navigation}) => {
             })
         );
         return {
-            center: result[Math.floor(result.length / 2)],
-            depot: result[0],
+            start: result[0],
             end: result[result.length - 1],
             stops: result,
         };
@@ -63,7 +61,7 @@ export const Maps = ({navigation}) => {
     useEffect(() => {
         (async () => {
             let currentLocation;
-            let {status} = await Location.requestPermissionsAsync();
+            const {status} = await Location.requestPermissionsAsync();
             if (status !== "granted") {
                 // setErrorMsg("Permission to access location was denied");
             } else {
@@ -75,15 +73,15 @@ export const Maps = ({navigation}) => {
             }
             currentLocation && setLocation(currentLocation);
 
-            getGeocodes(tour.stops).then(({center, depot, end, stops}) => {
+            getGeocodes(tour.stops).then(({start, end, stops}) => {
                 const [, ...stopsWithoutDepot] = stops; // get stops without depot for deliveryStops
-                const region = currentLocation ? currentLocation : depot; // center map view on current location or fall back to depot
+                const regionBuffer = currentLocation ? currentLocation : depot; // center map view on current location or fall back to depot
                 currentLocation && stops.unshift(currentLocation); // add current location to waypoints/markers
                 setDeliveryStops(stopsWithoutDepot);
-                setDepot(depot);
+                setDepot(start);
                 setDestination(end);
                 setWaypoints(stops);
-                setRegion({...region, latitudeDelta: 0.1, longitudeDelta: 0.1});
+                setRegion({...regionBuffer, latitudeDelta: 0.1, longitudeDelta: 0.1});
                 setTimeout(() => {
                     setShowMap(true);
                 }, 300);
@@ -142,9 +140,32 @@ export const Maps = ({navigation}) => {
                                     title={
                                         (location && index === 0 && "Aktueller Standort") ||
                                         (index === (location ? 1 : 0) && "Depot") ||
-                                        "Tour Stop"
+                                        (index - 1 in tour.stops &&
+                                            tour.stops[index - 1].firstName +
+                                                " " +
+                                                tour.stops[index - 1].lastName) ||
+                                        ""
                                     }
-                                    // description={"depot"}
+                                    description={
+                                        (location && index === 0 && "Sie befinden sich hier") ||
+                                        (index === (location ? 1 : 0) &&
+                                            tour.stops[location ? 1 : 0].streetName +
+                                                " " +
+                                                tour.stops[location ? 1 : 0].streetNumber +
+                                                "\n" +
+                                                tour.stops[location ? 1 : 0].zip +
+                                                " " +
+                                                tour.stops[location ? 1 : 0].city) ||
+                                        (index - 1 in tour.stops &&
+                                            tour.stops[index - 1].streetName +
+                                                " " +
+                                                tour.stops[index - 1].streetNumber +
+                                                "\n" +
+                                                tour.stops[index - 1].zip +
+                                                " " +
+                                                tour.stops[index - 1].city) ||
+                                        ""
+                                    }
                                 />
                             ))}
                             {location && (
