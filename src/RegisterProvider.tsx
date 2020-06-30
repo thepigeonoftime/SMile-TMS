@@ -19,14 +19,14 @@ export const RegisterContext = React.createContext<RegisterContextProps>({
     dataGebiet: null,
     dataZeiten: null,
     showRegModal: false,
-    register: () => {},
-    unregister: () => {},
-    registration: () => {},
-    storeDataPerson: (data, toStorage) => {},
-    storeDataFahrzeug: (data, toStorage) => {},
-    storeDataGebiet: (data, toStorage) => {},
-    storeDataZeiten: (data, toStorage) => {},
-    toggleRegModal: () => {},
+    register: () => true,
+    unregister: () => true,
+    registration: () => true,
+    storeDataPerson: (data, toStorage) => true,
+    storeDataFahrzeug: (data, toStorage) => true,
+    storeDataGebiet: (data, toStorage) => true,
+    storeDataZeiten: (data, toStorage) => true,
+    toggleRegModal: () => true,
 });
 
 interface RegisterProviderProps {}

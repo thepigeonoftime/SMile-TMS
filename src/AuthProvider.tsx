@@ -16,10 +16,10 @@ export const AuthContext = React.createContext<{
     token: null,
     loginMsg: null,
     signupMsg: null,
-    signup: () => {},
-    login: () => {},
-    storeToken: () => {},
-    logout: () => {},
+    signup: () => true,
+    login: () => true,
+    storeToken: () => true,
+    logout: () => true,
 });
 
 export const AuthProvider: React.FC<{}> = ({children}) => {
@@ -63,9 +63,9 @@ export const AuthProvider: React.FC<{}> = ({children}) => {
                             }, 5000);
                         });
                 },
-                storeToken: (token) => {
-                    SecureStore.setItemAsync("token", token);
-                    setToken(token);
+                storeToken: (JWT) => {
+                    SecureStore.setItemAsync("token", JWT);
+                    setToken(JWT);
                 },
                 logout: () => {
                     setToken(null);
