@@ -14,7 +14,7 @@ interface HeaderProps {
 }
 
 export const Header: React.SFC<HeaderProps> = (props) => {
-    let [fontsLoaded] = useFonts({
+    const [fontsLoaded] = useFonts({
         KonnectBlack: require("../assets/fonts/Konnect-Black.otf"),
     });
     const color = (propcolor) => {
@@ -55,7 +55,7 @@ const styles = StyleSheet.create({
         flex: 1,
         flexDirection: "row",
         alignItems: "flex-start",
-        paddingTop: "15%",
+        paddingTop: "13%",
         height: 240,
     },
     spacer: {
