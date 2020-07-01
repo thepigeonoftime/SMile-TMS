@@ -14,6 +14,7 @@ export const Signature = ({navigation}) => {
     console.ignoredYellowBox = ["Warning: Each", "Warning: Failed"];
     const {tour, currentStop, nextStop, finishTour, deliverPacket} = useContext(TourContext);
     const [dynStyles, setDynStyles] = useState<ViewStyleProp>(portrait);
+    const [hasSignature, setHasSignature] = useState<boolean>(true);
     const signatureRef = useRef(null);
 
     const orientationChange = async () => {
@@ -21,9 +22,11 @@ export const Signature = ({navigation}) => {
         const orientation = await ScreenOrientation.getOrientationAsync();
         if (orientation === 1) {
             signatureRef.current && signatureRef.current.clear();
+            setHasSignature(false);
             setDynStyles(portrait);
         } else {
             signatureRef.current && signatureRef.current.clear();
+            setHasSignature(false);
             setDynStyles(landscape);
         }
     };
@@ -84,6 +87,7 @@ export const Signature = ({navigation}) => {
                             style={styles.pixi}
                             strokeColor={"blue"}
                             strokeAlpha={1}
+                            onChange={() => setHasSignature(true)}
                             // onReady={this.onReady}
                         />
                     </View>
@@ -92,7 +96,7 @@ export const Signature = ({navigation}) => {
                             buttonStyle={[styles.buttonBlue, dynStyles.buttonBlue]}
                             titleStyle={styles.buttonBlueTitle}
                             disabledStyle={styles.buttonDisabled}
-                            disabled={false}
+                            disabled={!hasSignature}
                             title="Signatur speichern"
                             onPress={onSubmit}
                         />
