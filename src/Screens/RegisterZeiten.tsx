@@ -111,14 +111,14 @@ export const RegisterZeiten = ({navigation}) => {
             ["saturday", "satStart", "satEnd"],
         ];
 
-        const result = {};
+        const result: resultProps = {};
 
         makeResultData.forEach((row) => {
             // assemble wishTimeFrame objects for createDeliverer
             const day = row[0],
                 start = data[row[1]],
                 end = data[row[2]];
-            const obj = {
+            const obj: wishTimeFrame = {
                 // format to schema: {"MONDAY", 10, 16}
                 day: isEnabled[day] ? day.toUpperCase() : undefined,
                 startTime: start && Number(start.slice(0, 2)),
@@ -143,9 +143,7 @@ export const RegisterZeiten = ({navigation}) => {
             // behavior="padding"
         >
             <ScrollView>
-                <View>
-                    <Header text="Verfügbarkeit" subText="eingeben" color="#729628" />
-                </View>
+                <Header text="Verfügbarkeit" subText="eingeben" color="#729628" />
                 <View style={styles.container}>
                     <View style={styles.closeButtonContainer}>
                         <TouchableOpacity
