@@ -7,6 +7,7 @@ import MapView, {Marker, PROVIDER_GOOGLE} from "react-native-maps";
 import MapViewDirections from "react-native-maps-directions";
 import Modal from "react-native-modal";
 import {TourContext} from "../TourProvider";
+import * as Location from "expo-location";
 
 export const Navigation = (props) => {
     const {tour, currentStop, showNavigation, toggleNavigation} = useContext(TourContext);
@@ -21,6 +22,7 @@ export const Navigation = (props) => {
     const [waypoints, setWaypoints] = useState([]);
     const [destination, setDestination] = useState(null);
     const {width, height} = Dimensions.get("window");
+    const [location, setLocation] = useState(null);
     // const ASPECT_RATIO = width / height;
     const DIRECTIONS_APIKEY = Constants.manifest.extra.credentials.directionsApiKey;
     const GEOCODING_APIKEY = Constants.manifest.extra.credentials.geocodingApiKey;
@@ -53,27 +55,41 @@ export const Navigation = (props) => {
             // center: result[Math.floor(result.length / 2)],
             start: result[0],
             end: result[1],
-            stops: result,
         };
     };
 
     useEffect(() => {
         if (showNavigation) {
-            const nextStops = [tour.stops[currentStop - 1], tour.stops[currentStop]];
-            getGeocodes(nextStops).then(({start, end, stops}) => {
-                setOrigin(start);
-                setDestination(end);
-                setWaypoints(stops);
-                setRegion({...start, latitudeDelta: 0.1, longitudeDelta: 0.1});
-                setTimeout(() => {
-                    setShowMap(true);
-                }, 500);
-                // mapRef.current.animateCamera({
-                //     center: start,
-                //     pitch: 1000,
-                //     zoom: 15,
-                // });
-            });
+            (async () => {
+                let currentLocation;
+                const {status} = await Location.requestPermissionsAsync();
+                if (status !== "granted") {
+                    // setErrorMsg("Permission to access location was denied");
+                } else {
+                    const locationData = await Location.getCurrentPositionAsync({});
+                    currentLocation = {
+                        latitude: locationData.coords.latitude,
+                        longitude: locationData.coords.longitude,
+                    };
+                }
+                currentLocation && setLocation(currentLocation);
+
+                const nextStops = [tour.stops[currentStop - 1], tour.stops[currentStop]];
+                getGeocodes(nextStops).then(({start, end}) => {
+                    setOrigin(currentLocation ? currentLocation : start);
+                    setDestination(end);
+                    setWaypoints([currentLocation ? currentLocation : start, end]);
+                    setRegion({...start, latitudeDelta: 0.1, longitudeDelta: 0.1});
+                    setTimeout(() => {
+                        setShowMap(true);
+                    }, 500);
+                    // mapRef.current.animateCamera({
+                    //     center: start,
+                    //     pitch: 1000,
+                    //     zoom: 15,
+                    // });
+                });
+            })();
         }
     }, [showNavigation]);
 
@@ -130,6 +146,26 @@ export const Navigation = (props) => {
                                         null
                                     }
                                     coordinate={coordinate}
+                                    title={
+                                        (location && index === 0 && "Aktueller Standort") ||
+                                        (currentStop === 1 &&
+                                            index === 0 &&
+                                            tour.stops[currentStop - 1].id) ||
+                                        tour.stops[currentStop - 1 + index].firstName +
+                                            " " +
+                                            tour.stops[currentStop - 1 + index].lastName
+                                    }
+                                    description={
+                                        (location && index === 0 && "Sie befinden sich hier") ||
+                                        tour.stops[currentStop - 1 + index].streetName +
+                                            " " +
+                                            tour.stops[currentStop - 1 + index].streetNumber +
+                                            "\n" +
+                                            tour.stops[currentStop - 1 + index].zip +
+                                            " " +
+                                            tour.stops[currentStop - 1 + index].city ||
+                                        ""
+                                    }
                                 />
                             ))}
                             <MapViewDirections
