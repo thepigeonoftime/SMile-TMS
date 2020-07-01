@@ -6,7 +6,7 @@ import {TourContext} from "../TourProvider";
 import {TourSuche} from "./TourSuche";
 
 export const Authentifizierung = ({navigation}) => {
-    const {tour, currentStop, nextStop, resetTour} = useContext(TourContext);
+    const {tour, currentStop, nextStop, finishTour} = useContext(TourContext);
     if (!tour) {
         return <TourSuche navigation={navigation} />;
     } else {
@@ -58,7 +58,7 @@ export const Authentifizierung = ({navigation}) => {
                                     nextStop();
                                     navigation.navigate("Ziel");
                                 } else {
-                                    resetTour(navigation);
+                                    finishTour(navigation);
                                     navigation.navigate("TourSuche");
                                 }
                             }}
@@ -78,7 +78,8 @@ const styles = StyleSheet.create({
     header: {
         flex: 1,
         paddingLeft: "10%",
-        marginTop: "13%",
+        marginTop: "9%",
+        marginBottom: "3%",
         alignItems: "flex-start",
         justifyContent: "center",
         // paddingBottom: "10%",
@@ -98,16 +99,21 @@ const styles = StyleSheet.create({
         height: "50%",
         shadowColor: "#000",
         shadowOffset: {width: 0, height: -1},
-        shadowOpacity: 0.08,
-        shadowRadius: 1,
-        // elevation: 0,
+        shadowOpacity: 0.1,
+        shadowRadius: 2.84,
+        elevation: 2,
+    },
+    zielText: {
+        color: "#666",
+        fontSize: 20,
+        paddingLeft: 15,
     },
     buttonWrap: {
         flex: 4,
         alignSelf: "center",
         width: "80%",
-        justifyContent: "flex-end",
-        paddingBottom: "20%",
+        justifyContent: "flex-start",
+        paddingTop: "25%",
     },
     buttonWhite: {
         backgroundColor: "#FFF",
@@ -159,9 +165,5 @@ const styles = StyleSheet.create({
         backgroundColor: "transparent",
         borderWidth: 2,
         borderColor: "#ccc",
-    },
-    zielText: {
-        color: "#666",
-        fontSize: 20,
     },
 });
