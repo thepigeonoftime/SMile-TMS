@@ -7,7 +7,7 @@ import {captureRef} from "react-native-view-shot";
 import {Header} from "../Header";
 import {TourContext} from "../TourProvider";
 import {Button} from "react-native-elements";
-import {ScreenOrientation} from "expo";
+import * as ScreenOrientation from "expo-screen-orientation";
 import {TourSuche} from "./TourSuche";
 
 export const Signature = ({navigation}) => {
@@ -21,8 +21,12 @@ export const Signature = ({navigation}) => {
     }, []);
 
     const detectOrientation = async () => {
-        const {orientation} = await ScreenOrientation.getOrientationAsync();
-        if (orientation === "PORTRAIT" || orientation === "PORTRAIT_UP") {
+        await ScreenOrientation.getOrientationAsync();
+        console.log(ScreenOrientation.Orientation);
+        if (
+            ScreenOrientation.Orientation.PORTRAIT_UP ||
+            ScreenOrientation.Orientation.PORTRAIT_DOWN
+        ) {
             signatureRef.current && signatureRef.current.clear();
             setDynStyles(portrait);
         } else {
