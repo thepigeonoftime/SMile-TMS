@@ -106,12 +106,12 @@ const styles = StyleSheet.create({
     zielText: {
         color: "#666",
         fontSize: 20,
-        paddingLeft: 15,
+        paddingLeft: 10,
     },
     buttonWrap: {
         flex: 4,
         alignSelf: "center",
-        width: "80%",
+        width: "87%",
         justifyContent: "flex-start",
         paddingTop: "25%",
     },
