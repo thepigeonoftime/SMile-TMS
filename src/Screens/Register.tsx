@@ -107,9 +107,9 @@ export const Register = ({navigation}) => {
                     subText={"anlegen und individuelle\nTouren erhalten"}
                     containerStyle={{
                         paddingLeft: 60,
-                        paddingTop: "12%",
+                        paddingTop: "13%",
                         alignItems: "flex-start",
-                        paddingBottom: 45,
+                        paddingBottom: 50,
                         backgroundColor: "#F2F2F2",
                     }}
                 />
