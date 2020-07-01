@@ -104,7 +104,7 @@ export const TourStart: React.FC<IRoute> = ({navigation}) => {
                                     <Ionicons name="ios-arrow-forward" size={25} color="#ccc" />
                                 </View>
                             </View>
-                            <View style={[styles.pLeft]}>
+                            <View style={[styles.tourInfo]}>
                                 <View
                                     style={[
                                         {
@@ -248,13 +248,13 @@ const styles = StyleSheet.create({
     },
     depotHeader: {
         color: "#666",
-        fontSize: RFValue(19.5),
+        fontSize: 20,
         fontWeight: "bold",
         marginBottom: "3%",
     },
     depotText: {
         color: "#666",
-        fontSize: RFValue(19.5),
+        fontSize: 19,
     },
     tourLinkWrap: {
         flexDirection: "row",
@@ -264,8 +264,12 @@ const styles = StyleSheet.create({
     },
     tourLink: {
         color: "#41A9F5",
-        fontSize: RFPercentage(3),
+        fontSize: 20,
         fontWeight: "bold",
+    },
+    tourInfo: {
+        paddingLeft: 30,
+        paddingBottom: RFValue(5),
     },
     iconWrap: {
         right: 30,
@@ -274,9 +278,6 @@ const styles = StyleSheet.create({
         color: "#729628",
     },
     mFont: {
-        fontSize: RFValue(19),
-    },
-    pLeft: {
-        paddingLeft: 30,
+        fontSize: 20,
     },
 });

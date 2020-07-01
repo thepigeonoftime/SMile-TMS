@@ -28,7 +28,7 @@ export const TourListe = (props) => {
                                                 <Text
                                                     style={[
                                                         styles.zielText,
-                                                        index == currentStop && {
+                                                        index === currentStop && {
                                                             fontWeight: "bold",
                                                         },
                                                     ]}

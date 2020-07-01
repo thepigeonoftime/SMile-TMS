@@ -148,7 +148,7 @@ const styles = StyleSheet.create({
     },
     zielText: {
         color: "#666",
-        fontSize: RFPercentage(3),
+        fontSize: 20,
     },
     packetInfo: {
         flexDirection: "row",
@@ -157,7 +157,7 @@ const styles = StyleSheet.create({
     },
     packetText: {
         color: "#888",
-        fontSize: RFPercentage(2.8),
+        fontSize: 20,
     },
     buttonWrap: {
         flex: 2.8,
@@ -178,7 +178,7 @@ const styles = StyleSheet.create({
     },
     buttonWhiteTitle: {
         color: "#3FA9F5",
-        fontSize: RFPercentage(3),
+        fontSize: 22,
         fontWeight: "600",
     },
     buttonBlue: {
@@ -192,7 +192,7 @@ const styles = StyleSheet.create({
     },
     buttonBlueTitle: {
         color: "#FFF",
-        fontSize: RFPercentage(3),
+        fontSize: 22,
         fontWeight: "600",
     },
     buttonGrey: {
@@ -208,7 +208,7 @@ const styles = StyleSheet.create({
     },
     buttonGreyTitle: {
         color: "#aaa",
-        fontSize: RFPercentage(3),
+        fontSize: 22,
         fontWeight: "600",
     },
     buttonDisabled: {
