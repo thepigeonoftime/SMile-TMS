@@ -88,7 +88,7 @@ export const PaketeScannen = ({navigation}) => {
         if (!packetBuffer.length) {
             setFinished(true);
         }
-        setScannedPackets(-(-5 + packetBuffer.length)); // multiple packages same propID workaround
+        setScannedPackets(-(-tourPackets.length + packetBuffer.length)); // multiple packages same propID workaround
         setPackets(packetBuffer);
     };
 
