@@ -1,32 +1,25 @@
-import React, {useState, useRef, useContext, useEffect} from "react";
-import {createStackNavigator} from "@react-navigation/stack";
-import {SignatureProps} from "../Types";
-import {Text, TouchableOpacity, View, StyleSheet, SafeAreaView} from "react-native";
 import ExpoPixi from "expo-pixi";
+import * as ScreenOrientation from "expo-screen-orientation";
+import React, {useContext, useEffect, useRef, useState} from "react";
+import {SafeAreaView, StyleSheet, Text, View} from "react-native";
+import {Button} from "react-native-elements";
 import {captureRef} from "react-native-view-shot";
+import type {ViewStyleProp} from "react-native/Libraries/StyleSheet/StyleSheet";
 import {Header} from "../Header";
 import {TourContext} from "../TourProvider";
-import {Button} from "react-native-elements";
-import * as ScreenOrientation from "expo-screen-orientation";
 import {TourSuche} from "./TourSuche";
 
 export const Signature = ({navigation}) => {
     console.disableYellowBox = true;
     console.ignoredYellowBox = ["Warning: Each", "Warning: Failed"];
     const {tour, currentStop, nextStop, finishTour, deliverPacket} = useContext(TourContext);
-    const [dynStyles, setDynStyles] = useState<any>(portrait);
+    const [dynStyles, setDynStyles] = useState<ViewStyleProp>(portrait);
     const signatureRef = useRef(null);
-    useEffect(() => {
-        ScreenOrientation.unlockAsync();
-    }, []);
 
-    const detectOrientation = async () => {
-        await ScreenOrientation.getOrientationAsync();
-        console.log(ScreenOrientation.Orientation);
-        if (
-            ScreenOrientation.Orientation.PORTRAIT_UP ||
-            ScreenOrientation.Orientation.PORTRAIT_DOWN
-        ) {
+    const orientationChange = async () => {
+        // detect current orientation, apply corresponding styles
+        const orientation = await ScreenOrientation.getOrientationAsync();
+        if (orientation === 1) {
             signatureRef.current && signatureRef.current.clear();
             setDynStyles(portrait);
         } else {
@@ -35,14 +28,23 @@ export const Signature = ({navigation}) => {
         }
     };
 
-    ScreenOrientation.addOrientationChangeListener(detectOrientation);
+    useEffect(() => {
+        ScreenOrientation.unlockAsync();
+        ScreenOrientation.addOrientationChangeListener(orientationChange);
+        orientationChange();
+    }, []);
+
+    const onCancel = async () => {
+        await ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.PORTRAIT_UP);
+        navigation.goBack();
+    };
 
     const onSubmit = async () => {
         const signature = await captureRef(signatureRef, {
             result: "base64",
         });
         deliverPacket(signature);
-        ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.PORTRAIT);
+        ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.PORTRAIT_UP);
         if (currentStop < tour.stops.length - 1) {
             nextStop();
             navigation.navigate("Ziel");
@@ -54,7 +56,7 @@ export const Signature = ({navigation}) => {
         return <TourSuche navigation={navigation} />;
     } else {
         return (
-            <SafeAreaView style={dynStyles.container}>
+            <View style={dynStyles.container}>
                 <Header
                     text="Unterschrift"
                     color="#729628"
@@ -100,14 +102,12 @@ export const Signature = ({navigation}) => {
                             disabledStyle={styles.buttonDisabled}
                             disabled={false}
                             title="Abbrechen"
-                            onPress={() => {
-                                navigation.goBack();
-                            }}
+                            onPress={onCancel}
                         />
                     </View>
                     <View style={dynStyles.bottom} />
                 </View>
-            </SafeAreaView>
+            </View>
         );
     }
 };
@@ -154,6 +154,7 @@ const landscape = StyleSheet.create({
         backgroundColor: "#FFF",
     },
     header: {
+        display: "none",
         flex: 0,
         opacity: 0,
         height: 0,
