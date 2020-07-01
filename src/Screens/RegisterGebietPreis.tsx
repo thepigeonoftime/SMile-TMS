@@ -252,7 +252,7 @@ export const RegisterGebietPreis = ({navigation}) => {
 
 export const styles = StyleSheet.create({
     container: {
-        top: "-6%",
+        top: "-9%",
         padding: 20,
         borderRadius: 25,
         backgroundColor: "#FFF",

@@ -696,7 +696,7 @@ export const RegisterZeiten = ({navigation}) => {
 
 export const styles = StyleSheet.create({
     container: {
-        top: "-5%",
+        top: "-11%",
         paddingHorizontal: 20,
         borderRadius: 25,
         backgroundColor: "#FFF",

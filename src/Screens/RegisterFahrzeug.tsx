@@ -2,7 +2,6 @@ import {AntDesign, Entypo, FontAwesome, MaterialIcons, SimpleLineIcons} from "@e
 import React, {useContext} from "react";
 import {Controller, useForm} from "react-hook-form";
 import {
-    Alert,
     KeyboardAvoidingView,
     ScrollView,
     StyleSheet,
@@ -279,7 +278,7 @@ export const RegisterFahrzeug = ({navigation}) => {
 
 export const styles = StyleSheet.create({
     container: {
-        top: "-7%",
+        top: "-11%",
         padding: 20,
         borderRadius: 25,
         backgroundColor: "#FFF",

@@ -278,7 +278,7 @@ export const RegisterPerson = ({navigation}) => {
 
 export const styles = StyleSheet.create({
     container: {
-        top: "-5%",
+        top: "-7%",
         padding: 20,
         borderRadius: 25,
         backgroundColor: "#FFF",
