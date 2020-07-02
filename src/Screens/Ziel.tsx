@@ -148,7 +148,7 @@ const styles = StyleSheet.create({
     },
     zielText: {
         color: "#666",
-        fontSize: 20,
+        fontSize: 21,
     },
     packetInfo: {
         flexDirection: "row",
@@ -164,6 +164,7 @@ const styles = StyleSheet.create({
         justifyContent: "flex-start",
         alignSelf: "center",
         width: "80%",
+        marginTop: "5%",
     },
     buttonWhite: {
         backgroundColor: "#FFF",

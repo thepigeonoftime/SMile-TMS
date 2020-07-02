@@ -95,14 +95,14 @@ const styles = StyleSheet.create({
     },
     headerText: {
         color: "#FFF",
-        fontSize: 18,
+        fontSize: 20,
         fontWeight: "600",
         paddingBottom: 10,
     },
     text: {
         flex: 1,
         color: "#FFF",
-        fontSize: 17,
+        fontSize: 19,
     },
     buttonWrap: {
         flex: 1.2,

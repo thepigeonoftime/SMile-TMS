@@ -105,8 +105,8 @@ const styles = StyleSheet.create({
     },
     zielText: {
         color: "#666",
-        fontSize: 20,
-        paddingLeft: 10,
+        fontSize: 21,
+        paddingLeft: 5,
     },
     buttonWrap: {
         flex: 4,

@@ -108,23 +108,29 @@ export const TourSuche = ({navigation}) => {
                         flex: 1,
                         justifyContent: "center",
                         alignItems: "center",
-                        paddingTop: "2%",
+                    }}
+                    textStyle={{
+                        paddingTop: "7%",
+                        fontSize: 45,
+                    }}
+                    subTextStyle={{
+                        fontSize: 20,
                     }}
                 />
                 <View style={styles.buttonWrap}>
                     <Button
-                        buttonStyle={styles.saveButton}
-                        titleStyle={styles.saveButtonTitle}
-                        disabledStyle={styles.saveButtonDisabled}
+                        buttonStyle={styles.searchButton}
+                        titleStyle={styles.searchButtonTitle}
+                        disabledStyle={styles.searchButtonDisabled}
                         disabled={sucheDisabled}
                         title="Suche starten"
                         onPress={searchTour}
                     />
                     <Button
-                        buttonStyle={styles.saveButton}
-                        titleStyle={styles.saveButtonTitle}
-                        disabledStyle={styles.saveButtonDisabled}
-                        disabledTitleStyle={styles.saveButtonTitleDisabled}
+                        buttonStyle={styles.searchButton}
+                        titleStyle={styles.searchButtonTitle}
+                        disabledStyle={styles.searchButtonDisabled}
+                        disabledTitleStyle={styles.searchButtonTitleDisabled}
                         disabled={!sucheDisabled}
                         title="abbrechen"
                         onPress={cancelSearch}
@@ -149,7 +155,7 @@ const styles = StyleSheet.create({
         alignItems: "center",
         // marginTop: -40,
     },
-    saveButton: {
+    searchButton: {
         backgroundColor: "#3FA9F5",
         height: 50,
         width: 200,
@@ -158,16 +164,16 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         marginBottom: 20,
     },
-    saveButtonTitle: {
-        fontSize: 22,
+    searchButtonTitle: {
+        fontSize: 23,
         fontWeight: "800",
     },
-    saveButtonDisabled: {
+    searchButtonDisabled: {
         backgroundColor: "transparent",
         borderWidth: 3,
         borderColor: "#ccc",
     },
-    saveButtonTitleDisabled: {
+    searchButtonTitleDisabled: {
         color: "#ccc",
     },
 });
