@@ -118,7 +118,7 @@ export const PaketeScannen = ({navigation}) => {
             <View style={styles.container}>
                 {!hasPermission && (
                     <View style={styles.permissionWarning}>
-                        <Text style={{fontSize: 17}}>
+                        <Text style={{fontSize: 18}}>
                             Kamera Berechtigung benötigt zum scannen der Pakete.
                         </Text>
                         <Text>{"\n"}</Text>
@@ -151,15 +151,15 @@ export const PaketeScannen = ({navigation}) => {
                                     <BarcodeMask
                                         edgeBorderWidth={0}
                                         width="100%"
-                                        height="100%"
+                                        height="70%"
                                         backgroundColor="transparent"
                                         lineAnimationDuration={1500}
                                     />
                                 </Camera>
                             )}
                         </Animated.View>
-                        <View style={{justifyContent: "center", alignItems: "center"}}>
-                            <Text>
+                        <View style={styles.scanStatusWrap}>
+                            <Text style={styles.scanStatus}>
                                 {scannedPackets} von {packetLen} Paketen gescannt
                             </Text>
                         </View>
@@ -212,7 +212,7 @@ const styles = StyleSheet.create({
         alignItems: "center",
         borderRadius: 30,
         overflow: "hidden",
-        width: "95%",
+        width: "98%",
         height: "70%",
         marginTop: "3%",
         borderWidth: 10,
@@ -224,7 +224,15 @@ const styles = StyleSheet.create({
         padding: 8,
         // borderRadius: 30,
         width: "100%",
-        height: "105%",
+        height: "150%",
+    },
+    scanStatusWrap: {
+        justifyContent: "center",
+        alignItems: "center",
+    },
+    scanStatus: {
+        fontSize: 16,
+        color: "#777",
     },
     scanMsgContainer: {
         paddingTop: "5%",
