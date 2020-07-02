@@ -17,9 +17,11 @@ type tourType = any; // specify
 
 export const TourContext = React.createContext<{
     tour: tourType;
-    error: null | string;
+    error: string;
+    distance: number;
     setTour: (tour: any) => void;
     removeTour: () => void;
+    storeDistance: (tourDistance) => void;
     setError: (error: string) => void;
     showNavigation: boolean;
     toggleNavigation: () => void;
@@ -37,8 +39,10 @@ export const TourContext = React.createContext<{
 }>({
     tour: null,
     error: null,
+    distance: null,
     setTour: () => true,
     removeTour: () => true,
+    storeDistance: () => true,
     setError: () => true,
     showNavigation: false,
     toggleNavigation: () => true,
@@ -57,15 +61,16 @@ export const TourContext = React.createContext<{
 
 export const TourProvider = ({children}) => {
     const [tour, setTour] = useState(null);
-    const [pickupQueue, setPickupQueue] = useState(0);
-    const [deliveryQueue, setDeliveryQueue] = useState(0);
-    const [packetQueue, setPacketQueue] = useState(0);
-    const [isOnline, setIsOnline] = useState(false);
     const [error, setError] = useState(null);
+    const [distance, setDistance] = useState(null);
     const [currentStop, setCurrentStop] = useState(1);
     const [showTourListe, setShowTourListe] = useState(false);
     const [showNavigation, setShowNavigation] = useState(false);
     const [showPaketGeben, setShowPaketGeben] = useState(false);
+    const [isOnline, setIsOnline] = useState(false);
+    const [pickupQueue, setPickupQueue] = useState(0);
+    const [deliveryQueue, setDeliveryQueue] = useState(0);
+    const [packetQueue, setPacketQueue] = useState(0);
     const [updatePacket] = useMutation(UPDATE_PACKET);
     const [createPacket] = useMutation(CREATE_PACKET);
     // const {data, loading, error: queryErr} = useQuery(QUERY_PACKETS);
@@ -283,10 +288,11 @@ export const TourProvider = ({children}) => {
             value={{
                 tour,
                 error,
+                distance,
+                currentStop,
                 showNavigation,
                 showTourListe,
                 showPaketGeben,
-                currentStop,
                 setError: (tourError) => {
                     setError(tourError);
                 },
@@ -312,6 +318,8 @@ export const TourProvider = ({children}) => {
                     AsyncStorage.getItem("TourLogbuch")
                         .then((current) => {
                             const logBuffer = current ? JSON.parse(current) : [];
+                            tour.distance = distance;
+                            console.log(tour);
                             logBuffer.push(tour);
                             AsyncStorage.setItem("TourLogbuch", JSON.stringify(logBuffer));
                         })
@@ -330,6 +338,9 @@ export const TourProvider = ({children}) => {
                 nextStop: () => {
                     setCurrentStop(currentStop + 1);
                     AsyncStorage.setItem("currentStop", String(currentStop + 1));
+                },
+                storeDistance: (tourDistance) => {
+                    setDistance(tourDistance);
                 },
                 toggleNavigation: () => {
                     setShowNavigation(!showNavigation);

@@ -25,7 +25,7 @@ interface IRoute {
 }
 
 export const TourStart: React.FC<IRoute> = ({navigation}) => {
-    const {tour, setTour, removeTour, setError, error} = useContext(TourContext);
+    const {tour, setTour, removeTour, setError, error, storeDistance} = useContext(TourContext);
     const [distance, setDistance] = useState("...");
 
     useEffect(() => {
@@ -59,6 +59,8 @@ export const TourStart: React.FC<IRoute> = ({navigation}) => {
                         ? String((tourDistance / 1000).toFixed(1)) + " Kilometer"
                         : "Unbekannte Distanz"
                 );
+                // store distance for tourLogbuch
+                storeDistance((tourDistance / 1000).toFixed(1));
             })
             .catch((err) => {
                 console.log(err);
@@ -248,13 +250,13 @@ const styles = StyleSheet.create({
     },
     depotHeader: {
         color: "#666",
-        fontSize: 20,
+        fontSize: 21,
         fontWeight: "bold",
         marginBottom: "3%",
     },
     depotText: {
         color: "#666",
-        fontSize: 19,
+        fontSize: 20,
     },
     tourLinkWrap: {
         flexDirection: "row",
@@ -264,7 +266,7 @@ const styles = StyleSheet.create({
     },
     tourLink: {
         color: "#41A9F5",
-        fontSize: 20,
+        fontSize: 20.5,
         fontWeight: "bold",
     },
     tourInfo: {

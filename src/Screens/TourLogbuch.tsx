@@ -143,7 +143,7 @@ const TourLogSummary = ({navigation}) => {
                                     fill="#ccc"
                                     style={{marginTop: 2, marginRight: 5}}
                                 />
-                                <Text style={styles.summaryDetailText}>10 km</Text>
+                                <Text style={styles.summaryDetailText}>{tourItem.distance} km</Text>
                             </View>
                         </View>
                     );
@@ -235,6 +235,7 @@ const styles = StyleSheet.create({
     },
     scrollView: {
         paddingHorizontal: "11%",
+        marginBottom: "15%",
     },
     closeButtonContainer: {
         alignItems: "flex-end",
@@ -269,7 +270,7 @@ const styles = StyleSheet.create({
         justifyContent: "space-between",
     },
     date: {
-        fontSize: 20,
+        fontSize: 22,
         fontWeight: "700",
         color: "#696d7d",
         paddingBottom: 5,
@@ -280,7 +281,7 @@ const styles = StyleSheet.create({
     },
     summaryDetailText: {
         color: "#729628",
-        paddingRight: 15,
+        paddingRight: 17,
     },
     icon: {
         justifyContent: "flex-start",
