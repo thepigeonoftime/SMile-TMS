@@ -706,6 +706,7 @@ export const styles = StyleSheet.create({
         shadowOpacity: 0.1,
         shadowRadius: 2.84,
         elevation: 5,
+        marginBottom: "-11%",
     },
     formContainer: {
         flexDirection: "column",
