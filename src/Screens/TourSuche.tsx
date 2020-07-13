@@ -12,20 +12,28 @@ import {fetchTour} from "../Requests";
 
 export const TourSuche = ({navigation}) => {
     const {unregister} = useContext(RegisterContext);
-    const {logout} = useContext(AuthContext);
-    const {tour, setTour, removeTour, setError} = useContext(TourContext);
+    const {logout, token} = useContext(AuthContext);
+    const {tour, formatTour, setTour, removeTour, setError} = useContext(TourContext);
     const [sucheDisabled, setSucheDisabled] = useState(false);
+    const [tourError, setTourError] = useState("");
     const [showError, setShowError] = useState(false);
     const [timeoutID, setTimeoutID] = useState<ReturnType<typeof setTimeout>>(null);
 
     const getTour = () => {
-        fetchTour()
+        fetchTour(token)
             .then((response) => {
-                setTour(response.data);
-                setSucheDisabled(false);
-                navigation.navigate("TourStart");
+                if (response.data === "No new tours found") {
+                    setTourError("Momentan keine Tour verfügbar");
+                    setShowError(true);
+                } else {
+                    setTour(formatTour(response.data));
+                    setSucheDisabled(false);
+                    navigation.navigate("TourStart");
+                }
             })
             .catch((error) => {
+                console.log(error);
+                setTourError("Probleme beim Laden der Tour. Bitte erneut versuchen.");
                 setShowError(true);
                 setSucheDisabled(false);
                 setError(error);
@@ -68,9 +76,7 @@ export const TourSuche = ({navigation}) => {
                             opacity: showError ? 1 : 0,
                         }}
                     >
-                        <Text style={{color: "#fff", paddingTop: 10}}>
-                            Probleme beim Laden der Tour. Bitte erneut versuchen.
-                        </Text>
+                        <Text style={{color: "#fff", paddingTop: 10}}>{tourError}</Text>
                         <IconClose width={15} height={15} fill="#FFF" />
                     </Animated.View>
                 </TouchableOpacity>
@@ -111,10 +117,10 @@ export const TourSuche = ({navigation}) => {
                     }}
                     textStyle={{
                         paddingTop: "7%",
-                        fontSize: 45,
+                        fontSize: 44,
                     }}
                     subTextStyle={{
-                        fontSize: 20,
+                        fontSize: 18.5,
                     }}
                 />
                 <View style={styles.buttonWrap}>
