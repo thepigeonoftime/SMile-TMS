@@ -31,13 +31,12 @@ export const TourStart: React.FC<IRoute> = ({navigation}) => {
     useEffect(() => {
         // format tour stop addresses for google directions API call
         const formatAddress = (stop) => {
-            const result =
-                stop.streetName + "+" + stop.streetNumber + "+" + stop.zip + "+" + stop.city;
+            const result = stop.street + "+" + stop.zip + "+" + stop.city;
             return result.replace(/ /g, "+");
         };
         // clone tour stops to buffer
         const tourBuffer = [...tour.stops];
-        const origin = formatAddress(tourBuffer.shift());
+        const origin = formatAddress(tour._pickpoint);
         const destination = formatAddress(tourBuffer.pop());
         const waypoints = tourBuffer
             .map((stop, index) => {
@@ -88,12 +87,9 @@ export const TourStart: React.FC<IRoute> = ({navigation}) => {
                         <View style={{flex: 10}}>
                             <View>
                                 <Text style={[styles.depotHeader]}>Zentraldepot:</Text>
-                                <Text style={[styles.depotText]}>{tour.stops[0].streetName}</Text>
+                                <Text style={[styles.depotText]}>{tour._pickpoint.street}</Text>
                                 <Text style={[styles.depotText]}>
-                                    Nummer: {tour.stops[0].streetNumber}
-                                </Text>
-                                <Text style={[styles.depotText]}>
-                                    {tour.stops[0].zip + " " + tour.stops[0].city}
+                                    {tour._pickpoint.zip + " " + tour._pickpoint.city}
                                 </Text>
                             </View>
                             <View style={styles.tourLinkWrap}>
@@ -175,7 +171,7 @@ export const TourStart: React.FC<IRoute> = ({navigation}) => {
                                             style={{marginLeft: -30, marginRight: 20}}
                                         />
                                         <Text style={[styles.mFont, styles.green]}>
-                                            {tour.stops.length - 1} Stops
+                                            {tour.stops.length} Stops
                                         </Text>
                                     </View>
                                     <View
