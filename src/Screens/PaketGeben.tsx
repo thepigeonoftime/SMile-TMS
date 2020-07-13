@@ -12,7 +12,7 @@ export const PaketGeben = ({navigation}) => {
 
     const onSubmit = () => {
         const timestamp = new Date().toJSON();
-        reportDelivery(tour.packets[currentStop - 1].sscc, timestamp);
+        reportDelivery(tour.stops[currentStop].sscc, timestamp);
         navigation.navigate("Authentifizierung");
         togglePaketGeben();
     };
@@ -25,8 +25,7 @@ export const PaketGeben = ({navigation}) => {
                         <Text style={styles.text}>
                             {tour.stops[currentStop].firstName} {tour.stops[currentStop].lastName}
                             {"; "}
-                            {tour.stops[currentStop].streetName}{" "}
-                            {tour.stops[currentStop].streetNumber}
+                            {tour.stops[currentStop].street}
                             {"; "}
                             {tour.stops[currentStop].zip + " " + tour.stops[currentStop].city}
                         </Text>
