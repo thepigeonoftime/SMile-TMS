@@ -93,7 +93,7 @@ export const PaketeScannen = ({navigation}) => {
     };
 
     const onSubmit = () => {
-        setStop(1);
+        setStop(0);
         navigation.navigate("Ziel");
     };
 
