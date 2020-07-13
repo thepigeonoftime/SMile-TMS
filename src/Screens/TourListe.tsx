@@ -23,30 +23,26 @@ export const TourListe = (props) => {
                             <View style={styles.zielListe}>
                                 {tour.stops.map((stop: ZielProps, index: number) => {
                                     return (
-                                        stop.stopType === "Receiver" && (
-                                            <View key={stop.id} style={styles.ziel}>
-                                                <Text
-                                                    style={[
-                                                        styles.zielText,
-                                                        index === currentStop && {
-                                                            fontWeight: "bold",
-                                                        },
-                                                    ]}
-                                                >
-                                                    {stop.firstName +
-                                                        " " +
-                                                        stop.lastName +
-                                                        "; " +
-                                                        stop.streetName +
-                                                        " " +
-                                                        stop.streetNumber +
-                                                        "; " +
-                                                        stop.zip +
-                                                        " " +
-                                                        stop.city}
-                                                </Text>
-                                            </View>
-                                        )
+                                        <View key={stop._id} style={styles.ziel}>
+                                            <Text
+                                                style={[
+                                                    styles.zielText,
+                                                    index === currentStop && {
+                                                        fontWeight: "bold",
+                                                    },
+                                                ]}
+                                            >
+                                                {stop.firstName +
+                                                    " " +
+                                                    stop.lastName +
+                                                    "; " +
+                                                    stop.street +
+                                                    "; " +
+                                                    stop.zip +
+                                                    " " +
+                                                    stop.city}
+                                            </Text>
+                                        </View>
                                     );
                                 })}
                             </View>
