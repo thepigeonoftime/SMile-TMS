@@ -19,7 +19,8 @@ export const TourContext = React.createContext<{
     tour: tourType;
     error: string;
     distance: number;
-    setTour: (tour: any) => void;
+    formatTour: (tourObject: any) => void;
+    setTour: (tourObject: any) => void;
     removeTour: () => void;
     storeDistance: (tourDistance) => void;
     setError: (error: string) => void;
@@ -40,6 +41,7 @@ export const TourContext = React.createContext<{
     tour: null,
     error: null,
     distance: null,
+    formatTour: () => true,
     setTour: () => true,
     removeTour: () => true,
     storeDistance: () => true,
@@ -50,7 +52,7 @@ export const TourContext = React.createContext<{
     toggleTourListe: () => true,
     showPaketGeben: false,
     togglePaketGeben: () => true,
-    currentStop: 1,
+    currentStop: 0,
     setStop: () => true,
     nextStop: () => true,
     finishTour: () => true,
@@ -296,8 +298,20 @@ export const TourProvider = ({children}) => {
                 setError: (tourError) => {
                     setError(tourError);
                 },
+                formatTour: (tourObject) => {
+                    tourObject["stops"] = tourObject.packages.filter(
+                        (elm, index) =>
+                            tourObject.packages.findIndex(
+                                (a) => a["_receiverId"] === elm["_receiverId"]
+                            ) === index
+                    );
+                    tourObject.packets = tourObject.packages;
+                    tourObject.tourStartTime = new Date().toJSON();
+                    return tourObject;
+                },
                 setTour: (tourObject) => {
-                    setTour(tourObject.tours[0]); // change name
+                    // console.log("stops", tourObject.stops);
+                    setTour(tourObject); // change name
                     AsyncStorage.setItem("tour", JSON.stringify(tourObject));
                     // setCurrentStop(1);
                 },
@@ -319,7 +333,6 @@ export const TourProvider = ({children}) => {
                         .then((current) => {
                             const logBuffer = current ? JSON.parse(current) : [];
                             tour.distance = distance;
-                            console.log(tour);
                             logBuffer.push(tour);
                             AsyncStorage.setItem("TourLogbuch", JSON.stringify(logBuffer));
                         })
@@ -388,10 +401,10 @@ export const TourProvider = ({children}) => {
                 },
                 deliverPacket: (signature) => {
                     // updatePacket graphql mutation
-                    const receiverID = tour.stops[currentStop].id;
-                    const tourID = tour.tourMetaData.tourID;
-                    tour.packets
-                        .filter((packet) => packet.receiverID === receiverID)
+                    const receiverID = tour.stops[currentStop]._receiverIds;
+                    const tourID = tour.id;
+                    tour.stops
+                        .filter((packet) => packet._receiverID === receiverID)
                         .forEach((packet) => {
                             console.log(
                                 structurePacketData("signature", packet.sscc, tourID, currentStop)

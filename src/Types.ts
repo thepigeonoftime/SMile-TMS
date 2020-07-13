@@ -167,9 +167,8 @@ export type wishTimeFrame = {
 };
 
 export type ZielProps = {
-    stopType: "Depot" | "Receiver";
-    streetName: string;
-    streetNumber: string;
+    _id: string;
+    street: string;
     firstName: string;
     lastName: string;
     city: string;

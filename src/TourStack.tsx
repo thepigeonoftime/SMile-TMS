@@ -40,11 +40,11 @@ export const TourStack = ({navigation, route}) => {
                     if (tourObject) {
                         const [[, storedTour]] = tourObject;
                         const [, [, storedStop]] = tourObject;
-                        console.log(storedStop);
-                        storedTour &&
-                            (storedStop !== null && setStop(storedStop),
-                            setTour(JSON.parse(storedTour)),
-                            setInitialRoute(storedStop ? "Ziel" : "TourStart"));
+                        if (storedTour) {
+                            storedStop !== null && setStop(storedStop);
+                            setTour(JSON.parse(storedTour));
+                            setInitialRoute(storedStop ? "Ziel" : "TourStart");
+                        }
                     }
                     setLoading(false);
                 })
