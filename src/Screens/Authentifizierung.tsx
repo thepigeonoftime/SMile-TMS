@@ -19,10 +19,7 @@ export const Authentifizierung = ({navigation}) => {
                             {tour.stops[currentStop].firstName} {tour.stops[currentStop].lastName}
                         </Text>
                         <Text style={[styles.zielText, {paddingTop: 5}]}>
-                            {tour.stops[currentStop].streetName}
-                        </Text>
-                        <Text style={[styles.zielText]}>
-                            Nr. {tour.stops[currentStop].streetNumber}
+                            {tour.stops[currentStop].street}
                         </Text>
                         <Text style={[styles.zielText]}>
                             {tour.stops[currentStop].zip + " " + tour.stops[currentStop].city}
@@ -113,7 +110,7 @@ const styles = StyleSheet.create({
         alignSelf: "center",
         width: "87%",
         justifyContent: "flex-start",
-        paddingTop: "25%",
+        paddingTop: "20%",
     },
     buttonWhite: {
         backgroundColor: "#FFF",
