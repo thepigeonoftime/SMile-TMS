@@ -1,4 +1,4 @@
-import React, {useContext} from "react";
+import React, {useContext, useState, useEffect} from "react";
 import {StyleSheet, Text, View} from "react-native";
 import {Button} from "react-native-elements";
 import {Header} from "../Header";
@@ -20,6 +20,19 @@ export const Ziel = ({navigation}) => {
         toggleNavigation,
         togglePaketGeben,
     } = useContext(TourContext);
+
+    const [packetCount, setPacketCount] = useState(0);
+    const [packetLabel, setPacketLabel] = useState("Paket");
+    const [updatePacketCount, setUpdatePacketCount] = useState(0);
+
+    useEffect(() => {
+        const numPackets = tour.packets.filter(
+            (packet) => packet._receiverId === tour.stops[currentStop]._receiverId
+        ).length;
+        numPackets > 1 && setPacketLabel("Pakete");
+        setPacketCount(numPackets);
+    }, [updatePacketCount]);
+
     if (!tour) {
         return <TourSuche navigation={navigation} />;
     } else {
@@ -38,24 +51,13 @@ export const Ziel = ({navigation}) => {
                                 {tour.stops[currentStop].firstName}{" "}
                                 {tour.stops[currentStop].lastName}
                             </Text>
-                            <Text style={[styles.zielText, {fontWeight: "bold"}]}>
-                                {tour.stops[currentStop].streetName}
-                            </Text>
+                            <Text style={[styles.zielText]}>{tour.stops[currentStop].street}</Text>
                             <Text style={[styles.zielText]}>
-                                Nummer: {tour.stops[currentStop].streetNumber}
-                            </Text>
-                            <Text style={[styles.zielText]}>
-                                {tour.stops[currentStop].zip + " " + tour.stops[1].city}
+                                {tour.stops[currentStop].zip + " " + tour.stops[currentStop].city}
                             </Text>
                         </View>
                         <View style={styles.packetInfo}>
-                            <Text style={styles.packetText}>
-                                {
-                                    tour.packets.filter(
-                                        (packet) => packet.receiverID === tour.stops[currentStop].id
-                                    ).length
-                                }
-                            </Text>
+                            <Text style={styles.packetText}>{packetCount}</Text>
                             <PaketIcon
                                 width={20}
                                 height={20}
@@ -86,7 +88,7 @@ export const Ziel = ({navigation}) => {
                             titleStyle={styles.buttonBlueTitle}
                             disabledStyle={styles.buttonDisabled}
                             disabled={false}
-                            title="Paket übergeben"
+                            title={packetLabel + " übergeben"}
                             onPress={togglePaketGeben}
                         />
                         <Button
@@ -94,11 +96,12 @@ export const Ziel = ({navigation}) => {
                             titleStyle={styles.buttonGreyTitle}
                             disabledStyle={styles.buttonDisabled}
                             disabled={false}
-                            title="Paket nicht zustellbar"
+                            title={packetLabel + " nicht zustellbar"}
                             onPress={() => {
                                 if (currentStop < tour.stops.length - 1) {
                                     nextStop();
-                                    navigation.navigate("Ziel");
+                                    setUpdatePacketCount(updatePacketCount + 1);
+                                    // navigation.navigate("Ziel");
                                 } else {
                                     finishTour(navigation);
                                 }
