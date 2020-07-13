@@ -106,8 +106,8 @@ const TourLogSummary = ({navigation}) => {
                                 }}
                             >
                                 <Text style={styles.date}>
-                                    {moment(tourItem.tourMetaData.tourStartTime).format("L")} |{" "}
-                                    {moment(tourItem.tourMetaData.tourStartTime).format("LT")}
+                                    {moment(tourItem.tourStartTime).format("L")} |{" "}
+                                    {moment(tourItem.tourStartTime).format("LT")}
                                 </Text>
                                 <View style={styles.icon}>
                                     <Ionicons
@@ -135,7 +135,7 @@ const TourLogSummary = ({navigation}) => {
                                     style={{marginTop: 2, marginRight: 5}}
                                 />
                                 <Text style={styles.summaryDetailText}>
-                                    {Object.keys(tourItem.stops).length - 1} Stops
+                                    {Object.keys(tourItem.stops).length} Stops
                                 </Text>
                                 <DistanceIcon
                                     width={15}
@@ -155,12 +155,10 @@ const TourLogSummary = ({navigation}) => {
 
 const TourLogDetail = ({route, navigation}) => {
     const {tourItem} = route.params;
-    console.log(tourItem);
 
     return (
         <TourLogView navigation={navigation}>
-            {/* loop through tour stops, discarding initial depot entry */}
-            {tourItem.stops.slice(1).map((item, index) => {
+            {tourItem.stops.map((item, index) => {
                 return (
                     <View style={styles.single} key={index}>
                         <Text style={styles.singleText}>
@@ -168,10 +166,8 @@ const TourLogDetail = ({route, navigation}) => {
                                 " " +
                                 item.lastName +
                                 "; " +
-                                item.streetName +
+                                item.street +
                                 " " +
-                                item.streetNumber +
-                                "; " +
                                 item.zip +
                                 " " +
                                 item.city}
@@ -186,7 +182,7 @@ const TourLogDetail = ({route, navigation}) => {
                             <Text style={styles.singleDetailText}>
                                 {
                                     tourItem.packets.filter(
-                                        (packet) => packet.receiverID === item.id
+                                        (packet) => packet._receiverId === item._receiverId
                                     ).length
                                 }
                                 {" Pakete"}
@@ -299,6 +295,7 @@ const styles = StyleSheet.create({
     singleDetails: {
         flexDirection: "row",
         justifyContent: "flex-start",
+        marginTop: 5,
     },
     singleDetailText: {
         color: "#729628",
