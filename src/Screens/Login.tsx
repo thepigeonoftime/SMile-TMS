@@ -8,7 +8,7 @@ import {AuthNavProps} from "../Types";
 import {KeyboardAwareScrollView} from "react-native-keyboard-aware-scroll-view";
 
 export const Login = ({navigation, route}: AuthNavProps<"Signup">) => {
-    const {login, loginMsg} = useContext(AuthContext);
+    const {login, loginMsg, disableButton} = useContext(AuthContext);
     const [user, setUser] = useState(null);
     const [password, setPassword] = useState(null);
 
@@ -84,6 +84,7 @@ export const Login = ({navigation, route}: AuthNavProps<"Signup">) => {
                     <Button
                         title={"Login"}
                         onPress={onSubmit}
+                        disabled={disableButton}
                         buttonStyle={styles.button}
                         titleStyle={styles.buttonTitle}
                     />

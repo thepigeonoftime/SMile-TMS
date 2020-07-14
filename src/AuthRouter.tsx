@@ -1,27 +1,34 @@
 import {NavigationContainer} from "@react-navigation/native";
 import * as SecureStore from "expo-secure-store";
 import React, {useContext, useEffect, useState} from "react";
-import {View, ImageBackground, ActivityIndicator} from "react-native";
+import {View, ImageBackground, ActivityIndicator, AsyncStorage} from "react-native";
 import {AppContainer} from "./AppContainer";
 import {AuthContext} from "./AuthProvider";
 import {AuthStack} from "./AuthStack";
 import {Center} from "./Center";
+import moment from "moment";
 
 export const AuthRouter: React.FC<{}> = ({}) => {
-    const {token, storeToken} = useContext(AuthContext);
+    const {token, storeToken, removeToken} = useContext(AuthContext);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        SecureStore.getItemAsync("token")
-            .then((token) => {
-                if (token) {
-                    storeToken(token);
+        (async () => {
+            try {
+                // get current token, current date and expiry date -> set token if still valid, otherwise delete
+                const currentToken = await SecureStore.getItemAsync("token");
+                const tokenExpiry = await SecureStore.getItemAsync("tokenExpiry");
+                const currentDate = moment();
+                if (currentToken && tokenExpiry && currentDate.isBefore(tokenExpiry)) {
+                    storeToken(currentToken);
+                } else {
+                    removeToken();
                 }
-                setLoading(false);
-            })
-            .catch((err) => {
+            } catch (err) {
                 console.log(err);
-            });
+            }
+            setLoading(false);
+        })();
     }, []);
 
     if (loading) {
