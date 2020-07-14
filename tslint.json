@@ -1,5 +1,6 @@
 {
     "extends": ["tslint:latest", "tslint-react", "tslint-react-native", "tslint-config-prettier"],
+    "target": "ES6",
     "rules": {
         "class-name": false,
         "comment-format": [true, "check-space"],
@@ -12,6 +13,7 @@
         "no-eval": true,
         "no-implicit-dependencies": false,
         "no-internal-module": true,
+        "no-string-literal": false,
         "no-submodule-imports": false,
         "no-trailing-whitespace": true,
         "no-unsafe-finally": true,
