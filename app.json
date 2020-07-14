@@ -1,57 +1,47 @@
 {
-  "expo": {
-    "name": "SMile",
-    "slug": "smile",
-    "privacy": "public",
-    "platforms": [
-      "ios",
-      "android",
-      "web"
-    ],
-    "version": "1.0.0",
-    "orientation": "portrait",
-    "icon": "./assets/icon.png",
-    "splash": {
-      "image": "./assets/splash.png",
-      "resizeMode": "cover",
-      "backgroundColor": "#ffffff"
-    },
-    "updates": {
-      "fallbackToCacheTimeout": 0
-    },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
-    "ios": {
-      "supportsTablet": true,
-      "bundleIdentifier": "de.goodstag.smile",
-      "config": {
-        "googleMapsApiKey": "AIzaSyD7UM0HbxP0fGmEbTsRDayKJMJF3ivswP0"
-      }
-    },
-    "android": {
-      "package": "de.goodstag.smile",
-      "versionCode": 1,
-      "config": {
-        "googleMaps": {
-          "apiKey": "AIzaSyAFHmPT3wWHLwNsbQY6ejEHTgNdXfC2R-Y"
+    "expo": {
+        "name": "SMile",
+        "slug": "smile",
+        "privacy": "public",
+        "platforms": ["ios", "android", "web"],
+        "version": "0.5",
+        "orientation": "portrait",
+        "icon": "./assets/icon.png",
+        "splash": {
+            "image": "./assets/splash.png",
+            "resizeMode": "cover",
+            "backgroundColor": "#ffffff"
+        },
+        "updates": {
+            "fallbackToCacheTimeout": 0
+        },
+        "assetBundlePatterns": ["**/*"],
+        "ios": {
+            "supportsTablet": true,
+            "bundleIdentifier": "de.goodstag.smile",
+            "config": {
+                "googleMapsApiKey": "AIzaSyD7UM0HbxP0fGmEbTsRDayKJMJF3ivswP0"
+            }
+        },
+        "android": {
+            "permissions": ["CAMERA", "ACCESS_COARSE_LOCATION, ACCESS_FINE_LOCATION"],
+            "package": "de.goodstag.smile",
+            "versionCode": 5,
+            "config": {
+                "googleMaps": {
+                    "apiKey": "AIzaSyAFHmPT3wWHLwNsbQY6ejEHTgNdXfC2R-Y"
+                }
+            }
+        },
+        "packagerOpts": {
+            "config": "metro.config.js",
+            "sourceExts": ["ts", "tsx", "**js**", "svg"]
+        },
+        "extra": {
+            "credentials": {
+                "directionsApiKey": "AIzaSyDzgQenA9LdgC7sIXpng2GgV9lvasHUFOo",
+                "geocodingApiKey": "AIzaSyCFJ1veGSb5p8Xvwk1eO47u2oHHSdl3krw"
+            }
         }
-      }
-    },
-    "packagerOpts": {
-      "config": "metro.config.js",
-      "sourceExts": [
-        "ts",
-        "tsx",
-        "**js**",
-        "svg"
-      ]
-    },
-    "extra": {
-      "credentials": {
-        "directionsApiKey": "AIzaSyDzgQenA9LdgC7sIXpng2GgV9lvasHUFOo",
-        "geocodingApiKey": "AIzaSyCFJ1veGSb5p8Xvwk1eO47u2oHHSdl3krw"
-      }
     }
-  }
 }
