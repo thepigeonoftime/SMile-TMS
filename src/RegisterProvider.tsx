@@ -29,8 +29,7 @@ export const RegisterContext = React.createContext<RegisterContextProps>({
     toggleRegModal: () => true,
 });
 
-interface RegisterProviderProps {}
-export const RegisterProvider: React.FC<RegisterProviderProps> = ({children}) => {
+export const RegisterProvider: React.FC = ({children}) => {
     const [loading, setLoading] = useState(true);
     const [registered, setRegistered] = useState<string | null>(null);
     const [dataPerson, setDataPerson] = useState<dataPersonProps | null>(null);
