@@ -19,7 +19,6 @@ export const Maps = ({navigation}) => {
         longitudeDelta: 0.1,
     });
     const [waypoints, setWaypoints] = useState([]);
-    const [deliveryStops, setDeliveryStops] = useState([]);
     const [destination, setDestination] = useState(null);
     const [depot, setDepot] = useState(null);
     const [location, setLocation] = useState(null);
@@ -37,9 +36,7 @@ export const Maps = ({navigation}) => {
         const result: any[] = await Promise.all(
             tourStops.map((stop) => {
                 // @ts-ignore
-                return Geocoder.from(
-                    stop.streetName + " " + stop.streetNumber + " " + stop.zip + " " + stop.city
-                )
+                return Geocoder.from(stop.street + " " + stop.zip + " " + stop.city)
                     .then((json) => {
                         return {
                             latitude: json.results[0].geometry.location.lat,
@@ -73,14 +70,12 @@ export const Maps = ({navigation}) => {
             }
             currentLocation && setLocation(currentLocation);
 
-            getGeocodes(tour.stops).then(({start, end, stops}) => {
-                const [, ...stopsWithoutDepot] = stops; // get stops without depot for deliveryStops
-                const regionBuffer = currentLocation ? currentLocation : depot; // center map view on current location or fall back to depot
-                currentLocation && stops.unshift(currentLocation); // add current location to waypoints/markers
-                setDeliveryStops(stopsWithoutDepot);
+            getGeocodes([tour._pickpoint, ...tour.stops]).then(({start, end, stops}) => {
+                const [, ...deliveryStops] = stops; // get stops without depot
+                const regionBuffer = currentLocation ? currentLocation : start; // center map view on current location or fall back to depot
                 setDepot(start);
                 setDestination(end);
-                setWaypoints(stops);
+                setWaypoints(deliveryStops);
                 setRegion({...regionBuffer, latitudeDelta: 0.1, longitudeDelta: 0.1});
                 setTimeout(() => {
                     setShowMap(true);
@@ -127,43 +122,45 @@ export const Maps = ({navigation}) => {
                             initialRegion={region}
                             minZoomLevel={10}
                         >
+                            {location && (
+                                <Marker
+                                    pinColor={"#ff0099"}
+                                    coordinate={location}
+                                    title={"Aktueller Standort"}
+                                    description="Sie befinden sich hier"
+                                />
+                            )}
+                            <Marker
+                                pinColor={"#074dff"}
+                                coordinate={depot}
+                                title={"Depot"}
+                                description={
+                                    tour._pickpoint.street +
+                                    "\n" +
+                                    tour._pickpoint.zip +
+                                    " " +
+                                    tour._pickpoint.city
+                                }
+                            />
                             {waypoints.map((coordinate, index) => (
                                 <Marker
                                     key={`coordinate_${index}`}
-                                    pinColor={
-                                        (location && index === 0 && "#ff0099") ||
-                                        (index === (location ? 1 : 0) && "#074dff") ||
-                                        (index === waypoints.length - 1 && "#17a403") ||
-                                        null
-                                    }
+                                    pinColor={(index === waypoints.length - 1 && "#17a403") || null}
                                     coordinate={coordinate}
                                     title={
-                                        (location && index === 0 && "Aktueller Standort") ||
-                                        (index === (location ? 1 : 0) && "Depot") ||
-                                        (index - 1 in tour.stops &&
-                                            tour.stops[index - 1].firstName +
+                                        (index in tour.stops &&
+                                            tour.stops[index].firstName +
                                                 " " +
-                                                tour.stops[index - 1].lastName) ||
+                                                tour.stops[index].lastName) ||
                                         ""
                                     }
                                     description={
-                                        (location && index === 0 && "Sie befinden sich hier") ||
-                                        (index === (location ? 1 : 0) &&
-                                            tour.stops[location ? 1 : 0].streetName +
-                                                " " +
-                                                tour.stops[location ? 1 : 0].streetNumber +
+                                        (index in tour.stops &&
+                                            tour.stops[index].street +
                                                 "\n" +
-                                                tour.stops[location ? 1 : 0].zip +
+                                                tour.stops[index].zip +
                                                 " " +
-                                                tour.stops[location ? 1 : 0].city) ||
-                                        (index - 1 in tour.stops &&
-                                            tour.stops[index - 1].streetName +
-                                                " " +
-                                                tour.stops[index - 1].streetNumber +
-                                                "\n" +
-                                                tour.stops[index - 1].zip +
-                                                " " +
-                                                tour.stops[index - 1].city) ||
+                                                tour.stops[index].city) ||
                                         ""
                                     }
                                 />
@@ -195,7 +192,7 @@ export const Maps = ({navigation}) => {
                                 language="de"
                                 origin={depot}
                                 destination={destination}
-                                waypoints={deliveryStops}
+                                waypoints={waypoints}
                                 apikey={DIRECTIONS_APIKEY}
                                 strokeWidth={5}
                                 strokeColor="#ff009c"
