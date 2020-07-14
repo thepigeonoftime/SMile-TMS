@@ -74,12 +74,15 @@ export const Navigation = (props) => {
                 }
                 currentLocation && setLocation(currentLocation);
 
-                const nextStops = [tour.stops[currentStop - 1], tour.stops[currentStop]];
+                const nextStops =
+                    currentStop === 0
+                        ? [tour._pickpoint, tour.stops[currentStop]]
+                        : [tour.stops[currentStop - 1], tour.stops[currentStop]];
                 getGeocodes(nextStops).then(({start, end}) => {
                     setOrigin(currentLocation ? currentLocation : start);
                     setDestination(end);
-                    setWaypoints([currentLocation ? currentLocation : start, end]);
-                    setRegion({...start, latitudeDelta: 0.1, longitudeDelta: 0.1});
+                    const regionBuffer = currentLocation ? currentLocation : start;
+                    setRegion({...regionBuffer, latitudeDelta: 0.1, longitudeDelta: 0.1});
                     setTimeout(() => {
                         setShowMap(true);
                     }, 500);
@@ -137,37 +140,48 @@ export const Navigation = (props) => {
                             showsTraffic={true}
                             // minZoomLevel={10}
                         >
-                            {waypoints.map((coordinate, index) => (
-                                <Marker
-                                    key={`coordinate_${index}`}
-                                    pinColor={
-                                        (index === 0 && "#074dff") ||
-                                        (index === waypoints.length - 1 && "#17a403") ||
-                                        null
-                                    }
-                                    coordinate={coordinate}
-                                    title={
-                                        (location && index === 0 && "Aktueller Standort") ||
-                                        (currentStop === 1 &&
-                                            index === 0 &&
-                                            tour.stops[currentStop - 1].id) ||
-                                        tour.stops[currentStop - 1 + index].firstName +
-                                            " " +
-                                            tour.stops[currentStop - 1 + index].lastName
-                                    }
-                                    description={
-                                        (location && index === 0 && "Sie befinden sich hier") ||
-                                        tour.stops[currentStop - 1 + index].streetName +
-                                            " " +
-                                            tour.stops[currentStop - 1 + index].streetNumber +
+                            <Marker
+                                pinColor={"#074dff"}
+                                coordinate={origin}
+                                title={
+                                    (location && "Aktueller Standort") ||
+                                    (currentStop === 0 && "Depot") ||
+                                    tour.stops[currentStop - 1].firstName +
+                                        " " +
+                                        tour.stops[currentStop - 1].lastName
+                                }
+                                description={
+                                    (location && "Sie befinden sich hier") ||
+                                    (currentStop === 0 &&
+                                        tour._pickpoint.street +
                                             "\n" +
-                                            tour.stops[currentStop - 1 + index].zip +
+                                            tour._pickpoint.zip +
                                             " " +
-                                            tour.stops[currentStop - 1 + index].city ||
-                                        ""
-                                    }
-                                />
-                            ))}
+                                            tour._pickpoint.city) ||
+                                    tour.stops[currentStop - 1].street +
+                                        "\n" +
+                                        tour.stops[currentStop - 1].zip +
+                                        " " +
+                                        tour.stops[currentStop - 1].city ||
+                                    ""
+                                }
+                            />
+                            <Marker
+                                pinColor={"#17a403"}
+                                coordinate={destination}
+                                title={
+                                    tour.stops[currentStop].firstName +
+                                    " " +
+                                    tour.stops[currentStop].lastName
+                                }
+                                description={
+                                    tour.stops[currentStop].street +
+                                        "\n" +
+                                        tour.stops[currentStop].zip +
+                                        " " +
+                                        tour.stops[currentStop].city || ""
+                                }
+                            />
                             <MapViewDirections
                                 language="de"
                                 origin={origin}
