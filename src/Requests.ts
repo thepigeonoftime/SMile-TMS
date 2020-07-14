@@ -28,9 +28,20 @@ export const postLogin = (alias, password) => {
     });
 };
 
-export const fetchTour = () => {
-    // return axios.get("https://bpt-lab.org/smile/sphinx/getTours");
-    return axios.get("https://unsafe.run/getTours");
+// export const fetchTour = () => {
+//     return axios.get("https://unsafe.run/getTours");
+// };
+
+export const fetchTour = (token) => {
+    return axios.put(
+        "https://pickshare.herokuapp.com/users/getTour",
+        {},
+        {
+            headers: {
+                Authorization: token,
+            },
+        }
+    );
 };
 
 export const postPickup = (sscc, pickDate) => {
