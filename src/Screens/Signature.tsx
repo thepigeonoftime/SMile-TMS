@@ -15,6 +15,7 @@ export const Signature = ({navigation}) => {
     const {tour, currentStop, nextStop, finishTour, deliverPacket} = useContext(TourContext);
     const [dynStyles, setDynStyles] = useState<ViewStyleProp>(portrait);
     const [hasSignature, setHasSignature] = useState<boolean>(true);
+    const [buttonTitle, setButtonTitle] = useState("Signatur speichern");
     const signatureRef = useRef(null);
 
     const orientationChange = async () => {
@@ -43,6 +44,8 @@ export const Signature = ({navigation}) => {
     };
 
     const onSubmit = async () => {
+        setHasSignature(false);
+        setButtonTitle("Speichere..");
         const signature = await captureRef(signatureRef, {
             result: "base64",
         });
@@ -97,7 +100,7 @@ export const Signature = ({navigation}) => {
                             titleStyle={styles.buttonBlueTitle}
                             disabledStyle={styles.buttonDisabled}
                             disabled={!hasSignature}
-                            title="Signatur speichern"
+                            title={buttonTitle}
                             onPress={onSubmit}
                         />
                         <Button
