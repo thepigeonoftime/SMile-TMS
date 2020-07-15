@@ -127,12 +127,12 @@ export const TourProvider = ({children}) => {
             });
     };
 
-    const queuePacket = (signature, sscc, tourID, tourStop) => {
+    const queuePacket = (id, sscc, tourID, signature, tourStop, timestamp) => {
         // queue unsuccesful packet update into asyncstorage
         AsyncStorage.getItem("packetQueue")
             .then((current) => {
                 const packetBuffer = current ? JSON.parse(current) : [];
-                packetBuffer.push({signature, sscc, tourID, tourStop});
+                packetBuffer.push({id, sscc, tourID, signature, tourStop, timestamp});
                 setPacketQueue(packetBuffer.length);
                 AsyncStorage.setItem("packetQueue", JSON.stringify(packetBuffer));
             })
@@ -207,10 +207,12 @@ export const TourProvider = ({children}) => {
                 currentQueue.map(async (queuedPacket) => {
                     await updatePacket(
                         structurePacketData(
-                            "queuedPacket.signature",
+                            queuedPacket.id,
                             queuedPacket.sscc,
                             queuedPacket.tourID,
-                            queuedPacket.tourStop
+                            queuedPacket.signature,
+                            queuedPacket.tourStop,
+                            queuedPacket.timestamp
                         )
                     )
                         .then(({data, errors}) => {
@@ -402,21 +404,32 @@ export const TourProvider = ({children}) => {
                 deliverPacket: (signature) => {
                     // updatePacket graphql mutation
                     const receiverID = tour.stops[currentStop]._receiverIds;
-                    const tourID = tour.id;
+                    const timestamp = new Date().toJSON();
                     tour.stops
                         .filter((packet) => packet._receiverID === receiverID)
                         .forEach((packet) => {
-                            console.log(
-                                structurePacketData("signature", packet.sscc, tourID, currentStop)
-                            );
                             updatePacket(
-                                structurePacketData(signature, packet.sscc, tourID, currentStop)
+                                structurePacketData(
+                                    packet._id,
+                                    packet.sscc,
+                                    tour._id,
+                                    signature,
+                                    currentStop,
+                                    timestamp
+                                )
                             )
                                 .then(({data, errors}) => {
                                     if (errors && errors[0]) {
                                         console.log("graphql error:", errors[0].message);
                                         console.log("queuing packet");
-                                        queuePacket(signature, packet.sscc, tourID, currentStop);
+                                        queuePacket(
+                                            packet._id,
+                                            packet.sscc,
+                                            tour._id,
+                                            signature,
+                                            currentStop,
+                                            timestamp
+                                        );
                                     } else {
                                         console.log("graphql success | packet reported");
                                         console.log("data:");
@@ -426,7 +439,14 @@ export const TourProvider = ({children}) => {
                                 .catch((err) => {
                                     console.log("network error:", err);
                                     console.log("queuing packet");
-                                    queuePacket(signature, packet.sscc, tourID, currentStop);
+                                    queuePacket(
+                                        packet._id,
+                                        packet.sscc,
+                                        tour._id,
+                                        signature,
+                                        currentStop,
+                                        timestamp
+                                    );
                                 });
                         });
                 },

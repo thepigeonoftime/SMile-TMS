@@ -296,15 +296,17 @@ export const structureCreatePacketData = (sscc) => {
     };
 };
 
-export const structurePacketData = (signature, sscc, tourID, currentStop) => {
+export const structurePacketData = (id, sscc, tourId, signature, currentStop, timestamp) => {
     // structure registration data for createDeliverer
+    console.log(id, sscc, tourId, "signature", currentStop, timestamp);
     return {
         variables: {
-            id: "abd3a176-dead-4999-b4e2-ea67b79c5416",
-            positionInTour: Number(currentStop),
-            receiverSignature: signature,
+            id,
             sscc,
-            receiveDate: new Date().toJSON(),
+            tourId,
+            receiverSignature: signature,
+            positionInTour: Number(currentStop),
+            receiveDate: timestamp,
             // ratingOfDepot: 1,
             // height: 20,
             // width: 20,
@@ -327,7 +329,6 @@ export const structurePacketData = (signature, sscc, tourID, currentStop) => {
             // price: 1,
             // propId: uuid.v4(),
             // endOfWishTimeframe: new Date().toJSON(),
-            // tourId: tourID,
             // tourID: uuid.v4(),
         },
     };
