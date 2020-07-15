@@ -14,6 +14,9 @@ web-report/
  Expo
 .expo
 __generated__
+smile-react.keystore
+smile-react.keystore.old
+smile_upload_cert.pem
 
 # macOS
 .DS_Store
