@@ -97,11 +97,10 @@ export const RegisterFahrzeug = ({navigation}) => {
                                             }}
                                             items={[
                                                 {
-                                                    label: "Sprinter",
-                                                    value: "Sprinter",
+                                                    label: "Fahrrad",
+                                                    value: "Fahrrad",
                                                 },
-                                                {label: "Golf", value: "Golf"},
-                                                {label: "Bugatti", value: "Bugatti"},
+                                                {label: "Lastenfahrrad", value: "Lastenfahrrad"},
                                             ]}
                                             placeholder={
                                                 dataFahrzeug && dataFahrzeug.fahrzeugArt
