@@ -2,12 +2,14 @@ import {AntDesign} from "@expo/vector-icons";
 import moment from "moment";
 import React, {useState, useContext, useEffect} from "react";
 import {Controller, useForm} from "react-hook-form";
+import Icon from "react-native-vector-icons/Feather";
 import {
     Alert,
     KeyboardAvoidingView,
     Platform,
     ScrollView,
     StyleSheet,
+    TextInput,
     TouchableOpacity,
     View,
 } from "react-native";
@@ -17,57 +19,22 @@ import * as yup from "yup";
 import {Header} from "../Header";
 import {RegisterContext} from "../RegisterProvider";
 import {wishTimeFrame, resultProps} from "../Types";
+// import DropdownMenu from "react-native-dropdown-menu";
+// import DropDownPicker from "react-native-dropdown-picker";
+// import {Picker} from "@react-native-community/picker";
+import RNPickerSelect from "react-native-picker-select";
 
 export const RegisterZeiten = ({navigation}) => {
     const {dataZeiten, storeDataZeiten} = useContext(RegisterContext);
 
-    const [isEnabled, setIsEnabled] = useState({
-        // restore previous switch states
-        // monday: dataZeiten && dataZeiten.monday && dataZeiten.monday.day ? true : false,
-        // tuesday: dataZeiten && dataZeiten.tuesday && dataZeiten.tuesday.day ? true : false,
-        // wednesday: dataZeiten && dataZeiten.wednesday && dataZeiten.wednesday.day ? true : false,
-        // thursday: dataZeiten && dataZeiten.thursday && dataZeiten.thursday.day ? true : false,
-        // friday: dataZeiten && dataZeiten.friday && dataZeiten.friday.day ? true : false,
-        // saturday: dataZeiten && dataZeiten.saturday && dataZeiten.saturday.day ? true : false,
-        monday: false,
-        tuesday: false,
-        wednesday: false,
-        thursday: false,
-        friday: false,
-        saturday: false,
-    });
-
-    const toggleSwitch = (key) => {
-        setIsEnabled({...isEnabled, [key]: !isEnabled[key]});
-    };
+    const [listItems, setListItems] = useState<any>([]);
+    const [entryId, setEntryId] = useState(0);
+    const [formValues, setFormValues] = useState({});
+    const [isComplete, setIsComplete] = useState(false);
 
     const timeSchema = yup.string().test("is-time", "Ungültig", (value) => {
         return value ? moment(value, "HH:mm", true).isValid() : true;
     });
-
-    const validationSchema = yup.object().shape({
-        monStart: timeSchema,
-        monEnd: timeSchema,
-        tueStart: timeSchema,
-        tueEnd: timeSchema,
-        wedStart: timeSchema,
-        wedEnd: timeSchema,
-        thuStart: timeSchema,
-        thuEnd: timeSchema,
-        friStart: timeSchema,
-        friEnd: timeSchema,
-        satStart: timeSchema,
-        satEnd: timeSchema,
-    });
-
-    // save last keystroke in input fields to capture backspaces
-    let lastKey = "";
-
-    const formatTime = (time) => {
-        // automaticall add ":00" to time input to only allow full hours
-        time.length > 1 && (time += ":00");
-        return time;
-    };
 
     const {
         register,
@@ -83,15 +50,30 @@ export const RegisterZeiten = ({navigation}) => {
     } = useForm({
         mode: "onBlur",
         reValidateMode: "onChange",
-        validationSchema,
-        submitFocusError: true,
+        // submitFocusError: true,
     });
 
-    const isGreater = (start, end, errorField) => {
-        if (moment(getValues(start), "HH:mm").isSameOrAfter(moment(getValues(end), "HH:mm"))) {
-            setError(errorField, "", "Startzeit muss vor Endzeit liegen");
-        } else {
-            clearError(errorField);
+    // save last keystroke in input fields to capture backspaces
+    let lastKey = "";
+
+    const isTime = (time) => {
+        return time && moment(time, "HH:mm", true).isValid();
+    };
+
+    const formatTime = (time) => {
+        // automaticall add ":00" to time input to only allow full hours
+        (time.length < 2 && time > 2 && (time = "0" + time + ":00")) ||
+            (time.length > 1 && (time += ":00"));
+        return time;
+    };
+
+    const isGreater = (start, end, errorField, pickerName) => {
+        if (isTime(getValues(start)) && isTime(getValues(end))) {
+            if (moment(getValues(start), "HH:mm").isSameOrAfter(moment(getValues(end), "HH:mm"))) {
+                setError(errorField, "", "Startzeit muss vor Endzeit liegen");
+            } else {
+                clearError(errorField);
+            }
         }
     };
 
@@ -102,601 +84,233 @@ export const RegisterZeiten = ({navigation}) => {
     };
 
     const onSubmit = (data) => {
-        const makeResultData = [
-            ["monday", "monStart", "monEnd"],
-            ["tuesday", "tueStart", "tueEnd"],
-            ["wednesday", "wedStart", "wedEnd"],
-            ["thursday", "thuStart", "thuEnd"],
-            ["friday", "friStart", "friEnd"],
-            ["saturday", "satStart", "satEnd"],
-        ];
-
-        const result: resultProps = {};
-
-        makeResultData.forEach((row) => {
-            // assemble wishTimeFrame objects for createDeliverer
-            const day = row[0],
-                start = data[row[1]],
-                end = data[row[2]];
-            const obj: wishTimeFrame = {
-                // format to schema: {"MONDAY", 10, 16}
-                day: isEnabled[day] ? day.toUpperCase() : undefined,
-                startTime: start && Number(start.slice(0, 2)),
-                endTime: end && Number(end.slice(0, 2)),
-            };
-            // reject objects that have undefined fields
-            !Object.values(obj).includes(undefined) && (result[day] = obj);
+        const result = [];
+        weekdays.forEach((day) => {
+            result[day.value] = [];
         });
+        listItems.forEach((item) => {
+            const day = formValues["day" + item.id] ? formValues["day" + item.id] : "monday";
+            // result[day].push({
+            //     startTime: formValues["start" + item.id],
+            //     endTime: formValues["end" + item.id],
+            // });
+            result.push({
+                day: day.toUpperCase(),
+                startTime: formValues["start" + item.id],
+                endTime: formValues["end" + item.id],
+            });
+        });
+        // Object.entries(result).forEach(([key, value]: [string, []]) => {
+        //     value && !value.length && delete result[key];
+        // });
         console.log(result);
         storeDataZeiten(result, true);
         navigation.goBack();
     };
 
-    return (
-        <KeyboardAvoidingView
-            style={{
-                flex: 1,
-                flexDirection: "column",
-                justifyContent: "center",
-                backgroundColor: "#FFF",
-            }}
-            // behavior="padding"
-        >
-            <ScrollView>
-                <Header text="Verfügbarkeit" subText="eingeben" color="#729628" />
-                <View style={styles.container}>
-                    <View style={styles.closeButtonContainer}>
-                        <TouchableOpacity
-                            onPress={() => navigation.goBack()}
-                            style={styles.closeButton}
-                        >
-                            <AntDesign name={"close"} size={20} color="#f89e3b" />
-                        </TouchableOpacity>
-                    </View>
-                    <View style={styles.formContainer}>
-                        <View style={styles.rowContainer}>
-                            <View style={styles.labelWrap}>
-                                <Text style={styles.labelSpacer} />
-                                <Text style={styles.label}>Montag</Text>
-                            </View>
-                            <View style={styles.lineWrap}>
-                                <AntDesign
-                                    name="calendar"
-                                    style={styles.icon}
-                                    size={25}
-                                    color="#ccc"
-                                />
+    const saveFormValues = (fieldName, value) => {
+        const pickBuffer = formValues;
+        pickBuffer[fieldName] = value;
+        setFormValues(pickBuffer);
+    };
 
-                                <Switch
-                                    trackColor={{false: "#e6e6e6", true: "#e6e6e6"}}
-                                    thumbColor={isEnabled.monday ? "#729628" : "#f4f3f4"}
-                                    ios_backgroundColor="#e6e6e6"
-                                    onValueChange={(value) => {
-                                        toggleSwitch("monday");
-                                    }}
-                                    value={isEnabled.monday}
-                                    style={styles.switch}
-                                />
-                                <View style={styles.inputWrap}>
-                                    <Controller
-                                        as={<Input />}
-                                        control={control}
-                                        name="monStart"
-                                        onKeyPress={({nativeEvent}) => {
-                                            lastKey = nativeEvent.key;
-                                        }}
-                                        onChangeText={(time) => {
-                                            setValue(
-                                                "monStart",
-                                                lastKey === "Backspace" ? "" : formatTime(time)
-                                            );
-                                            lastKey = "";
-                                            errors.monStart && triggerValidation("monStart");
-                                        }}
-                                        maxLength={5}
-                                        placeholder={getPlaceholder("monday", "startTime")}
-                                        errorMessage={
-                                            errors.monStart ? errors.monStart.message : " "
-                                        }
-                                        containerStyle={styles.input}
-                                        inputStyle={styles.inputText}
-                                        keyboardType={"numeric"}
-                                        inputContainerStyle={errors.monStart && styles.inputError}
-                                        errorStyle={styles.error}
-                                    />
-                                    <Controller
-                                        as={<Input />}
-                                        control={control}
-                                        name="monEnd"
-                                        onKeyPress={({nativeEvent}) => {
-                                            lastKey = nativeEvent.key;
-                                        }}
-                                        onChangeText={(time) => {
-                                            setValue(
-                                                "monEnd",
-                                                lastKey === "Backspace" ? "" : formatTime(time)
-                                            );
-                                            lastKey = "";
-                                            errors.monEnd && triggerValidation("monEnd");
-                                        }}
-                                        onBlur={() => {
-                                            isGreater("monStart", "monEnd", "monday");
-                                        }}
-                                        maxLength={5}
-                                        placeholder={getPlaceholder("monday", "endTime")}
-                                        errorMessage={errors.monEnd ? errors.monEnd.message : " "}
-                                        containerStyle={styles.input}
-                                        inputStyle={styles.inputText}
-                                        keyboardType={"numeric"}
-                                        inputContainerStyle={errors.monEnd && styles.inputError}
-                                        errorStyle={styles.error}
-                                    />
-                                </View>
-                            </View>
-                            <View style={styles.validation}>
-                                <Text style={styles.validationText}>
-                                    {errors.monday ? errors.monday.message : ""}
-                                </Text>
-                            </View>
-                            <View style={styles.rowContainer}>
-                                <View style={styles.labelWrap}>
-                                    <Text style={styles.labelSpacer} />
-                                    <Text style={styles.label}>Dienstag</Text>
-                                </View>
-                                <View style={styles.lineWrap}>
-                                    <AntDesign
-                                        name="calendar"
-                                        style={styles.icon}
-                                        size={25}
-                                        color="#ccc"
-                                    />
-                                    <Switch
-                                        trackColor={{false: "#e6e6e6", true: "#e6e6e6"}}
-                                        thumbColor={isEnabled.tuesday ? "#729628" : "#f4f3f4"}
-                                        ios_backgroundColor="#e6e6e6"
-                                        onValueChange={(value) => {
-                                            toggleSwitch("tuesday");
-                                        }}
-                                        value={isEnabled.tuesday}
-                                        style={styles.switch}
-                                    />
-                                    <View style={styles.inputWrap}>
-                                        <Controller
-                                            as={<Input />}
-                                            control={control}
-                                            name="tueStart"
-                                            onKeyPress={({nativeEvent}) => {
-                                                lastKey = nativeEvent.key;
-                                            }}
-                                            onChangeText={(time) => {
-                                                setValue(
-                                                    "tueStart",
-                                                    lastKey === "Backspace" ? "" : formatTime(time)
-                                                );
-                                                lastKey = "";
-                                                errors.tueStart && triggerValidation("tueStart");
-                                            }}
-                                            maxLength={5}
-                                            placeholder={getPlaceholder("tuesday", "startTime")}
-                                            errorMessage={
-                                                errors.tueStart ? errors.tueStart.message : " "
-                                            }
-                                            containerStyle={styles.input}
-                                            inputStyle={styles.inputText}
-                                            keyboardType={"numeric"}
-                                            inputContainerStyle={
-                                                errors.tueStart && styles.inputError
-                                            }
-                                            errorStyle={styles.error}
-                                        />
-                                        <Controller
-                                            as={<Input />}
-                                            control={control}
-                                            name="tueEnd"
-                                            onKeyPress={({nativeEvent}) => {
-                                                lastKey = nativeEvent.key;
-                                            }}
-                                            onChangeText={(time) => {
-                                                setValue(
-                                                    "tueEnd",
-                                                    lastKey === "Backspace" ? "" : formatTime(time)
-                                                );
-                                                lastKey = "";
-                                                errors.tueEnd && triggerValidation("tueEnd");
-                                            }}
-                                            onBlur={() => {
-                                                isGreater("tueStart", "tueEnd", "tuesday");
-                                            }}
-                                            maxLength={5}
-                                            placeholder={getPlaceholder("tuesday", "endTime")}
-                                            errorMessage={
-                                                errors.tueEnd ? errors.tueEnd.message : " "
-                                            }
-                                            containerStyle={styles.input}
-                                            inputStyle={styles.inputText}
-                                            keyboardType={"numeric"}
-                                            inputContainerStyle={errors.tueEnd && styles.inputError}
-                                            errorStyle={styles.error}
-                                        />
-                                    </View>
-                                </View>
-                            </View>
-                            <View style={styles.validation}>
-                                <Text style={styles.validationText}>
-                                    {errors.tuesday ? errors.tuesday.message : ""}
-                                </Text>
-                            </View>
-                            <View style={styles.rowContainer}>
-                                <View style={styles.labelWrap}>
-                                    <Text style={styles.labelSpacer} />
-                                    <Text style={styles.label}>Mittwoch</Text>
-                                </View>
-                                <View style={styles.lineWrap}>
-                                    <AntDesign
-                                        name="calendar"
-                                        style={styles.icon}
-                                        size={25}
-                                        color="#ccc"
-                                    />
-                                    <Switch
-                                        trackColor={{false: "#e6e6e6", true: "#e6e6e6"}}
-                                        thumbColor={isEnabled.wednesday ? "#729628" : "#f4f3f4"}
-                                        ios_backgroundColor="#e6e6e6"
-                                        onValueChange={(value) => {
-                                            toggleSwitch("wednesday");
-                                        }}
-                                        value={isEnabled.wednesday}
-                                        style={styles.switch}
-                                    />
-                                    <View style={styles.inputWrap}>
-                                        <Controller
-                                            as={<Input />}
-                                            control={control}
-                                            name="wedStart"
-                                            onKeyPress={({nativeEvent}) => {
-                                                lastKey = nativeEvent.key;
-                                            }}
-                                            onChangeText={(time) => {
-                                                setValue(
-                                                    "wedStart",
-                                                    lastKey === "Backspace" ? "" : formatTime(time)
-                                                );
-                                                lastKey = "";
-                                                errors.wedStart && triggerValidation("wedStart");
-                                            }}
-                                            maxLength={5}
-                                            placeholder={getPlaceholder("wednesday", "startTime")}
-                                            errorMessage={
-                                                errors.wedStart ? errors.wedStart.message : " "
-                                            }
-                                            containerStyle={styles.input}
-                                            inputStyle={styles.inputText}
-                                            keyboardType={"numeric"}
-                                            inputContainerStyle={
-                                                errors.wedStart && styles.inputError
-                                            }
-                                            errorStyle={styles.error}
-                                        />
-                                        <Controller
-                                            as={<Input />}
-                                            control={control}
-                                            name="wedEnd"
-                                            onKeyPress={({nativeEvent}) => {
-                                                lastKey = nativeEvent.key;
-                                            }}
-                                            onChangeText={(time) => {
-                                                setValue(
-                                                    "wedEnd",
-                                                    lastKey === "Backspace" ? "" : formatTime(time)
-                                                );
-                                                lastKey = "";
-                                                errors.wedEnd && triggerValidation("wedEnd");
-                                            }}
-                                            onBlur={() => {
-                                                isGreater("wedStart", "wedEnd", "wednesday");
-                                            }}
-                                            maxLength={5}
-                                            placeholder={getPlaceholder("wednesday", "endTime")}
-                                            errorMessage={
-                                                errors.wedEnd ? errors.wedEnd.message : " "
-                                            }
-                                            containerStyle={styles.input}
-                                            inputStyle={styles.inputText}
-                                            keyboardType={"numeric"}
-                                            inputContainerStyle={errors.wedEnd && styles.inputError}
-                                            errorStyle={styles.error}
-                                        />
-                                    </View>
-                                </View>
-                            </View>
-                            <View style={styles.validation}>
-                                <Text style={styles.validationText}>
-                                    {errors.wednesday ? errors.wednesday.message : ""}
-                                </Text>
-                            </View>
-                            <View style={styles.rowContainer}>
-                                <View style={styles.labelWrap}>
-                                    <Text style={styles.labelSpacer} />
-                                    <Text style={styles.label}>Donnerstag</Text>
-                                </View>
-                                <View style={styles.lineWrap}>
-                                    <AntDesign
-                                        name="calendar"
-                                        style={styles.icon}
-                                        size={25}
-                                        color="#ccc"
-                                    />
-                                    <Switch
-                                        trackColor={{false: "#e6e6e6", true: "#e6e6e6"}}
-                                        thumbColor={isEnabled.thursday ? "#729628" : "#f4f3f4"}
-                                        ios_backgroundColor="#e6e6e6"
-                                        onValueChange={(value) => {
-                                            toggleSwitch("thursday");
-                                        }}
-                                        value={isEnabled.thursday}
-                                        style={styles.switch}
-                                    />
-                                    <View style={styles.inputWrap}>
-                                        <Controller
-                                            as={<Input />}
-                                            control={control}
-                                            name="thuStart"
-                                            onKeyPress={({nativeEvent}) => {
-                                                lastKey = nativeEvent.key;
-                                            }}
-                                            onChangeText={(time) => {
-                                                setValue(
-                                                    "thuStart",
-                                                    lastKey === "Backspace" ? "" : formatTime(time)
-                                                );
-                                                lastKey = "";
-                                                errors.thuStart && triggerValidation("thuStart");
-                                            }}
-                                            maxLength={5}
-                                            placeholder={getPlaceholder("thursday", "startTime")}
-                                            errorMessage={
-                                                errors.thuStart ? errors.thuStart.message : " "
-                                            }
-                                            containerStyle={styles.input}
-                                            inputStyle={styles.inputText}
-                                            keyboardType={"numeric"}
-                                            inputContainerStyle={
-                                                errors.thuStart && styles.inputError
-                                            }
-                                            errorStyle={styles.error}
-                                        />
-                                        <Controller
-                                            as={<Input />}
-                                            control={control}
-                                            name="thuEnd"
-                                            onKeyPress={({nativeEvent}) => {
-                                                lastKey = nativeEvent.key;
-                                            }}
-                                            onChangeText={(time) => {
-                                                setValue(
-                                                    "thuEnd",
-                                                    lastKey === "Backspace" ? "" : formatTime(time)
-                                                );
-                                                lastKey = "";
-                                                errors.thuEnd && triggerValidation("thuEnd");
-                                            }}
-                                            maxLength={5}
-                                            placeholder={getPlaceholder("thursday", "endTime")}
-                                            errorMessage={
-                                                errors.thuEnd ? errors.thuEnd.message : " "
-                                            }
-                                            onBlur={() => {
-                                                isGreater("thuStart", "thuEnd", "thursday");
-                                            }}
-                                            containerStyle={styles.input}
-                                            inputStyle={styles.inputText}
-                                            keyboardType={"numeric"}
-                                            inputContainerStyle={errors.thuEnd && styles.inputError}
-                                            errorStyle={styles.error}
-                                        />
-                                    </View>
-                                </View>
-                            </View>
-                            <View style={styles.validation}>
-                                <Text style={styles.validationText}>
-                                    {errors.thursday ? errors.thursday.message : ""}
-                                </Text>
-                            </View>
-                            <View style={styles.rowContainer}>
-                                <View style={styles.labelWrap}>
-                                    <Text style={styles.labelSpacer} />
-                                    <Text style={styles.label}>Freitag</Text>
-                                </View>
-                                <View style={styles.lineWrap}>
-                                    <AntDesign
-                                        name="calendar"
-                                        style={styles.icon}
-                                        size={25}
-                                        color="#ccc"
-                                    />
-                                    <Switch
-                                        trackColor={{false: "#e6e6e6", true: "#e6e6e6"}}
-                                        thumbColor={isEnabled.friday ? "#729628" : "#f4f3f4"}
-                                        ios_backgroundColor="#e6e6e6"
-                                        onValueChange={(value) => {
-                                            toggleSwitch("friday");
-                                        }}
-                                        value={isEnabled.friday}
-                                        style={styles.switch}
-                                    />
-                                    <View style={styles.inputWrap}>
-                                        <Controller
-                                            as={<Input />}
-                                            control={control}
-                                            name="friStart"
-                                            onKeyPress={({nativeEvent}) => {
-                                                lastKey = nativeEvent.key;
-                                            }}
-                                            onChangeText={(time) => {
-                                                setValue(
-                                                    "friStart",
-                                                    lastKey === "Backspace" ? "" : formatTime(time)
-                                                );
-                                                lastKey = "";
-                                                errors.friStart && triggerValidation("friStart");
-                                            }}
-                                            maxLength={5}
-                                            placeholder={getPlaceholder("friday", "startTime")}
-                                            errorMessage={
-                                                errors.friStart ? errors.friStart.message : " "
-                                            }
-                                            containerStyle={styles.input}
-                                            inputStyle={styles.inputText}
-                                            keyboardType={"numeric"}
-                                            inputContainerStyle={
-                                                errors.friStart && styles.inputError
-                                            }
-                                            errorStyle={styles.error}
-                                        />
-                                        <Controller
-                                            as={<Input />}
-                                            control={control}
-                                            name="friEnd"
-                                            onKeyPress={({nativeEvent}) => {
-                                                lastKey = nativeEvent.key;
-                                            }}
-                                            onChangeText={(time) => {
-                                                setValue(
-                                                    "friEnd",
-                                                    lastKey === "Backspace" ? "" : formatTime(time)
-                                                );
-                                                lastKey = "";
-                                                errors.friEnd && triggerValidation("friEnd");
-                                            }}
-                                            onBlur={() => {
-                                                isGreater("friStart", "friEnd", "friday");
-                                            }}
-                                            maxLength={5}
-                                            placeholder={getPlaceholder("friday", "endTime")}
-                                            errorMessage={
-                                                errors.friEnd ? errors.friEnd.message : " "
-                                            }
-                                            containerStyle={styles.input}
-                                            inputStyle={styles.inputText}
-                                            keyboardType={"numeric"}
-                                            inputContainerStyle={errors.friEnd && styles.inputError}
-                                            errorStyle={styles.error}
-                                        />
-                                    </View>
-                                </View>
-                            </View>
-                            <View style={styles.validation}>
-                                <Text style={styles.validationText}>
-                                    {errors.friday ? errors.friday.message : ""}
-                                </Text>
-                            </View>
-                            <View style={styles.rowContainer}>
-                                <View style={styles.labelWrap}>
-                                    <Text style={styles.labelSpacer} />
-                                    <Text style={styles.label}>Samstag</Text>
-                                </View>
-                                <View style={styles.lineWrap}>
-                                    <AntDesign
-                                        name="calendar"
-                                        style={styles.icon}
-                                        size={25}
-                                        color="#ccc"
-                                    />
-                                    <Switch
-                                        trackColor={{false: "#e6e6e6", true: "#e6e6e6"}}
-                                        thumbColor={isEnabled.saturday ? "#729628" : "#f4f3f4"}
-                                        ios_backgroundColor="#e6e6e6"
-                                        onValueChange={(value) => {
-                                            toggleSwitch("saturday");
-                                        }}
-                                        value={isEnabled.saturday}
-                                        style={styles.switch}
-                                    />
-                                    <View style={styles.inputWrap}>
-                                        <Controller
-                                            as={<Input />}
-                                            control={control}
-                                            name="satStart"
-                                            onKeyPress={({nativeEvent}) => {
-                                                lastKey = nativeEvent.key;
-                                            }}
-                                            onChangeText={(time) => {
-                                                setValue(
-                                                    "satStart",
-                                                    lastKey === "Backspace" ? "" : formatTime(time)
-                                                );
-                                                lastKey = "";
-                                                errors.satStart && triggerValidation("satStart");
-                                            }}
-                                            maxLength={5}
-                                            placeholder={getPlaceholder("saturday", "startTime")}
-                                            errorMessage={
-                                                errors.satStart ? errors.satStart.message : " "
-                                            }
-                                            containerStyle={styles.input}
-                                            inputStyle={styles.inputText}
-                                            keyboardType={"numeric"}
-                                            inputContainerStyle={
-                                                errors.satStart && styles.inputError
-                                            }
-                                            errorStyle={styles.error}
-                                        />
-                                        <Controller
-                                            as={<Input />}
-                                            control={control}
-                                            name="satEnd"
-                                            onKeyPress={({nativeEvent}) => {
-                                                lastKey = nativeEvent.key;
-                                            }}
-                                            onChangeText={(time) => {
-                                                setValue(
-                                                    "satEnd",
-                                                    lastKey === "Backspace" ? "" : formatTime(time)
-                                                );
-                                                lastKey = "";
-                                                errors.satEnd && triggerValidation("satEnd");
-                                            }}
-                                            placeholder={getPlaceholder("saturday", "endTime")}
-                                            errorMessage={
-                                                errors.satEnd ? errors.satEnd.message : " "
-                                            }
-                                            onBlur={() => {
-                                                isGreater("satStart", "satEnd", "saturday");
-                                            }}
-                                            containerStyle={styles.input}
-                                            inputStyle={styles.inputText}
-                                            keyboardType={"numeric"}
-                                            inputContainerStyle={errors.satEnd && styles.inputError}
-                                            errorStyle={styles.error}
-                                        />
-                                    </View>
-                                </View>
-                            </View>
-                            <View style={styles.validation}>
-                                <Text style={styles.validationText}>
-                                    {errors.saturday ? errors.saturday.message : ""}
-                                </Text>
-                            </View>
-                            <View style={styles.saveButtonContainer}>
-                                <Button
-                                    buttonStyle={styles.saveButton}
-                                    titleStyle={styles.saveButtonTitle}
-                                    disabled={Object.keys(errors).length !== 0}
-                                    title="Speichern"
-                                    onPress={handleSubmit(onSubmit)}
-                                />
-                            </View>
-                        </View>
+    const weekdays = [
+        {label: "Montag", value: "monday"},
+        {label: "Dienstag", value: "tuesday"},
+        {label: "Mittwoch", value: "wednesday"},
+        {label: "Donnerstag", value: "thursday"},
+        {label: "Freitag", value: "friday"},
+        {label: "Samstag", value: "saturday"},
+    ];
+
+    const addItem = () => {
+        setListItems([...listItems, {id: String(entryId)}]);
+        setEntryId(entryId + 1);
+        setIsComplete(false);
+    };
+
+    const checkComplete = () => {
+        const completeCheck = [];
+        listItems.forEach((item) => {
+            const startTime = getValues("start" + item.id);
+            const endTime = getValues("end" + item.id);
+            if (startTime.length === 5 && endTime.length === 5) {
+                const startValid = isTime(startTime);
+                const endValid = isTime(endTime);
+                if (startValid && endValid) {
+                    completeCheck.push(true);
+                } else {
+                    !startValid && setError("start" + item.id, "", "Ungültig");
+                    !endValid && setError("end" + item.id, "", "Ungültig");
+                    completeCheck.push(false);
+                }
+            }
+        });
+        setIsComplete(
+            completeCheck.length === listItems.length && !completeCheck.includes(false)
+                ? true
+                : false
+        );
+    };
+
+    const TimeEntry = ({id}) => {
+        const itemId = "item" + id;
+        const pickerName = "day" + id;
+        const startName = "start" + id;
+        const endName = "end" + id;
+        const errorName = "error" + id;
+        return (
+            <View style={styles.rowContainer} key={itemId}>
+                <View style={styles.lineWrap}>
+                    <AntDesign name="calendar" style={styles.icon} size={25} color="#ccc" />
+                    <View style={Platform.OS === "ios" ? {flex: 2} : {flex: 3.5}}>
+                        <RNPickerSelect
+                            key={pickerName}
+                            onValueChange={(value) => {
+                                saveFormValues(pickerName, value);
+                                setValue(pickerName, value);
+                            }}
+                            items={weekdays}
+                            placeholder={
+                                formValues[pickerName]
+                                    ? {
+                                          label: weekdays.find(
+                                              (o) => o.value === formValues[pickerName]
+                                          ).label,
+                                          value: formValues[pickerName],
+                                          style: {color: "#333", fontSize: 16},
+                                      }
+                                    : {}
+                            }
+                            style={pickerStyle}
+                        />
+                    </View>
+                    <View style={styles.inputWrap}>
+                        <Controller
+                            as={<Input />}
+                            control={control}
+                            name={startName}
+                            key={startName}
+                            defaultValue={getValues(startName) || ""}
+                            onKeyPress={({nativeEvent}) => {
+                                lastKey = nativeEvent.key;
+                            }}
+                            onChangeText={(time) => {
+                                setValue(
+                                    startName,
+                                    lastKey === "Backspace" ? "" : formatTime(time)
+                                );
+                                saveFormValues(
+                                    startName,
+                                    lastKey === "Backspace" ? "" : formatTime(time)
+                                );
+                                lastKey = "";
+                                errors[startName] && triggerValidation(startName);
+                                isGreater(startName, endName, errorName, pickerName);
+                                checkComplete();
+                            }}
+                            onBlur={() => {
+                                checkComplete();
+                            }}
+                            maxLength={5}
+                            errorMessage={errors[startName] ? errors[startName].message : " "}
+                            containerStyle={styles.input}
+                            inputStyle={styles.inputText}
+                            keyboardType={"numeric"}
+                            inputContainerStyle={errors[startName] && styles.inputError}
+                            errorStyle={styles.error}
+                            style={{borderWidth: 1, width: "40%"}}
+                        />
+                        <Controller
+                            as={<Input />}
+                            control={control}
+                            name={endName}
+                            key={endName}
+                            defaultValue={getValues(endName) || ""}
+                            onKeyPress={({nativeEvent}) => {
+                                lastKey = nativeEvent.key;
+                            }}
+                            onChangeText={(time) => {
+                                setValue(endName, lastKey === "Backspace" ? "" : formatTime(time));
+                                saveFormValues(
+                                    endName,
+                                    lastKey === "Backspace" ? "" : formatTime(time)
+                                );
+                                lastKey = "";
+                                errors[endName] && triggerValidation(endName);
+                                isGreater(startName, endName, errorName, pickerName);
+                                checkComplete();
+                            }}
+                            onBlur={() => {
+                                isGreater(startName, endName, errorName, pickerName);
+                                checkComplete();
+                            }}
+                            maxLength={5}
+                            errorMessage={errors[endName] ? errors[endName].message : " "}
+                            containerStyle={styles.input}
+                            inputStyle={styles.inputText}
+                            keyboardType={"numeric"}
+                            inputContainerStyle={errors[endName] && styles.inputError}
+                            errorStyle={styles.error}
+                            style={{borderWidth: 1, width: "40%"}}
+                        />
                     </View>
                 </View>
-            </ScrollView>
-        </KeyboardAvoidingView>
+                <View style={styles.validation}>
+                    <Text style={styles.validationText}>
+                        {errors[errorName] ? errors[errorName].message : ""}
+                    </Text>
+                </View>
+            </View>
+        );
+    };
+
+    return (
+        <ScrollView contentContainerStyle={{flexGrow: 1}}>
+            <Header text="Verfügbarkeit" subText="eingeben" color="#729628" />
+            <View style={styles.container}>
+                <View style={styles.closeButtonContainer}>
+                    <TouchableOpacity
+                        onPress={() => navigation.goBack()}
+                        style={styles.closeButton}
+                    >
+                        <AntDesign name={"close"} size={20} color="#f89e3b" />
+                    </TouchableOpacity>
+                </View>
+                <View style={styles.formContainer}>
+                    <View style={{marginBottom: 10}}>
+                        <TouchableOpacity onPress={addItem}>
+                            <AntDesign name={"pluscircleo"} size={20} color="#729628" />
+                        </TouchableOpacity>
+                    </View>
+                    <View style={styles.formItems}>
+                        {listItems.map((item, i) => {
+                            return <TimeEntry id={item.id} key={"item" + i} />;
+                        })}
+                    </View>
+                    <View style={styles.saveButtonContainer}>
+                        <Button
+                            buttonStyle={styles.saveButton}
+                            titleStyle={styles.saveButtonTitle}
+                            disabled={
+                                Object.keys(errors).length !== 0 ||
+                                !isComplete ||
+                                listItems.length < 1
+                            }
+                            title="Speichern"
+                            onPress={handleSubmit(onSubmit)}
+                        />
+                    </View>
+                </View>
+            </View>
+        </ScrollView>
     );
 };
 
 export const styles = StyleSheet.create({
     container: {
-        top: "-11%",
+        // flex: 1,
+        marginTop: "-22%",
         paddingHorizontal: 20,
         borderRadius: 25,
         backgroundColor: "#FFF",
@@ -709,6 +323,8 @@ export const styles = StyleSheet.create({
         marginBottom: "-11%",
     },
     formContainer: {
+        flex: 1,
+        minHeight: "100%",
         flexDirection: "column",
         alignContent: "flex-start",
         justifyContent: "flex-start",
@@ -737,21 +353,17 @@ export const styles = StyleSheet.create({
         shadowRadius: 3.84,
         elevation: 5,
     },
+    formItems: {
+        // height: "50%",
+        // flex: 1,
+        // paddingTop: 50,
+    },
     rowContainer: {
-        marginTop: 10,
+        // marginTop: 10,
+        // marginBottom: 30,
         flex: 1,
-    },
-    labelWrap: {
-        flexDirection: "row",
-        justifyContent: "flex-start",
-        alignItems: "flex-start",
-    },
-    labelSpacer: {
-        flex: 1,
-    },
-    label: {
-        flex: 6.5,
-        color: "#555",
+        // paddingTop: 10,
+        flexDirection: "column",
     },
     lineWrap: {
         flexDirection: "row",
@@ -759,14 +371,12 @@ export const styles = StyleSheet.create({
         alignItems: "center",
         flex: 1,
         width: "100%",
+        // height: 10,
     },
     icon: {
-        flex: 1,
+        flex: Platform.OS === "ios" ? 1 : 0.8,
         paddingRight: 5,
-    },
-    switch: {
-        transform:
-            Platform.OS === "ios" ? [{scaleX: 0.8}, {scaleY: 0.8}] : [{scaleX: 1.3}, {scaleY: 1.3}],
+        marginTop: -25,
     },
     inputWrap: {
         flex: 6,
@@ -775,11 +385,12 @@ export const styles = StyleSheet.create({
         marginLeft: 10,
         // marginBottom: 5,
         paddingLeft: 10,
-        marginBottom: -5,
+        marginBottom: 10,
+        // marginTop: 10,
     },
     input: {
         backgroundColor: "#FFF",
-        paddingLeft: 20,
+        paddingLeft: 10,
         flex: 5,
     },
     inputText: {
@@ -791,11 +402,14 @@ export const styles = StyleSheet.create({
     error: {
         color: "#ff8787",
         marginLeft: -1,
+        marginTop: -1,
     },
     validation: {
-        justifyContent: "center",
+        flex: 1,
+        justifyContent: "flex-end",
         alignItems: "flex-end",
-        marginTop: "-8%",
+        marginTop: "-6%",
+        marginRight: "3%",
     },
     validationText: {
         color: "#ff8787",
@@ -803,7 +417,12 @@ export const styles = StyleSheet.create({
     },
     saveButtonContainer: {
         alignItems: "center",
+        // marginTop: 50,
+        // position: "absolute",
+        // bottom: -200,
         marginTop: 50,
+        // marginBottom: 50,
+        // left: "25%",
     },
     saveButton: {
         backgroundColor: "#3FA9F5",
@@ -818,3 +437,40 @@ export const styles = StyleSheet.create({
         fontWeight: "800",
     },
 });
+
+const pickerStyle = {
+    inputIOS: {
+        // marginTop: -25,
+        paddingBottom: 30,
+        color: "#555",
+        fontSize: 16,
+        padding: 0,
+    },
+    inputAndroid: {
+        marginTop: -30,
+        color: "#555",
+        fontSize: 16,
+        margin: 0,
+        width: 120,
+    },
+    placeholder: {
+        color: "#555",
+        fontSize: 16,
+    },
+    icon: {
+        position: "absolute",
+        backgroundColor: "transparent",
+        borderTopWidth: 5,
+        borderTopColor: "#00000099",
+        borderRightWidth: 5,
+        borderRightColor: "transparent",
+        borderLeftWidth: 5,
+        borderLeftColor: "transparent",
+        width: 0,
+    },
+    iconContainer: {
+        placeholderColor: "#ababa",
+        padding: 0,
+        width: 0,
+    },
+};
