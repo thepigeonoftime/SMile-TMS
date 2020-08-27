@@ -1,118 +1,33 @@
 import {AntDesign} from "@expo/vector-icons";
 import moment from "moment";
-import React, {useState, useContext, useEffect} from "react";
-import {Controller, useForm} from "react-hook-form";
-import Icon from "react-native-vector-icons/Feather";
-import {
-    Alert,
-    KeyboardAvoidingView,
-    Platform,
-    ScrollView,
-    StyleSheet,
-    TextInput,
-    TouchableOpacity,
-    View,
-} from "react-native";
-import {Button, Input} from "react-native-elements";
-import {Switch, Text} from "react-native-paper";
+import React, {useContext, useState} from "react";
+import {Platform, ScrollView, StyleSheet, TouchableOpacity, View} from "react-native";
+import {Button} from "react-native-elements";
+import DateTimePickerModal from "react-native-modal-datetime-picker";
+import {Text} from "react-native-paper";
+import RNPickerSelect from "react-native-picker-select";
 import * as yup from "yup";
 import {Header} from "../Header";
 import {RegisterContext} from "../RegisterProvider";
-import {wishTimeFrame, resultProps} from "../Types";
-// import DropdownMenu from "react-native-dropdown-menu";
-// import DropDownPicker from "react-native-dropdown-picker";
-// import {Picker} from "@react-native-community/picker";
-import RNPickerSelect from "react-native-picker-select";
+import {useForm} from "react-hook-form";
 
 export const RegisterZeiten = ({navigation}) => {
-    const {dataZeiten, storeDataZeiten} = useContext(RegisterContext);
+    const {storeDataZeiten} = useContext(RegisterContext);
 
     const [listItems, setListItems] = useState<any>([]);
     const [entryId, setEntryId] = useState(0);
     const [formValues, setFormValues] = useState({});
+    const [activeId, setActiveId] = useState(null);
+    const [activeTime, setActiveTime] = useState("");
+    const [showTimeSelect, setShowTimeSelect] = useState(false);
+    const [timeErrors, setTimeErrors] = useState([]);
     const [isComplete, setIsComplete] = useState(false);
 
-    const timeSchema = yup.string().test("is-time", "Ungültig", (value) => {
-        return value ? moment(value, "HH:mm", true).isValid() : true;
-    });
-
-    const {
-        register,
-        setValue,
-        getValues,
-        handleSubmit,
-        errors,
-        triggerValidation,
-        control,
-        formState,
-        setError,
-        clearError,
-    } = useForm({
+    const {errors, setError, clearError} = useForm({
         mode: "onBlur",
         reValidateMode: "onChange",
         // submitFocusError: true,
     });
-
-    // save last keystroke in input fields to capture backspaces
-    let lastKey = "";
-
-    const isTime = (time) => {
-        return time && moment(time, "HH:mm", true).isValid();
-    };
-
-    const formatTime = (time) => {
-        // automaticall add ":00" to time input to only allow full hours
-        (time.length < 2 && time > 2 && (time = "0" + time + ":00")) ||
-            (time.length > 1 && (time += ":00"));
-        return time;
-    };
-
-    const isGreater = (start, end, errorField, pickerName) => {
-        if (isTime(getValues(start)) && isTime(getValues(end))) {
-            if (moment(getValues(start), "HH:mm").isSameOrAfter(moment(getValues(end), "HH:mm"))) {
-                setError(errorField, "", "Startzeit muss vor Endzeit liegen");
-            } else {
-                clearError(errorField);
-            }
-        }
-    };
-
-    const getPlaceholder = (day, type) => {
-        return dataZeiten && dataZeiten[day] && dataZeiten[day][type]
-            ? String(dataZeiten[day][type]) + ":00"
-            : "";
-    };
-
-    const onSubmit = (data) => {
-        const result = [];
-        weekdays.forEach((day) => {
-            result[day.value] = [];
-        });
-        listItems.forEach((item) => {
-            const day = formValues["day" + item.id] ? formValues["day" + item.id] : "monday";
-            // result[day].push({
-            //     startTime: formValues["start" + item.id],
-            //     endTime: formValues["end" + item.id],
-            // });
-            result.push({
-                day: day.toUpperCase(),
-                startTime: formValues["start" + item.id],
-                endTime: formValues["end" + item.id],
-            });
-        });
-        // Object.entries(result).forEach(([key, value]: [string, []]) => {
-        //     value && !value.length && delete result[key];
-        // });
-        console.log(result);
-        storeDataZeiten(result, true);
-        navigation.goBack();
-    };
-
-    const saveFormValues = (fieldName, value) => {
-        const pickBuffer = formValues;
-        pickBuffer[fieldName] = value;
-        setFormValues(pickBuffer);
-    };
 
     const weekdays = [
         {label: "Montag", value: "monday"},
@@ -129,28 +44,71 @@ export const RegisterZeiten = ({navigation}) => {
         setIsComplete(false);
     };
 
+    const setTime = (fieldName, time) => {
+        const timeBuffer = formValues;
+        timeBuffer[fieldName] = time;
+        setFormValues(timeBuffer);
+    };
+
+    const isTime = (time) => {
+        return time && moment(time, "HH:mm", true).isValid();
+    };
+
+    const isGreater = (id) => {
+        if (
+            moment(formValues["start" + id], "HH:mm").isSameOrAfter(
+                moment(formValues["end" + id], "HH:mm")
+            )
+        ) {
+            setError("error" + id, "", "Startzeit muss vor Endzeit liegen");
+        } else {
+            clearError("error" + id);
+        }
+    };
+
+    const saveFormValues = (fieldName, value) => {
+        const pickBuffer = formValues;
+        pickBuffer[fieldName] = value;
+        setFormValues(pickBuffer);
+    };
+
     const checkComplete = () => {
         const completeCheck = [];
+        let errorCheck = true;
         listItems.forEach((item) => {
-            const startTime = getValues("start" + item.id);
-            const endTime = getValues("end" + item.id);
-            if (startTime.length === 5 && endTime.length === 5) {
-                const startValid = isTime(startTime);
-                const endValid = isTime(endTime);
-                if (startValid && endValid) {
-                    completeCheck.push(true);
-                } else {
-                    !startValid && setError("start" + item.id, "", "Ungültig");
-                    !endValid && setError("end" + item.id, "", "Ungültig");
-                    completeCheck.push(false);
-                }
-            }
+            const startValid = isTime(formValues["start" + item.id]);
+            const endValid = isTime(formValues["end" + item.id]);
+            completeCheck.push(startValid && endValid ? true : false);
         });
+        timeErrors.forEach((item) => {
+            item && (errorCheck = false);
+        });
+        console.log(completeCheck, errorCheck);
         setIsComplete(
-            completeCheck.length === listItems.length && !completeCheck.includes(false)
+            completeCheck.length === listItems.length &&
+                !completeCheck.includes(false) &&
+                errorCheck
                 ? true
                 : false
         );
+    };
+
+    const onSubmit = (data) => {
+        const result = [];
+        weekdays.forEach((day) => {
+            result[day.value] = [];
+        });
+        listItems.forEach((item) => {
+            const day = formValues["day" + item.id] ? formValues["day" + item.id] : "monday";
+            result.push({
+                day: day.toUpperCase(),
+                startTime: formValues["start" + item.id],
+                endTime: formValues["end" + item.id],
+            });
+        });
+        console.log(result);
+        storeDataZeiten(result, true);
+        navigation.goBack();
     };
 
     const TimeEntry = ({id}) => {
@@ -159,6 +117,7 @@ export const RegisterZeiten = ({navigation}) => {
         const startName = "start" + id;
         const endName = "end" + id;
         const errorName = "error" + id;
+        const date = new Date();
         return (
             <View style={styles.rowContainer} key={itemId}>
                 <View style={styles.lineWrap}>
@@ -168,7 +127,6 @@ export const RegisterZeiten = ({navigation}) => {
                             key={pickerName}
                             onValueChange={(value) => {
                                 saveFormValues(pickerName, value);
-                                setValue(pickerName, value);
                             }}
                             items={weekdays}
                             placeholder={
@@ -186,74 +144,33 @@ export const RegisterZeiten = ({navigation}) => {
                         />
                     </View>
                     <View style={styles.inputWrap}>
-                        <Controller
-                            as={<Input />}
-                            control={control}
-                            name={startName}
-                            key={startName}
-                            defaultValue={getValues(startName) || ""}
-                            onKeyPress={({nativeEvent}) => {
-                                lastKey = nativeEvent.key;
+                        <TouchableOpacity
+                            onPress={() => {
+                                setActiveId(id);
+                                setActiveTime(startName);
+                                setShowTimeSelect(!showTimeSelect);
                             }}
-                            onChangeText={(time) => {
-                                setValue(
-                                    startName,
-                                    lastKey === "Backspace" ? "" : formatTime(time)
-                                );
-                                saveFormValues(
-                                    startName,
-                                    lastKey === "Backspace" ? "" : formatTime(time)
-                                );
-                                lastKey = "";
-                                errors[startName] && triggerValidation(startName);
-                                isGreater(startName, endName, errorName, pickerName);
-                                checkComplete();
+                            style={{paddingLeft: "25%", paddingRight: "20%"}}
+                        >
+                            <Text style={styles.pickerText}>
+                                {formValues[startName]
+                                    ? moment(formValues[startName]).format("HH:mm")
+                                    : "--:--"}
+                            </Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                            onPress={() => {
+                                setActiveId(id);
+                                setActiveTime(endName);
+                                setShowTimeSelect(!showTimeSelect);
                             }}
-                            onBlur={() => {
-                                checkComplete();
-                            }}
-                            maxLength={5}
-                            errorMessage={errors[startName] ? errors[startName].message : " "}
-                            containerStyle={styles.input}
-                            inputStyle={styles.inputText}
-                            keyboardType={"numeric"}
-                            inputContainerStyle={errors[startName] && styles.inputError}
-                            errorStyle={styles.error}
-                            style={{borderWidth: 1, width: "40%"}}
-                        />
-                        <Controller
-                            as={<Input />}
-                            control={control}
-                            name={endName}
-                            key={endName}
-                            defaultValue={getValues(endName) || ""}
-                            onKeyPress={({nativeEvent}) => {
-                                lastKey = nativeEvent.key;
-                            }}
-                            onChangeText={(time) => {
-                                setValue(endName, lastKey === "Backspace" ? "" : formatTime(time));
-                                saveFormValues(
-                                    endName,
-                                    lastKey === "Backspace" ? "" : formatTime(time)
-                                );
-                                lastKey = "";
-                                errors[endName] && triggerValidation(endName);
-                                isGreater(startName, endName, errorName, pickerName);
-                                checkComplete();
-                            }}
-                            onBlur={() => {
-                                isGreater(startName, endName, errorName, pickerName);
-                                checkComplete();
-                            }}
-                            maxLength={5}
-                            errorMessage={errors[endName] ? errors[endName].message : " "}
-                            containerStyle={styles.input}
-                            inputStyle={styles.inputText}
-                            keyboardType={"numeric"}
-                            inputContainerStyle={errors[endName] && styles.inputError}
-                            errorStyle={styles.error}
-                            style={{borderWidth: 1, width: "40%"}}
-                        />
+                        >
+                            <Text style={styles.pickerText}>
+                                {formValues[endName]
+                                    ? moment(formValues[endName]).format("HH:mm")
+                                    : "--:--"}
+                            </Text>
+                        </TouchableOpacity>
                     </View>
                 </View>
                 <View style={styles.validation}>
@@ -288,17 +205,29 @@ export const RegisterZeiten = ({navigation}) => {
                             return <TimeEntry id={item.id} key={"item" + i} />;
                         })}
                     </View>
+                    <View>
+                        <DateTimePickerModal
+                            isVisible={showTimeSelect}
+                            mode="time"
+                            locale="de_DE"
+                            onConfirm={(time) => {
+                                setTime(activeTime, time);
+                                setShowTimeSelect(!showTimeSelect);
+                                isGreater(activeId);
+                                checkComplete();
+                            }}
+                            onCancel={() => {
+                                setShowTimeSelect(!showTimeSelect);
+                            }}
+                        />
+                    </View>
                     <View style={styles.saveButtonContainer}>
                         <Button
                             buttonStyle={styles.saveButton}
                             titleStyle={styles.saveButtonTitle}
-                            disabled={
-                                Object.keys(errors).length !== 0 ||
-                                !isComplete ||
-                                listItems.length < 1
-                            }
+                            disabled={Object.keys(errors).length !== 0 || !isComplete}
                             title="Speichern"
-                            onPress={handleSubmit(onSubmit)}
+                            onPress={onSubmit}
                         />
                     </View>
                 </View>
@@ -310,7 +239,7 @@ export const RegisterZeiten = ({navigation}) => {
 export const styles = StyleSheet.create({
     container: {
         // flex: 1,
-        marginTop: "-22%",
+        marginTop: Platform.OS === "ios" ? "-20%" : "-23%",
         paddingHorizontal: 20,
         borderRadius: 25,
         backgroundColor: "#FFF",
@@ -356,14 +285,12 @@ export const styles = StyleSheet.create({
     formItems: {
         // height: "50%",
         // flex: 1,
-        // paddingTop: 50,
+        paddingTop: 20,
     },
     rowContainer: {
-        // marginTop: 10,
-        // marginBottom: 30,
         flex: 1,
-        // paddingTop: 10,
         flexDirection: "column",
+        marginVertical: Platform.OS === "ios" ? -5 : 10,
     },
     lineWrap: {
         flexDirection: "row",
@@ -381,34 +308,25 @@ export const styles = StyleSheet.create({
     inputWrap: {
         flex: 6,
         flexDirection: "row",
-        justifyContent: "space-around",
-        marginLeft: 10,
+        justifyContent: "flex-start",
+        // justifyContent: "center",
+        // marginRight: "-20%",
         // marginBottom: 5,
-        paddingLeft: 10,
+        // paddingLeft: 100,
         marginBottom: 10,
-        // marginTop: 10,
+        marginTop: -14,
     },
-    input: {
-        backgroundColor: "#FFF",
-        paddingLeft: 10,
-        flex: 5,
-    },
-    inputText: {
-        color: "#729628",
-    },
-    inputError: {
-        borderColor: "#ff8787",
-    },
-    error: {
-        color: "#ff8787",
-        marginLeft: -1,
-        marginTop: -1,
+    pickerText: {
+        color: "#555",
+        fontSize: 16,
+        // width: 90,
     },
     validation: {
         flex: 1,
         justifyContent: "flex-end",
         alignItems: "flex-end",
-        marginTop: "-6%",
+        marginTop: "-2%",
+        marginBottom: "2%",
         marginRight: "3%",
     },
     validationText: {
