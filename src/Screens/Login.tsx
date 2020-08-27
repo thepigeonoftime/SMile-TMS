@@ -11,6 +11,7 @@ export const Login = ({navigation, route}: AuthNavProps<"Signup">) => {
     const {login, loginMsg, disableButton} = useContext(AuthContext);
     const [user, setUser] = useState(null);
     const [password, setPassword] = useState(null);
+    const [complete, setComplete] = useState(false);
 
     const onSubmit = () => {
         login(user.trim(), password);
@@ -84,7 +85,7 @@ export const Login = ({navigation, route}: AuthNavProps<"Signup">) => {
                     <Button
                         title={"Login"}
                         onPress={onSubmit}
-                        disabled={disableButton}
+                        disabled={disableButton || !(user && password)}
                         buttonStyle={styles.button}
                         titleStyle={styles.buttonTitle}
                     />
